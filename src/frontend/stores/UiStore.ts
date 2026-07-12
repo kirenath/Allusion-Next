@@ -229,8 +229,8 @@ class UiStore {
   @observable thumbnailTagOverlayMode: ThumbnailTagOverlayModeType = 'all';
   @observable inheritedTagsVisibilityMode: InheritedTagsVisibilityModeType =
     'visible-when-inherited';
-  @observable isThumbnailFilenameOverlayEnabled: boolean = false;
-  @observable isThumbnailResolutionOverlayEnabled: boolean = false;
+  @observable isThumbnailFilenameOverlayEnabled: boolean = true;
+  @observable isThumbnailResolutionOverlayEnabled: boolean = true;
   /** Refresh locations and detect file changes at startup  */
   @observable isRefreshLocationsStartupEnabled: boolean = false;
   /** Whether to restore the last search query on start-up */
@@ -1698,8 +1698,8 @@ class UiStore {
           );
         }
         this.showTreeConnectorLines = Boolean(prefs.showTreeConnectorLines ?? false);
-        this.isThumbnailFilenameOverlayEnabled = Boolean(prefs.isThumbnailFilenameOverlayEnabled ?? false); // eslint-disable-line prettier/prettier
-        this.isThumbnailResolutionOverlayEnabled = Boolean(prefs.isThumbnailResolutionOverlayEnabled ?? false); // eslint-disable-line prettier/prettier
+        this.isThumbnailFilenameOverlayEnabled = Boolean(prefs.isThumbnailFilenameOverlayEnabled ?? true); // eslint-disable-line prettier/prettier
+        this.isThumbnailResolutionOverlayEnabled = Boolean(prefs.isThumbnailResolutionOverlayEnabled ?? true); // eslint-disable-line prettier/prettier
         this.areFileEditorsDocked = Boolean(prefs.areFileEditorsDocked ?? false);
         this.isFileTagsEditorOpen = Boolean(prefs.isFileTagsEditorOpen ?? false);
         this.isClearTagSelectorsOnSelectEnabled = Boolean(prefs.isClearTagSelectorsOnSelectEnabled ?? false); // eslint-disable-line prettier/prettier
