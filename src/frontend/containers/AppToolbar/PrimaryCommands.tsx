@@ -6,7 +6,12 @@ import { IconSet } from 'widgets';
 import { ToolbarButton } from 'widgets/toolbar';
 import { FileRemoval } from '../../components/RemovalAlert';
 import { useStore } from '../../contexts/StoreContext';
-import { SortCommand, ViewCommand } from './Menus';
+import {
+  SortCommand,
+  ThumbnailSizeToolbarSlider,
+  ViewCommand,
+  ViewSegmentedControl,
+} from './Menus';
 import Searchbar from './Searchbar';
 import {
   FileExifEditorButton,
@@ -40,6 +45,11 @@ const PrimaryCommands = observer(() => {
       <OutlinerToggle />
       <FileSelectionCommand />
 
+      <ViewSegmentedControl />
+      <ThumbnailSizeToolbarSlider />
+      <SortCommand />
+      <ViewCommand />
+
       <Searchbar />
 
       {/* TODO: Put back tag button (or just the T hotkey) */}
@@ -57,10 +67,6 @@ const PrimaryCommands = observer(() => {
         </>
         //</div>
       )}
-
-      <SortCommand />
-
-      <ViewCommand />
     </>
   );
 });

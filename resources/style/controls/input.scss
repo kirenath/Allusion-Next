@@ -30,18 +30,21 @@
 .input {
   height: 28px;
   background: var(--input-color);
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid transparent;
   outline: none;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-md, 0.5rem);
   cursor: text;
+  transition: background-color 100ms ease-out, border-color 100ms ease-out,
+    box-shadow 100ms ease-out;
 
   &:hover {
     background: var(--input-color-hover);
   }
 
   &:focus-within {
-    background: var(--input-color);
-    box-shadow: 0 0 0 0.125rem var(--accent-color);
+    background: var(--background-color-alt);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.1875rem var(--accent-color-soft);
   }
 
   &.multiautocomplete {

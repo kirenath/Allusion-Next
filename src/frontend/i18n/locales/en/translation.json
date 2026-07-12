@@ -224,6 +224,8 @@
     "languageDescription": "Choose the display language for the interface",
     "theme": "Theme",
     "colorScheme": "Color Scheme",
+    "accentColor": "Accent Color",
+    "accentColorCustom": "Custom color...",
     "light": "Light",
     "dark": "Dark",
     "scrollbarStyle": "Scrollbar Style",

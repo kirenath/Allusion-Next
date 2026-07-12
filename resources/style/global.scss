@@ -88,9 +88,9 @@ table {
 select {
   background: var(--input-color);
   color: var(--text-color);
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid transparent;
   outline: none;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-md, 0.5rem);
   line-height: 1.5rem;
   min-height: 1.5rem;
 
@@ -99,8 +99,9 @@ select {
   }
 
   &:focus-within {
-    background: var(--input-color);
-    box-shadow: 0 0 0 0.125rem var(--accent-color);
+    background: var(--background-color-alt);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.1875rem var(--accent-color-soft);
   }
 }
 

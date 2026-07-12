@@ -34,10 +34,11 @@
   }
 
   > .label {
-    height: 1.5rem;
+    height: 1.625rem;
     position: relative;
     display: flex;
     align-items: center;
+    border-radius: var(--radius-md, 0.5rem);
     padding-left: calc(var(--level) * var(--treeitem-identation) + var(--treeitem-offset));
 
 
@@ -97,12 +98,19 @@
 
   &[aria-selected='true'] > .label {
     background-color: var(--background-color-selected);
-    color: var(--text-color-strong);
+    color: var(--accent-color);
+    font-weight: 600;
+
+    [class*='custom-icon'] {
+      color: var(--accent-color);
+    }
 
     &:hover {
-      // TODO: proper background color change for hover
-      // This also changes text color
-      filter: brightness(0.95);
+      color: var(--accent-color);
+
+      [class*='custom-icon'] {
+        color: var(--accent-color);
+      }
     }
   }
 

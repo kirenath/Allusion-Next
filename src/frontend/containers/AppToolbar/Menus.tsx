@@ -13,12 +13,23 @@ import { ExtraPropertySelector } from 'src/frontend/components/ExtraPropertySele
 import { ClientExtraProperty } from 'src/frontend/entities/ExtraProperty';
 import { useComputed } from 'src/frontend/hooks/mobx';
 
-export const SortCommand = () => {
+export const SortCommand = observer(() => {
+  const { fileStore } = useStore();
   const { t } = useTranslation();
+
+  const sortItem =
+    fileStore.orderBy === sortExtraPropertyData.prop
+      ? sortExtraPropertyData
+      : sortMenuData.find((item) => item.prop === fileStore.orderBy);
+  const directionArrow = fileStore.orderDirection === OrderDirection.Desc ? ' \u2193' : ' \u2191';
+  const text = sortItem
+    ? `${t(sortItem.textKey)}${sortItem.hideDirection ? '' : directionArrow}`
+    : t('toolbar.sort');
+
   return (
     <MenuButton
       icon={IconSet.SORT}
-      text={t('toolbar.sort')}
+      text={text}
       tooltip={t('toolbar.sortTooltip')}
       id="__sort-menu"
       menuID="__sort-options"
@@ -26,7 +37,7 @@ export const SortCommand = () => {
       <SortMenuItems />
     </MenuButton>
   );
-};
+});
 
 export const ViewCommand = () => {
   const { t } = useTranslation();
@@ -51,6 +62,55 @@ export const ViewCommand = () => {
   );
 };
 
+/** Segmented control for switching between the view methods directly from the toolbar */
+export const ViewSegmentedControl = observer(() => {
+  const { uiStore } = useStore();
+  const { t } = useTranslation();
+
+  const options = [
+    { icon: IconSet.VIEW_LIST, onClick: uiStore.setMethodList, checked: uiStore.isList, text: t('toolbar.viewList') }, // eslint-disable-line prettier/prettier
+    { icon: IconSet.VIEW_GRID, onClick: uiStore.setMethodGrid, checked: uiStore.isGrid, text: t('toolbar.viewGrid') }, // eslint-disable-line prettier/prettier
+    { icon: IconSet.VIEW_MASONRY_V, onClick: uiStore.setMethodMasonryVertical, checked: uiStore.isMasonryVertical, text: t('toolbar.viewMasonryVertical') }, // eslint-disable-line prettier/prettier
+    { icon: IconSet.VIEW_MASONRY_H, onClick: uiStore.setMethodMasonryHorizontal, checked: uiStore.isMasonryHorizontal, text: t('toolbar.viewMasonryHorizontal') }, // eslint-disable-line prettier/prettier
+  ];
+
+  return (
+    <div className="segmented-control" role="radiogroup" aria-label={t('toolbar.view')}>
+      {options.map((option) => (
+        <button
+          key={option.text}
+          role="radio"
+          aria-checked={option.checked}
+          data-tooltip={option.text}
+          onClick={option.onClick}
+        >
+          {option.icon}
+        </button>
+      ))}
+    </div>
+  );
+});
+
+/** Inline thumbnail size slider, as seen in the toolbar of the reference design */
+export const ThumbnailSizeToolbarSlider = observer(() => {
+  const { uiStore } = useStore();
+  const { t } = useTranslation();
+
+  return (
+    <div className="toolbar-slider" data-tooltip={t('toolbar.thumbnailSize')}>
+      <input
+        type="range"
+        min={thumbnailSizeOptions[0].value}
+        max={thumbnailSizeOptions[thumbnailSizeOptions.length - 1].value}
+        step={20}
+        value={getThumbnailSize(uiStore.thumbnailSize)}
+        aria-label={t('toolbar.thumbnailSize')}
+        onChange={(e) => uiStore.setThumbnailSize(Number(e.target.value))}
+      />
+    </div>
+  );
+});
+
 const sortMenuData: Array<{
   prop: OrderBy<FileDTO>;
   icon: JSX.Element;
@@ -65,7 +125,12 @@ const sortMenuData: Array<{
   { prop: 'dateModified', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateModifiedInApp' },
   { prop: 'dateModifiedOS', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateModified' },
   { prop: 'dateCreated', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateCreated' },
-  { prop: 'random', icon: IconSet.RELOAD_COMPACT, textKey: 'toolbar.sortRandom', hideDirection: true },
+  {
+    prop: 'random',
+    icon: IconSet.RELOAD_COMPACT,
+    textKey: 'toolbar.sortRandom',
+    hideDirection: true,
+  },
 ];
 
 const sortExtraPropertyData: {

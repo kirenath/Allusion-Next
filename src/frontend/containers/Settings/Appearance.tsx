@@ -7,7 +7,7 @@ import useCustomTheme from 'src/frontend/hooks/useCustomTheme';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { Button, IconSet, Radio, RadioGroup, Toggle } from 'widgets';
 import { useStore } from '../../contexts/StoreContext';
-import { InheritedTagsVisibilityModeType } from 'src/frontend/stores/UiStore';
+import { AccentColorPresets, InheritedTagsVisibilityModeType } from 'src/frontend/stores/UiStore';
 import { Slider } from 'widgets/slider';
 import { SUPPORTED_LANGUAGES } from 'src/frontend/i18n';
 
@@ -69,6 +69,7 @@ export const Appearance = observer(() => {
           <Radio value="light">{t('settings.light')}</Radio>
           <Radio value="dark">{t('settings.dark')}</Radio>
         </RadioGroup>
+        <AccentColorPicker />
         <CustomThemePicker />
         <RadioGroup
           orientation="horizontal"
@@ -271,6 +272,47 @@ const Zoom = () => {
     </label>
   );
 };
+
+const AccentColorPicker = observer(() => {
+  const { uiStore } = useStore();
+  const { t } = useTranslation();
+
+  return (
+    <div className="accent-color-picker">
+      <span className="accent-color-picker-label">{t('settings.accentColor')}</span>
+      <div
+        className="accent-color-swatches"
+        role="radiogroup"
+        aria-label={t('settings.accentColor')}
+      >
+        {AccentColorPresets.map((color) => (
+          <button
+            key={color}
+            className="accent-color-swatch"
+            style={{ backgroundColor: color }}
+            role="radio"
+            aria-checked={uiStore.accentColor === color}
+            onClick={() => uiStore.setAccentColor(color)}
+            data-tooltip={color}
+          />
+        ))}
+        <label
+          className="accent-color-swatch accent-color-swatch-custom"
+          data-tooltip={t('settings.accentColorCustom')}
+          role="radio"
+          aria-checked={!AccentColorPresets.includes(uiStore.accentColor as any)}
+          style={{ backgroundColor: uiStore.accentColor }}
+        >
+          <input
+            type="color"
+            value={uiStore.accentColor}
+            onChange={(e) => uiStore.setAccentColor(e.target.value)}
+          />
+        </label>
+      </div>
+    </div>
+  );
+});
 
 const CustomThemePicker = () => {
   const { t } = useTranslation();

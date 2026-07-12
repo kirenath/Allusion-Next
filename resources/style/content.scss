@@ -202,8 +202,8 @@
     contain: layout size;
 
     &[aria-selected='true'] {
-      background-color: var(--accent-color);
-      color: white;
+      background-color: var(--background-color-selected);
+      color: var(--accent-color);
     }
 
     &[data-dnd-target='true'] {
@@ -482,6 +482,45 @@
       max-width: inherit;
       width: unset;
       height: inherit;
+    }
+
+    // Check badge on selected thumbnails (see reference design)
+    &[aria-selected='true'] {
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      // Accent circle
+      &::before {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        box-shadow: 0 0.0625rem 0.25rem rgba(0, 0, 0, 0.3);
+      }
+
+      // White checkmark
+      &::after {
+        top: calc(0.5rem + 0.1875rem);
+        right: calc(0.5rem + 0.1875rem);
+        width: 0.875rem;
+        height: 0.875rem;
+        background-color: white;
+        mask-image: url(~resources/icons/checkmark.svg);
+        -webkit-mask-image: url(~resources/icons/checkmark.svg);
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-position: center;
+        mask-size: contain;
+        -webkit-mask-size: contain;
+      }
     }
 
     // Note: this feature has an ugly exception, when filename is also shown. See the #gallery-item[data-show-overlay] rule below

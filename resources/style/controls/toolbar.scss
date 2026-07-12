@@ -29,7 +29,7 @@
   .toolbar-button {
     min-height: 2rem;
     min-width: 2rem;
-    border-radius: 0.25rem;
+    border-radius: var(--radius-md, 0.5rem);
     padding: 0 0.75rem;
     margin: 0rem;
 

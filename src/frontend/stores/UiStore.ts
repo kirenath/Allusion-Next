@@ -51,6 +51,19 @@ export type GalleryVideoPlaybackMode = (typeof GalleryVideoPlaybackModes)[number
 const Themes = ['light', 'dark'] as const;
 export type Theme = (typeof Themes)[number];
 
+/** Preset accent colors selectable in the appearance settings */
+export const AccentColorPresets = [
+  '#F97316', // orange (default)
+  '#EF4444', // red
+  '#EC4899', // pink
+  '#A855F7', // purple
+  '#3B82F6', // blue
+  '#14B8A6', // teal
+  '#22C55E', // green
+  '#EAB308', // yellow
+] as const;
+export const DEFAULT_ACCENT_COLOR = AccentColorPresets[0];
+
 const ScrollbarsStyles = ['classic', 'hover'] as const;
 export type ScrollbarsStyle = (typeof ScrollbarsStyles)[number];
 
@@ -150,6 +163,7 @@ export const defaultHotkeyMap: IHotkeyMap = {
 type PersistentPreferenceFields =
   | 'zoomFactor'
   | 'theme'
+  | 'accentColor'
   | 'scrollbarsStyle'
   | 'isOutlinerOpen'
   | 'isSlideInspectorOpen'
@@ -206,6 +220,7 @@ class UiStore {
 
   // Theme
   @observable theme: Theme = 'dark';
+  @observable accentColor: string = DEFAULT_ACCENT_COLOR;
   @observable scrollbarsStyle: ScrollbarsStyle = 'hover';
 
   // UI
@@ -240,7 +255,7 @@ class UiStore {
   /** Cursor that represents the first item in the viewport. Also acts as the current item shown in slide mode */
   @observable firstItem: Cursor | undefined;
   @observable thumbnailSize: ThumbnailSize | number = 'medium';
-  @observable thumbnailRadius: number = 1;
+  @observable thumbnailRadius: number = 6;
   @observable largeThumbFullResThreshold: number = 3840;
   @observable masonryItemPadding: number = 8;
   @observable thumbnailShape: ThumbnailShape = 'square';
@@ -905,6 +920,24 @@ class UiStore {
     }
     this.theme = theme;
     RendererMessenger.setTheme({ theme });
+  }
+
+  /** Accepts a hex color string like #F97316. */
+  @action.bound setAccentColor(color: string = DEFAULT_ACCENT_COLOR): void {
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) {
+      console.warn(color, '- Invalid accentColor value, keeping previous value');
+      return;
+    }
+    this.accentColor = color.toUpperCase();
+  }
+
+  /** The accent color as a "r, g, b" triplet, usable in rgb()/rgba() CSS functions. */
+  @computed get accentColorRgbTriplet(): string {
+    const hex = this.accentColor;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `${r}, ${g}, ${b}`;
   }
 
   @action.bound setScrollbarsStyle(style: ScrollbarsStyle = 'hover'): void {
@@ -1637,6 +1670,9 @@ class UiStore {
         if (prefs.theme) {
           this.setTheme(prefs.theme);
         }
+        if (prefs.accentColor) {
+          this.setAccentColor(prefs.accentColor);
+        }
         if (prefs.scrollbarsStyle) {
           this.setScrollbarsStyle(prefs.scrollbarsStyle);
         }
@@ -1775,6 +1811,7 @@ class UiStore {
     const preferences: Record<PersistentPreferenceFields, unknown> = {
       zoomFactor: this.zoomFactor,
       theme: this.theme,
+      accentColor: this.accentColor,
       scrollbarsStyle: this.scrollbarsStyle,
       isOutlinerOpen: this.isOutlinerOpen,
       isSlideInspectorOpen: this.isSlideInspectorOpen,

@@ -224,6 +224,8 @@
     "languageDescription": "选择界面显示语言",
     "theme": "主题",
     "colorScheme": "配色方案",
+    "accentColor": "主题色",
+    "accentColorCustom": "自定义颜色...",
     "light": "浅色",
     "dark": "深色",
     "scrollbarStyle": "滚动条样式",

@@ -27,7 +27,11 @@ const Settings = () => {
       closeOnEscape
       additionalCloseKey={uiStore.hotkeyMap.toggleSettings}
     >
-      <div id="settings" className={`${uiStore.theme} scrollbar-classic`}>
+      <div
+        id="settings"
+        className={`${uiStore.theme} scrollbar-classic`}
+        style={{ '--accent-color-raw': uiStore.accentColorRgbTriplet } as React.CSSProperties}
+      >
         <Tabs />
       </div>
     </PopupWindow>

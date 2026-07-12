@@ -71,6 +71,7 @@ const App = observer(() => {
           data-fullscreen={uiStore.isFullScreen}
           id="layout-container"
           className={`${uiStore.theme} scrollbar-${uiStore.scrollbarsStyle}`}
+          style={{ '--accent-color-raw': uiStore.accentColorRgbTriplet } as React.CSSProperties}
         >
           {!uiStore.isFullScreen && <WindowTitlebar />}
 
