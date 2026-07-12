@@ -8,6 +8,7 @@ import { MenuSubItem, Menu, useContextMenu } from 'widgets/menus';
 
 import Placeholder from './Placeholder';
 import Layout from './LayoutSwitcher';
+import { getThumbnailSize } from './utils';
 
 import { LayoutMenuItems, SortMenuItems } from '../AppToolbar/Menus';
 import { useTagDnD } from 'src/frontend/contexts/TagDnDContext';
@@ -99,6 +100,18 @@ const Content = observer(() => {
     }
   });
 
+  const handleWheel = useAction((e: React.WheelEvent) => {
+    if (!e.ctrlKey || uiStore.isSlideMode) {
+      return;
+    }
+    const currentSize = getThumbnailSize(uiStore.thumbnailSize);
+    const delta = e.deltaY > 0 ? -20 : 20;
+    const newSize = Math.max(128, Math.min(368, currentSize + delta));
+    if (newSize !== currentSize) {
+      uiStore.setThumbnailSize(newSize);
+    }
+  });
+
   return (
     <div
       ref={container}
@@ -110,6 +123,7 @@ const Content = observer(() => {
       }
       data-selected-file-dropping={isDroppingTagOnSelection}
       onContextMenu={handleContextMenu}
+      onWheel={handleWheel}
       // Clear selection when clicking on the background, unless in slide mode: always needs an active image
       onClick={clearFileSelection}
       onKeyDown={handleKeyDown}

@@ -175,12 +175,24 @@ const SlideView = observer(({ width, height }: SlideViewProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file?.id]);
 
+  const handleWheel = useAction((e: React.WheelEvent) => {
+    if (e.ctrlKey) {
+      return;
+    }
+    if (e.deltaY > 0) {
+      incrImgIndex();
+    } else if (e.deltaY < 0) {
+      decrImgIndex();
+    }
+  });
+
   return (
     <div
       id="zoomable-image"
       style={{ width, height }}
       onContextMenu={eventManager?.showSlideContextMenu}
       onDrop={eventManager?.drop}
+      onWheel={handleWheel}
       tabIndex={-1}
     >
       {file && (

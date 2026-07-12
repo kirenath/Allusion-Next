@@ -150,6 +150,9 @@ export default class ZoomPan extends React.Component<ZoomPanProps, ZoomPanState>
   };
 
   handleMouseWheel = (event: React.WheelEvent) => {
+    if (!event.ctrlKey) {
+      return;
+    }
     this.stopAnimation();
     const { scale } = this.state;
     const point = getRelativePosition(createVec2(event.clientX, event.clientY), this.container);
