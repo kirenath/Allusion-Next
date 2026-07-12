@@ -205,19 +205,11 @@ const PAGE_DATA: () => IPageData[] = () => [
             <img className="centered" src={Logo_About} alt="Logo" />
             <p>
               <strong>
-                Allusion is a tool designed to help artists organize their visual library. It is
-                very common for creative people to use reference images throughout their projects.
+                Allusion 是一款专为艺术家设计的工具，旨在帮助他们整理视觉素材库。创意工作者在项目中经常使用参考图片，这非常普遍。
               </strong>
             </p>
             <p>
-              Finding such images has become relatively easy through the use of internet technology.
-              Managing such images on the other hand, has remained a challenge. Clearly, it is not
-              the amount of images that we can store, but a question of what we can effectively
-              access, that matters. If only a handful of images were relevant to us, it would be
-              easy to keep them in mind, but many artists are interested in creating their own
-              curated library, and in such, it becomes increasingly difficult to remember where
-              images were. Again, Allusion was created to help artists organize their visual
-              library. To learn more about how Allusion works, please read on.
+              借助互联网技术，寻找此类图片已变得相对容易。然而，管理这些图片仍然是一个挑战。我们关注的不是能存储多少图片，而是能有效地访问哪些图片。如果只有少量图片与我们相关，那很容易记住它们，但许多艺术家希望创建自己的精选素材库，在这种情况下，记住图片位置变得越来越困难。Allusion 正是为了帮助艺术家整理视觉素材库而创建的。要了解 Allusion 的工作原理，请继续阅读。
             </p>
           </>
         ),
@@ -233,11 +225,8 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              Library setup refers to the process of getting your images into Allusion, so that they
-              are available to be managed and viewed. Rather than manually importing images from
-              your filesystem, Allusion focuses on linked folders, which we refer to as{' '}
-              <b>Locations</b>. Read on to find out about how to add images to your Allusion
-              library.
+              素材库设置指的是将图片导入 Allusion 的过程，以便它们可以被管理和查看。Allusion 不手动从文件系统导入图片，而是专注于链接的文件夹，我们称之为{' '}
+              <b>位置</b>。继续阅读以了解如何向您的 Allusion 素材库添加图片。
             </p>
           </>
         ),
@@ -247,44 +236,19 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              In Allusion, the primary way of adding images to your library is the use of
-              "Locations". A location in this context is a link to a folder on your computer. This
-              means that all images in that folder as well as any subfolders will be automatically
-              loaded once it is added to your list of locations.
+              在 Allusion 中，向素材库添加图片的主要方式是使用“位置”。位置在此上下文中是指指向您计算机上文件夹的链接。这意味着该文件夹中的所有图片以及任何子文件夹都会自动加载，一旦它们被添加到您的位置列表中。
               <br />
-              The benefit of this system is that you can have full control over where your data is
-              stored, while not having to tediously import images manually from various places. To
-              add more images, simply place them into the linked folder, and they will automatically
-              show up in Allusion.
+              这种系统的优势在于您可以完全控制数据存储的位置，而无需从各个地方手动繁琐地导入图片。要添加更多图片，只需将它们放入链接的文件夹中，它们会自动出现在 Allusion 中。
               <br />
-              However, removing images from a linked folder will not automatically remove them from
-              Allusion in order to prevent you from losing the tags you assigned to them when you
-              accidentially remove your images, or move them elsewhere. To confirm to Allusion the
-              files were deleted intentionally, you can select those images in the "Missing images"
-              view and pressing the delete button in the toolbar. Otherwise, you can simply place
-              the images back to their original path so that Allusion will automatically detect them
-              again.
+              然而，从链接的文件夹中移除图片不会自动从 Allusion 中移除它们，以防止您在意外删除图片或移动它们时丢失已分配的标签。要向 Allusion 确认文件是有意删除的，您可以在“缺失图片”视图中选择这些图片并按下工具栏中的删除按钮。否则，您可以将图片放回原始路径，Allusion 会自动重新检测到它们。
               <br />
-              You are free to rename your images, and to move them to a different folder, as long as
-              they remain within the same location. Allusion will automatically detect those changes
-              upon you restarting the application.
+              您可以自由地重命名图片，并将它们移动到不同的文件夹，只要它们保持在同一位置内。Allusion 会在您重启应用程序时自动检测到这些变化。
             </p>
             <p>
-              To add a new location, open the outliner and hover with your mouse over the location's
-              header. You will see a small plus icon to the right. Once you click the icon, go ahead
-              and browse the folder that contains images. Confirm your selection and select your
-              location preferences in the following popup. You have the option to exclude subfolders
-              during this process. Excluding subfolders later is also possible but keep in mind that
-              Allusion does not store tag data for excluded folders. Any existing tag data will be
-              removed when you choose to exclude a subfolder. Once you confirm, your images will
-              show up in the content area.
+              要添加新位置，打开大纲视图并将鼠标悬停在位置的标题上。您会看到右侧有一个小加号图标。点击该图标后，浏览包含图片的文件夹。确认您的选择，并在以下弹出窗口中选择位置偏好设置。您有选项在此过程中排除子文件夹。稍后排除子文件夹也是可能的，但请记住 Allusion 不会为排除的文件夹存储标签数据。选择排除子文件夹时，任何现有的标签数据都会被移除。一旦确认，您的图片会出现在内容区域。
             </p>
             <p>
-              To remove a location, open the outliner and right click on a location. A context menu
-              will open with the option to remove your location. You have to confirm this action.
-              Please be aware that removing a location will delete all tagging information that may
-              have been attached to images of that location. The images themselves on your
-              filesystem however, will of course remain.
+              要移除位置，打开大纲视图并右键点击位置。上下文菜单会打开，提供移除位置的选项。您需要确认此操作。请注意，移除位置会删除可能附加到该位置图片的所有标签信息。图片本身在文件系统中当然会保留。
             </p>
           </>
         ),
@@ -294,10 +258,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              Another way of quickly importing images is by dragging them into your list of
-              locations in the the application window. You can drag them from your file explorer,
-              but also from any other sources like a web browser. When dropping those images, they
-              will be copied in into the (sub)folder you chose.
+              另一种快速导入图片的方式是将它们拖入应用程序窗口中的位置列表。您可以从文件资源管理器拖入，也可以从任何来源如网页浏览器拖入。当放置这些图片时，它们会被复制到您选择的（子）文件夹中。
             </p>
           </>
         ),
@@ -307,12 +268,9 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              A browser extension for FireFox and Chromium-based browsers such as Google Chrome and
-              Edge is available. It allows you to import images into Allusion directly from your web
-              browser and immediately tag them as well. Take a look in the "Background Processes"
-              section in the settings window for more information. Get the extension here from{' '}
-              <ExternalLink url={chromeExtensionUrl}>Chrome Webstore</ExternalLink> or for{' '}
-              <ExternalLink url={firefoxExtensionUrl}>Firefox</ExternalLink>.
+              为 FireFox 和基于 Chromium 的浏览器（如 Google Chrome 和 Edge）提供了浏览器扩展。它允许您直接从网页浏览器导入图片到 Allusion，并立即为它们添加标签。在设置窗口的“后台进程”部分可以找到更多信息。从{' '}
+              <ExternalLink url={chromeExtensionUrl}>Chrome Webstore</ExternalLink> 或{' '}
+              <ExternalLink url={firefoxExtensionUrl}>Firefox</ExternalLink> 获取扩展。
             </p>
           </>
         ),
@@ -322,17 +280,12 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              You can save the tags stored in Allusion's internal database to the metadata of your
-              image files. This allows you to view them in other applications, such as your file
-              browser and tools like Adobe Bridge. This option is available in the "Import/Export"
-              section of the settings window. Importing tags from file metadata can be performed in
-              the same place.
+              您可以将 Allusion 内部数据库中存储的标签保存到图片文件的元数据中。这允许您在其他应用程序中查看它们，如文件浏览器和 Adobe Bridge 等工具。此选项在设置窗口的“导入/导出”部分可用。从文件元数据导入标签可以在同一位置进行。
               <br />
-              Note that only the images shown in the gallery are affected by these operations!
+              请注意，只有画廊中显示的图片受这些操作影响！
             </p>
             <p>
-              You can also import/export tags from selected files through the "Tagging" options in
-              the file context menu.
+              您也可以通过文件上下文菜单中的“标签”选项导入/导出选定文件的标签。
             </p>
           </>
         ),
@@ -348,36 +301,22 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              Although it is possible to create tags on the fly, it is recommended to set up useful
-              tags in advance to take full advantage of the organized tag structures that can be
-              created in the outliner. The outliner has a tag related section below your locations.
-              In this section you are able to create, edit and organize your tags.
+              虽然可以在运行时创建标签，但建议在大纲视图中提前设置有用的标签，以充分利用可以创建的有组织的标签结构。大纲视图在位置下方有一个与标签相关的部分。在此部分中，您可以创建、编辑和组织您的标签。
             </p>
             <p>
-              To create a new tag, simply press the plus icon next to the header. You have to hover
-              the mouse over the region for the icon to become visible. Alternatively right-click a
-              tag and then select "New Tag" to create a sub-tag directly.
+              要创建新标签，只需点击标题旁边的加号图标。您需要将鼠标悬停在区域上，图标才会可见。或者右键点击标签，然后选择“新标签”以直接创建子标签。
             </p>
             <p>
-              To organize your tags, simply drag the list items across the outliner. You can drop
-              items onto one another to create a hierarchy. In this way you can turn a list of many
-              tags into a structured shape, so that it is easy for you to find the specific tags you
-              were looking for. Alternatively, you can search for a tag in the File tags editor,
-              right-click the tag you're searching for, and select "Reveal in tags panel" to quickly
-              find a tag.
+              要组织您的标签，只需在大纲视图中拖动列表项。您可以将项放置到另一个项上以创建层次结构。通过这种方式，您可以将许多标签的列表转换为结构化形状，以便您轻松找到特定的标签。或者，您可以在文件标签编辑器中搜索标签，右键点击您正在搜索的标签，并选择“在标签面板中显示”以快速找到标签。
             </p>
             <p>
-              You can set aliases, tag descriptions, implied relationships, and other settings for a
-              tag through the tag's properties editor. To open it, use the contextual menu option
-              "Edit Tag" or by selecting a tag and pressing the shortcut key "4".
+              您可以通过标签的属性编辑器设置别名、标签描述、隐含关系和其他设置。要打开它，使用上下文菜单选项“编辑标签”或选择标签并按下快捷键“4”。
             </p>
             <p>
-              Finally, to remove or edit an entry, right-click it and choose an action from the
-              context menu. The tag tree also supports versatile selection using modifier keys: hold{' '}
-              <strong>Alt</strong> to select whole tag collections (a tag and its sub-tags);
-              otherwise, only visible tags are selected. Hold <strong>Command</strong>/
-              <strong>Control</strong> to enable additive/subtractive selection. Hold{' '}
-              <strong>Shift</strong> to select multiple items in range.
+              最后，要移除或编辑条目，右键点击它并从上下文菜单中选择操作。标签树还支持使用修饰键进行灵活选择：按住{' '}
+              <strong>Alt</strong> 以选择整个标签集合（标签及其子标签）；否则，仅选择可见标签。按住 <strong>Command</strong>/
+              <strong>Control</strong> 以启用加法/减法选择。按住{' '}
+              <strong>Shift</strong> 以选择范围内的多个项。
             </p>
           </>
         ),
@@ -387,31 +326,16 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              You can set implied relationships to a tag through the tag's properties editor, {'('}
-              right-click "Edit Tag" or shortcut key "4"{')'}. When you tag a file, it also inherits
-              all its ancestor tags and implied tags (and their implied tags as well) automatically,
-              which are used in searches. For example, if the tag <em>dog</em> implies{' '}
-              <em>mammal</em>, and <em>mammal</em> implies
-              <em>animal</em>, then if you search for <em>animal</em>, files with the tag
-              <em>dog</em> will also be included because of the implied relationship.
+              您可以通过标签属性编辑器设置标签之间的隐含关系（右键点击“编辑标签”，或使用快捷键“4”）。为文件添加标签后，该文件还会自动继承该标签的所有上级标签和隐含标签（包括这些标签所隐含的标签），搜索时也会将它们纳入匹配范围。例如，如果标签 <em>dog</em> 隐含 <em>mammal</em>，而 <em>mammal</em> 隐含 <em>animal</em>，那么搜索 <em>animal</em> 时，带有 <em>dog</em> 标签的文件也会因这种隐含关系而出现在结果中。
             </p>
             <p>
-              Inherited tags can't be removed from a file unless you remove all the tags that cause
-              them to be inherited automatically.
+              继承的标签无法从文件中移除，除非您移除所有导致它们被自动继承的标签。
             </p>
             <p>
-              It is possible to configure the visibility of tags and collections when they are
-              inherited. You can decide exactly which tags appear in file thumbnails and tag lists
-              by setting each tag’s "Visible When Inherited" status using the tag's right-click menu
-              or the tag properties editor. You can also configure the global inherited tags
-              visibility mode in the Appearance settings. Available modes are: Show all (even those
-              with "Visible When Inherited" status disabled), Show only "Visible When Inherited"
-              tags (default mode), and Do not show inherited tags.
+              可以配置继承标签和集合的可见性。您可以决定哪些标签出现在文件缩略图和标签列表中，通过设置每个标签的“继承时可见”状态，使用标签的右键菜单或标签属性编辑器。您还可以在外观设置中配置全局继承标签可见性模式。可用模式包括：显示所有（即使“继承时可见”状态被禁用），仅显示“继承时可见”标签（默认模式），和不显示继承标签。
             </p>
             <p>
-              When exporting tags to file metadata, only the explicitly assigned tags get exported
-              to the file. The automatically inherited tags will not be included unless you
-              explicitly assign them to the file.
+              当导出标签到文件元数据时，只有显式分配的标签会被导出到文件。自动继承的标签不会被包括，除非您显式地将它们分配给文件。
             </p>
           </>
         ),
@@ -420,45 +344,34 @@ const PAGE_DATA: () => IPageData[] = () => [
         title: i18n.t('helpcenter.howToTagAnImage'),
         content: (
           <>
-            <p>There are several ways to tag your images and manage your collection efficiently:</p>
+            <p>有几种方式可以标记您的图片并高效管理您的素材库：</p>
             <ul>
               <li>
-                <strong>Drag and Drop:</strong> Drag a tag from the outliner directly onto an image
-                or a selection of multiple images.
+                <strong>拖放：</strong> 从大纲视图直接将标签拖到图片或多个图片的选择上。
               </li>
               <li>
-                <strong>The Tag Editor:</strong> Select one or more images, press <code>3</code> to
-                open the Tag Editor, and assign or remove tags from the list.
+                <strong>标签编辑器：</strong> 选择一张或多张图片，按下 <code>3</code> 打开标签编辑器，并从列表中添加或移除标签。
               </li>
               <li>
-                <strong>The Inspector Panel:</strong> Add tags directly to the list in the sidebar
-                on the right when viewing images at full size.
+                <strong>检查器面板：</strong> 在右侧查看全尺寸图片时，直接在侧边栏的列表中添加标签。
               </li>
               <li>
-                <strong>Tagging Locations:</strong> Right-click a location folder and choose{' '}
-                <em>"Edit Tags"</em> to automatically assign a specific tag to all files contained
-                within it.
+                <strong>标记位置：</strong> 右键点击位置文件夹并选择{' '}
+                <em>"编辑标签"</em> 以自动为包含在该文件夹中的所有文件分配特定标签。
               </li>
               <li>
-                <strong>Bulk Tag Pasting:</strong> Inside the Tag Editor, you can paste raw
-                unstructured text, comma-separated values, or text with line breaks to quickly
-                identify and assign tags in bulk.
+                <strong>批量标签粘贴：</strong> 在标签编辑器中，您可以粘贴原始未结构化文本、逗号分隔的值或带换行符的文本，以快速识别并批量分配标签。
               </li>
               <li>
-                <strong>Local Tagging Service:</strong> You can connect and trigger an external
-                tagging tool via a local HTTP interface. To learn how to configure this integration,
-                check the <em>"Automatic Tagging"</em> section.
+                <strong>本地标签服务：</strong> 您可以连接并触发外部标签工具，通过本地 HTTP 接口。要了解如何配置此集成，请查看 <em>"自动标签"</em> 部分。
               </li>
             </ul>
 
             <p>
-              To remove tags from one or more images, you can use either the Tag Editor or the
-              Inspector. In both places, you will be able to remove individual tags or clear the
-              entire set of tags on the selected image(s).
+              要从一张或多张图片中移除标签，您可以使用标签编辑器或检查器。在这两个地方，您都可以移除单个标签或清除选定图片上的整个标签集。
             </p>
             <p>
-              When using the Tag Editor, you can hold <code>ALT + arrow keys</code> to navigate
-              through the gallery items while keeping focus on the input field.
+              使用标签编辑器时，您可以按住 <code>ALT + 方向键</code> 在画廊项之间导航，同时保持焦点在输入字段上。
             </p>
           </>
         ),
@@ -468,11 +381,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              When using a tag to tag files or in a quick search, it will be added to the Recently
-              Used Tags list. This list will be shown in all tag selectors as initial suggestions
-              and can store up to 10 tags by default. This number can be changed, or the feature
-              disabled entirely by setting it to 0 in the "Settings &gt; Usage Preferences &gt;
-              Recently Used Tags" section.
+              当使用标签标记文件或进行快速搜索时，它会被添加到“最近使用的标签”列表。此列表会在所有标签选择器中作为初始建议显示，默认可以存储最多 10 个标签。这个数字可以更改，或者通过将其设置为 0 在“设置 &gt; 使用偏好 &gt; 最近使用的标签”部分完全禁用此功能。
             </p>
           </>
         ),
@@ -482,10 +391,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              When you have a large library of tags, it could be hard to find or remember where a
-              tag is in the hierarchy, in this case you can search for the tag on the tag editor
-              panel or in assigned tags in a file, and right-click them to show the option "Reveal
-              in tags panel" to quickly find a tag.
+              当您拥有大量标签的素材库时，可能难以找到或记住标签在层次结构中的位置。在这种情况下，您可以在标签编辑器面板或文件中的分配标签中搜索标签，并右键点击它们以显示“在标签面板中显示”选项，快速找到标签。
             </p>
           </>
         ),
@@ -495,32 +401,24 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              You can set an endpoint to a locally hosted AI tagging service or any custom tagging
-              implementation, allowing the app to send requests and automatically tag files with the
-              service response. You can also configure the number of concurrent requests made to the
-              service simultaneously. For more information, see the "Background Processes" section
-              in the settings window.
+              您可以设置一个端点指向本地托管的 AI 标签服务或任何自定义标签实现，允许应用程序发送请求并自动使用服务响应标记文件。您还可以配置同时发送到服务的并发请求数量。更多信息请查看设置窗口的“后台进程”部分。
             </p>
             <p>
-              To automatically tag selected files, use the
-              {' "Tagging... > Auto Tag Selected Using Tagging Service" '}
-              option in the file context menu.
+              要自动标记选中的文件，请在文件右键菜单中选择“标记… &gt; 使用标签服务自动标记所选文件”。
             </p>
-            <h4>API Implementation Specifications</h4>
+            <h4>API 实现规范</h4>
             <p>
-              To interface properly with the application, your local server must expose a base URL
-              (e.g., <code>http://localhost:5000</code>) and implement the following two
-              <code>POST</code> endpoints:
+              为了与应用程序正确交互，您的本地服务器必须暴露一个基础 URL（例如，<code>http://localhost:5000</code>）并实现以下两个
+              <code>POST</code> 端点：
             </p>
-            <h4>1. Core Tagging Endpoint (Base URL)</h4>
+            <h4>1. 核心标签端点（基础 URL）</h4>
             <p>
-              The application triggers a <code>POST</code> request to the base URL for each
-              individual file to retrieve its generated tags.
+              应用程序为每个文件触发一个 <code>POST</code> 请求到基础 URL 以获取其生成的标签。
             </p>
             <div style={{ paddingLeft: '8px' }}>
-              <strong>Request Body Format:</strong>
+              <strong>请求正文格式：</strong>
               <pre>{'{ "file": "<absolute_path>" }'}</pre>
-              <strong>Expected Response Format:</strong>
+              <strong>预期响应格式：</strong>
               <pre>
                 {'{'}
                 <br />
@@ -537,14 +435,13 @@ const PAGE_DATA: () => IPageData[] = () => [
                 {'}'}
               </pre>
             </div>
-            <h4>2. Allowed Files Pre-Filter Endpoint</h4>
+            <h4>2. 允许文件预筛选端点</h4>
             <p>
-              Before executing requests, the application hits the <code>/allowed-files/</code>{' '}
-              sub-path via a <code>POST</code> request. This is used to pre-verify which paths from
-              a selection the server is capable of processing.
+              在执行请求之前，应用程序通过 <code>POST</code> 请求访问 <code>/allowed-files/</code>{' '}
+              子路径。这用于预先验证服务器能够处理哪些路径。
             </p>
             <div style={{ paddingLeft: '8px' }}>
-              <strong>Request Body Format:</strong>
+              <strong>请求正文格式：</strong>
               <pre>
                 {'{'}
                 <br />
@@ -561,7 +458,7 @@ const PAGE_DATA: () => IPageData[] = () => [
                 {'}'}
               </pre>
 
-              <strong>Expected Response Format:</strong>
+              <strong>预期响应格式：</strong>
               <pre>
                 {'{'}
                 <br />
@@ -576,6 +473,7 @@ const PAGE_DATA: () => IPageData[] = () => [
                 {'}'}
               </pre>
             </div>
+            <p>您还可以使用快捷键 R 快速刷新画廊。</p>
           </>
         ),
       },
@@ -590,44 +488,28 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              You can define extra properties and add values to files using the Extra File
-              Properties Editor panel (shortcut key 4) or the Inspector. Extra properties allow you
-              to store additional information alongside your files and potentially use it to curate
-              and organize your library even further.
+              您可以使用额外的文件属性编辑器面板（快捷键 4）或检查器定义额外的属性并向文件添加值。额外的属性允许您存储与文件相关的附加信息，并可能用于进一步整理和组织您的素材库。
             </p>
             <p>
-              To create a new extra property definition, go to the Extra File Properties Editor or
-              the Inspector and click the "+" plus icon button. Then enter a name for the new
-              property and select one of the available creation options: currently, you can define
-              properties of type number or text.
+              要创建新的额外属性定义，前往额外的文件属性编辑器或检查器并点击“+”加号按钮。然后输入新属性的名称并选择可用的创建选项之一：目前，您可以定义类型为数字或文本的属性。
             </p>
             <p>
-              To add an extra property to a file or multiple files, first select the files you want
-              to edit. Then, go to the Extra File Properties Editor or the Inspector and click the
-              "+" button to open the Extra Property Selector. You can search for a specific property
-              using the text input and/or select the one you want to add.
+              要向文件或多个文件添加额外属性，首先选择要编辑的文件。然后，前往额外的文件属性编辑器或检查器并点击“+”按钮打开额外属性选择器。您可以使用文本输入搜索特定属性，并选择要添加的属性。
             </p>
             <p>
-              To edit the value of an extra property for a file or group of selected files, simply
-              type the new value in the Extra File Properties Editor or in the Inspector.
-              Number-type properties support positive decimal numbers, and text-type properties
-              support multiline input (press Enter to create a new line).
+              要编辑文件或选定文件组的额外属性值，只需在额外的文件属性编辑器或检查器中输入新值。数字类型属性支持正小数，文本类型属性支持多行输入（按 Enter 创建新行）。
             </p>
             <p>
-              To rename, remove from a file, or delete an extra property definition, right-click the
-              property in the Extra File Properties Editor or in the Extra Property Selector.
+              要重命名、从文件中移除或删除额外属性定义，右键点击额外的文件属性编辑器或额外属性选择器中的属性。
             </p>
             <p>
-              You can sort your files by extra property values using the "Sort by" option in the
-              contextual menu or in the "Sort View Content" panel in the toolbar.
+              您可以使用“按”选项在上下文菜单或工具栏的“排序视图内容”面板中按额外属性值对文件进行排序。
             </p>
             <p>
-              You can also use extra properties to create advanced search criteria and filter files
-              based on their values.
+              您还可以使用额外属性创建高级搜索条件，并根据其值过滤文件。
             </p>
             <p>
-              Extra properties are exported to file metadata when using the "Export Tags to File
-              Metadata" option in the import/export settings menu.
+              额外的属性在导入/导出设置菜单中使用“导出标签到文件元数据”选项时会被导出到文件元数据中。
             </p>
           </>
         ),
@@ -643,29 +525,15 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              In Allusion there are several ways to find specific images. By default, the search bar
-              lets you look for images based on their tags. You can press Ctrl-F to focus on the
-              searchbar quickly. The advanced search can be accessed from the three dots icon in the
-              upper right corner of Allusion. or by pressing Ctrl-Shift-F.
+              在 Allusion 中有几种方式可以找到特定图片。默认情况下，搜索栏允许您根据标签查找图片。您可以按下 Ctrl-F 快速聚焦到搜索栏。高级搜索可以从 Allusion 右上角的三点图标访问，或者按下 Ctrl-Shift-F。
             </p>
             <p>
-              The searchbar that is always visible in the toolbar is the quickest way to search.
-              Once you start typing, Allusion will make suggestions with an indication of any parent
-              tags. Select the item from the list to add it to your search. You can narrow down an
-              image by searching for several tags at once. If you search for two tags, by default,
-              Allusion will return all images that have both tags assigned. You can change this
-              behavior with the two circles icon on the right side of the search bar to return all
-              images that have any of the two tags assigned instead. Finally keep in mind that
-              Allusion will search for child tags recursivly by default. You can use the advanced
-              search to exclude child tags from the result.
+              工具栏中始终可见的搜索栏是最快的搜索方式。一旦开始输入，Allusion 会提供建议，并显示任何父标签。从列表中选择项以将其添加到搜索中。您可以通过同时搜索多个标签来缩小图片范围。如果搜索两个标签，默认情况下，Allusion 会返回所有同时具有这两个标签的图片。您可以使用搜索栏右侧的两个圆圈图标更改此行为，以返回所有具有任一标签的图片。最后请记住，Allusion 默认会递归搜索子标签。您可以使用高级搜索排除子标签。
             </p>
             <p>
-              If you press Alt while selecting the search bar, an alternative menu will appear that
-              allows you to quickly create different types of search criteria based on the text in
-              the search bar. Such as searching the text/value in an extra property or in the file
-              path.
+              如果在选择搜索栏时按下 Alt，会出现一个替代菜单，允许您基于搜索栏中的文本快速创建不同类型的搜索条件，如搜索额外属性或文件路径中的文本/值。
             </p>
-            <p>You can also quickly refresh the gallery using the R shortcut.</p>
+            <p>您还可以使用快捷键 R 快速刷新画廊。</p>
           </>
         ),
       },
@@ -674,27 +542,13 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              The advanced search can be opened by pressing the three dots icon in the upper right
-              corner of Allusion, or by using the Ctrl-Shift-F shortcut. In that window you are able
-              to create as many search criteria as you wish by listing them up. Enter your criteria
-              in the criteria builder section of the advanced search. Then use the plus icon on the
-              right side to add the finished criteria to the query editor below. Clicking on search
-              will return all images that match with the criteria in the query editor, not with
-              anything that is entered in the criteria builder.
+              高级搜索可以通过按下 Allusion 右上角的三点图标或使用 Ctrl-Shift-F 快捷键打开。在该窗口中，您可以通过列出它们来创建尽可能多的搜索条件。在高级搜索的“条件构建器”部分输入您的条件。然后使用右侧的加号图标将完成的条件添加到下方的查询编辑器中。点击搜索会返回所有与查询编辑器中的条件匹配的图片，而不是与条件构建器中输入的内容匹配。
             </p>
             <p>
-              To take a closer look, each row in the interface represents one criteria and consists
-              of three input fields. First select the type of information you want to look for. You
-              can search for tags and file properties such as their name, size, type and creation
-              date. You can then select an operator such as "equals", "greater than", "includes"
-              etc. Finally you can enter the value of the selected property you wish to look for.
-              Adding multiple criteria will again help you narrow down a search result.
+              为了更详细地查看，界面上的每一行代表一个条件，由三个输入字段组成。首先选择您想要查找的信息类型。您可以搜索标签和文件属性，如名称、大小、类型和创建日期。然后选择操作符，如“等于”、“大于”、“包含”等。最后输入您想要查找的选定属性的值。添加多个条件会帮助您进一步缩小搜索结果。
             </p>
             <p>
-              To provide some extra control when searching with multiple queries, you can swap
-              between finding images that match all entered queries, or any of them. This toggle is
-              available at the bottom of the advanced search panel, and at the right in the search
-              bar when two or more queries have been entered.
+              为了在搜索时提供额外控制，您可以切换查找匹配所有输入查询的图片，或匹配任一查询的图片。此切换选项位于高级搜索面板底部，以及在搜索栏右侧，当输入两个或更多查询时。
             </p>
           </>
         ),
@@ -710,13 +564,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              The content area is the area in which your images are listed in the center of the
-              window. There are several preferences you can set in the toolbar that will influence
-              the way your images are listed. You can choose between several view modes by using the
-              dropdown menu in the toolbar, or by right clicking anywhere in the content area. You
-              can also sort the images according to various criteria. Finally, you can also change
-              the size of your thumbnails. This can be changed in the context menu too, as well as
-              in the settings menu.
+              内容区域是图片在窗口中心列出的区域。您可以在工具栏中设置多个偏好，影响图片的列出方式。您可以使用工具栏中的下拉菜单选择多种视图模式，或者在内容区域中右键点击。您还可以根据各种条件对图片进行排序。最后，您可以更改缩略图的大小。这也可以在上下文菜单和设置菜单中更改。
             </p>
           </>
         ),
@@ -726,13 +574,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              Each image carries a lot of information with it such as the file name, url,
-              dimensions, etc. Such information can be viewed through the inspector. The inspector
-              is a panel that is shown when viewing the image at full size, which can be performed
-              by choosing said option in the context menu of an image, or simply by double clicking
-              on it. This panel will allow you to see relevant meta-data of the file as well as the
-              list of tags and scores assigned to the image. If the inspector is not visible in the
-              full size view, find the information icon in the toolbar.
+              每张图片都携带大量信息，如文件名、URL、尺寸等。这些信息可以通过检查器查看。检查器是一个面板，在查看全尺寸图片时显示，可以通过在图片的上下文菜单中选择该选项，或者双击图片来打开。此面板允许您查看文件的元数据以及分配给图片的标签和评分。如果检查器在查看全尺寸图片时不可见，请在工具栏中找到信息图标。
             </p>
           </>
         ),
@@ -742,11 +584,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         content: (
           <>
             <p>
-              You can also preview images in a separate window by selecting an image and pressing
-              the spacebar. The preview window will open and display your images. It is however
-              important to take note that the preview window will only allow you to cycle through
-              images in your selection. You can therefore select multiple images and preview just
-              those in the new window. Press spacebar again to close the window.
+              您也可以通过选择图片并按下空格键在单独的窗口中预览图片。预览窗口会打开并显示您的图片。但请注意，预览窗口仅允许您在选定图片之间循环。因此，您可以选择多张图片并在新的窗口中预览它们。再次按下空格键关闭窗口。
             </p>
           </>
         ),
