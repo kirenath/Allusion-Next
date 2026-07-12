@@ -29,7 +29,15 @@ async function copyPresets(themeDir: string) {
     const presetDir = getExtraResourcePath('themes');
     const files = await fse.readdir(presetDir);
     for (const file of files) {
-      await fse.copy(`${presetDir}/${file}`, `${themeDir}/${file}`);
+      try {
+        const dest = `${themeDir}/${file}`;
+        if (await fse.pathExists(dest)) {
+          continue;
+        }
+        await fse.copy(`${presetDir}/${file}`, dest);
+      } catch {
+        // Silently skip files that cannot be copied (e.g. EPERM on Windows)
+      }
     }
   } catch (e) {
     console.error(e);
