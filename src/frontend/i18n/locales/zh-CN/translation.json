@@ -276,6 +276,8 @@
     "includeSubtagsOnMatch": "标签选择器建议匹配时包含子标签",
     "bulkTagNamesAutoDisable": "批量标签名称/正则表达式自动禁用",
     "bulkTagCharsAutoRemove": "批量标签字符自动移除",
+    "inspector": "信息面板",
+    "showInspectorByDefault": "默认显示信息面板",
     "gallery": "画廊",
     "paginationSize": "分页大小",
     "paginationSizeDesc": "初始加载和到达滚动边缘时加载的文件数量。",
@@ -539,6 +541,15 @@
     "nextImage": "下一张图片",
     "fullSize": "原始大小",
     "toggleInspector": "切换检查器面板"
+  },
+  "inspector": {
+    "allFiles": "全部文件",
+    "description": "描述",
+    "basicInfo": "基本信息",
+    "fileCount": "文件数",
+    "totalSize": "占用空间",
+    "dateAdded": "添加日期",
+    "openFolder": "导出文件夹"
   },
   "advancedSearch": {
     "title": "高级搜索",

@@ -276,6 +276,8 @@
     "includeSubtagsOnMatch": "Include Sub-tags On Tag Selector Suggestion Matches",
     "bulkTagNamesAutoDisable": "Bulk Tag Names / RegEx to Auto Disable",
     "bulkTagCharsAutoRemove": "Bulk Tag Characters to Auto Remove",
+    "inspector": "Inspector",
+    "showInspectorByDefault": "Show info panel by default",
     "gallery": "Gallery",
     "paginationSize": "Pagination Size",
     "paginationSizeDesc": "Number of files initially loaded and when reaching the scroll edge.",
@@ -539,6 +541,15 @@
     "nextImage": "Next Image",
     "fullSize": "Full size",
     "toggleInspector": "Toggle the inspector panel"
+  },
+  "inspector": {
+    "allFiles": "All Files",
+    "description": "Description",
+    "basicInfo": "Basic Info",
+    "fileCount": "Files",
+    "totalSize": "Size",
+    "dateAdded": "Date Added",
+    "openFolder": "Open Folder"
   },
   "advancedSearch": {
     "title": "Advanced Search",

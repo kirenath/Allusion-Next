@@ -31,6 +31,9 @@ export const enum ViewMethod {
 }
 export const PREFERENCES_STORAGE_KEY = 'preferences';
 
+/** Global (unscoped) key that stores the last-used theme for the library picker. */
+export const GLOBAL_THEME_KEY = 'allusion-global-theme';
+
 const ThumbnailSizes = ['small', 'medium', 'large'] as const;
 export type ThumbnailSize = (typeof ThumbnailSizes)[number] | number;
 
@@ -220,7 +223,7 @@ class UiStore {
   private readonly rootStore: RootStore;
 
   // Theme
-  @observable theme: Theme = 'dark';
+  @observable theme: Theme = 'light';
   @observable accentColor: string = DEFAULT_ACCENT_COLOR;
   @observable scrollbarsStyle: ScrollbarsStyle = 'hover';
 
@@ -228,7 +231,7 @@ class UiStore {
   @observable zoomFactor: number = 1;
   @observable isOutlinerOpen: boolean = true;
   @observable isSlideInspectorOpen: boolean = true;
-  @observable isOverviewInspectorOpen: boolean = false;
+  @observable isOverviewInspectorOpen: boolean = true;
   @observable isSettingsOpen: boolean = false;
   @observable isHelpCenterOpen: boolean = false;
   @observable isAboutOpen: boolean = false;
@@ -919,13 +922,14 @@ class UiStore {
     this.importDirectory = dir;
   }
 
-  @action.bound setTheme(theme: Theme = 'dark'): void {
+  @action.bound setTheme(theme: Theme = 'light'): void {
     if (!Themes.includes(theme)) {
       console.warn(theme, '- Invalid theme value, keeping previous value');
       return;
     }
     this.theme = theme;
     RendererMessenger.setTheme({ theme });
+    localStorage.setItem(GLOBAL_THEME_KEY, theme);
   }
 
   /** Accepts a hex color string like #F97316. */

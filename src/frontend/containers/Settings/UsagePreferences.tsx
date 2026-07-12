@@ -134,6 +134,16 @@ export const UsagePreferences = observer(() => {
         <br />
       </div>
 
+      <h3>{t('settings.inspector')}</h3>
+      <div className="vstack">
+        <Toggle
+          checked={uiStore.isOverviewInspectorOpen}
+          onChange={uiStore.toggleOverviewInspector}
+        >
+          {t('settings.showInspectorByDefault')}
+        </Toggle>
+      </div>
+
       <h3>{t('settings.gallery')}</h3>
       <div className="vstack">
         <div id="page-size-controllers-container">

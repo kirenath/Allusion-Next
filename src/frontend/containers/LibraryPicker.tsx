@@ -5,6 +5,7 @@ import PreloadIcon from 'resources/icons/preload.svg';
 import { SVG } from 'widgets/icons';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { LibraryInfo } from 'src/ipc/messages';
+import { GLOBAL_THEME_KEY } from 'src/frontend/stores/UiStore';
 
 type LibraryPickerProps = {
   onPicked: (library: LibraryInfo) => void;
@@ -19,6 +20,16 @@ const LibraryPicker = ({ onPicked }: LibraryPickerProps) => {
   const { t } = useTranslation();
   const [libraries, setLibraries] = useState<LibraryInfo[]>([]);
   const [isBusy, setIsBusy] = useState(false);
+
+  const theme: 'light' | 'dark' = (() => {
+    const stored = localStorage.getItem(GLOBAL_THEME_KEY);
+    return stored === 'dark' ? 'dark' : 'light';
+  })();
+
+  // Set native window theme to match
+  useEffect(() => {
+    RendererMessenger.setTheme({ theme });
+  }, [theme]);
 
   const refresh = useCallback(async () => {
     const registry = await RendererMessenger.getLibraries();
@@ -63,38 +74,40 @@ const LibraryPicker = ({ onPicked }: LibraryPickerProps) => {
     [refresh],
   );
 
+  const s = styles[theme];
+
   return (
-    <div style={styles.container} id="library-picker">
-      <div style={styles.panel}>
-        <div style={styles.header}>
-          <SVG src={PreloadIcon} style={{ fill: '#fff', width: '42px', height: '36px' }} />
-          <h1 style={styles.title}>{t('libraries.pickerTitle')}</h1>
-          <p style={styles.subtitle}>{t('libraries.pickerSubtitle')}</p>
+    <div style={s.container} id="library-picker">
+      <div style={s.panel}>
+        <div style={s.header}>
+          <SVG src={PreloadIcon} style={{ fill: s.iconFill, width: '42px', height: '36px' }} />
+          <h1 style={s.title}>{t('libraries.pickerTitle')}</h1>
+          <p style={s.subtitle}>{t('libraries.pickerSubtitle')}</p>
         </div>
 
         {libraries.length > 0 && (
-          <div style={styles.list}>
+          <div style={s.list}>
             {libraries.map((lib) => (
-              <div key={lib.path} style={styles.listItem}>
+              <div key={lib.path} style={s.listItem}>
                 <button
-                  style={styles.libraryButton}
+                  style={s.libraryButton}
                   onClick={() => openLibrary(lib.path)}
                   disabled={isBusy}
                   title={lib.path}
                 >
-                  <span style={styles.libraryName}>
+                  <span style={s.libraryName}>
                     {lib.name}
                     {lib.isDefault ? ` (${t('libraries.defaultLibrary')})` : ''}
                   </span>
-                  <span style={styles.libraryPath}>{lib.path}</span>
-                  <span style={styles.libraryDate}>
+                  <span style={s.libraryPath}>{lib.path}</span>
+                  <span style={s.libraryDate}>
                     {t('libraries.lastOpened', {
                       date: new Date(lib.lastOpened).toLocaleString(),
                     })}
                   </span>
                 </button>
                 <button
-                  style={styles.removeButton}
+                  style={s.removeButton}
                   onClick={() => removeFromRecents(lib.path)}
                   disabled={isBusy}
                   title={t('libraries.removeFromList')}
@@ -107,33 +120,40 @@ const LibraryPicker = ({ onPicked }: LibraryPickerProps) => {
           </div>
         )}
 
-        {libraries.length === 0 && <p style={styles.emptyText}>{t('libraries.noLibrariesYet')}</p>}
+        {libraries.length === 0 && <p style={s.emptyText}>{t('libraries.noLibrariesYet')}</p>}
 
-        <div style={styles.actions}>
-          <button style={styles.actionButton} onClick={browseForLibrary} disabled={isBusy}>
+        <div style={s.actions}>
+          <button style={s.actionButton} onClick={browseForLibrary} disabled={isBusy}>
             {t('libraries.openFolderAsLibrary')}
           </button>
         </div>
-        <p style={styles.hint}>{t('libraries.openFolderHint')}</p>
+        <p style={s.hint}>{t('libraries.openFolderHint')}</p>
       </div>
     </div>
   );
 };
 
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    width: '100vw',
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1c1e23',
-    color: '#f5f8fa',
-    fontFamily:
-      '-apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif',
-    WebkitFontSmoothing: 'antialiased',
-    overflow: 'auto',
-  },
+type ThemeStyles = {
+  container: React.CSSProperties;
+  panel: React.CSSProperties;
+  header: React.CSSProperties;
+  iconFill: string;
+  title: React.CSSProperties;
+  subtitle: React.CSSProperties;
+  list: React.CSSProperties;
+  listItem: React.CSSProperties;
+  libraryButton: React.CSSProperties;
+  libraryName: React.CSSProperties;
+  libraryPath: React.CSSProperties;
+  libraryDate: React.CSSProperties;
+  removeButton: React.CSSProperties;
+  emptyText: React.CSSProperties;
+  actions: React.CSSProperties;
+  actionButton: React.CSSProperties;
+  hint: React.CSSProperties;
+};
+
+const baseStyles: Omit<ThemeStyles, 'container' | 'iconFill' | 'subtitle'> = {
   panel: {
     width: 'min(560px, 90vw)',
     maxHeight: '90vh',
@@ -150,11 +170,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '22px',
     fontWeight: 700,
   },
-  subtitle: {
-    margin: 0,
-    fontSize: '13px',
-    color: '#9aa0a6',
-  },
   list: {
     display: 'flex',
     flexDirection: 'column',
@@ -167,28 +182,12 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'stretch',
     gap: '8px',
   },
-  libraryButton: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '2px',
-    padding: '10px 14px',
-    borderRadius: '8px',
-    border: '1px solid #33363d',
-    backgroundColor: '#25282e',
-    color: '#f5f8fa',
-    cursor: 'pointer',
-    textAlign: 'left',
-    minWidth: 0,
-  },
   libraryName: {
     fontSize: '15px',
     fontWeight: 600,
   },
   libraryPath: {
     fontSize: '12px',
-    color: '#9aa0a6',
     maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -197,20 +196,28 @@ const styles: Record<string, React.CSSProperties> = {
   },
   libraryDate: {
     fontSize: '11px',
-    color: '#6f757d',
+  },
+  libraryButton: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '2px',
+    padding: '10px 14px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    minWidth: 0,
   },
   removeButton: {
     width: '36px',
     borderRadius: '8px',
-    border: '1px solid #33363d',
     backgroundColor: 'transparent',
-    color: '#9aa0a6',
     cursor: 'pointer',
     flexShrink: 0,
   },
   emptyText: {
     textAlign: 'center',
-    color: '#9aa0a6',
     fontSize: '13px',
     margin: 0,
   },
@@ -222,7 +229,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '10px 20px',
     borderRadius: '8px',
     border: 'none',
-    backgroundColor: '#3b82f6',
     color: '#fff',
     fontSize: '14px',
     fontWeight: 600,
@@ -232,7 +238,77 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     textAlign: 'center',
     fontSize: '12px',
-    color: '#6f757d',
+  },
+};
+
+const styles: Record<'light' | 'dark', ThemeStyles> = {
+  light: {
+    ...baseStyles,
+    container: {
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f5f7fa',
+      color: '#1c1e23',
+      fontFamily:
+        '-apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+      overflow: 'auto',
+    },
+    iconFill: '#1c1e23',
+    subtitle: { margin: 0, fontSize: '13px', color: '#5f6368' },
+    libraryButton: {
+      ...baseStyles.libraryButton,
+      border: '1px solid #d0d4d9',
+      backgroundColor: '#fff',
+      color: '#1c1e23',
+    },
+    libraryPath: { ...baseStyles.libraryPath, color: '#5f6368' },
+    libraryDate: { ...baseStyles.libraryDate, color: '#80868b' },
+    removeButton: {
+      ...baseStyles.removeButton,
+      border: '1px solid #d0d4d9',
+      color: '#5f6368',
+    },
+    emptyText: { ...baseStyles.emptyText, color: '#5f6368' },
+    actionButton: { ...baseStyles.actionButton, backgroundColor: '#3b82f6' },
+    hint: { ...baseStyles.hint, color: '#80868b' },
+  },
+  dark: {
+    ...baseStyles,
+    container: {
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#1c1e23',
+      color: '#f5f8fa',
+      fontFamily:
+        '-apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif',
+      WebkitFontSmoothing: 'antialiased',
+      overflow: 'auto',
+    },
+    iconFill: '#fff',
+    subtitle: { margin: 0, fontSize: '13px', color: '#9aa0a6' },
+    libraryButton: {
+      ...baseStyles.libraryButton,
+      border: '1px solid #33363d',
+      backgroundColor: '#25282e',
+      color: '#f5f8fa',
+    },
+    libraryPath: { ...baseStyles.libraryPath, color: '#9aa0a6' },
+    libraryDate: { ...baseStyles.libraryDate, color: '#6f757d' },
+    removeButton: {
+      ...baseStyles.removeButton,
+      border: '1px solid #33363d',
+      color: '#9aa0a6',
+    },
+    emptyText: { ...baseStyles.emptyText, color: '#9aa0a6' },
+    actionButton: { ...baseStyles.actionButton, backgroundColor: '#3b82f6' },
+    hint: { ...baseStyles.hint, color: '#6f757d' },
   },
 };
 
