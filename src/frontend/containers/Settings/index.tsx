@@ -9,6 +9,7 @@ import { Appearance } from './Appearance';
 import { BackgroundProcesses } from './BackgroundProcesses';
 import { ImageFormatPicker } from './ImageFormatPicker';
 import { ImportExport } from './ImportExport';
+import { Library } from './Library';
 import { Shortcuts } from './Shortcuts';
 import { StartupBehavior } from './StartupBehavior';
 import { UsagePreferences } from './UsagePreferences';
@@ -51,6 +52,7 @@ type TabDef = {
 };
 
 const TAB_DEFS: TabDef[] = [
+  { labelKey: 'settings.library', content: Library },
   { labelKey: 'settings.appearance', content: Appearance },
   { labelKey: 'settings.usagePreferences', content: UsagePreferences },
   { labelKey: 'settings.keyboardShortcuts', content: Shortcuts },

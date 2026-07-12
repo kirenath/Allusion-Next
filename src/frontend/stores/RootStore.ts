@@ -15,6 +15,7 @@ import SearchStore from './SearchStore';
 import ExtraPropertyStore from './ExtraPropertyStore';
 import { AppToaster } from '../components/Toaster';
 import i18n from '../i18n';
+import { getLibraryDisplayName } from '../library-scope';
 
 // This will throw exceptions whenever we try to modify the state directly without an action
 // Actions will batch state modifications -> better for performance
@@ -65,11 +66,13 @@ class RootStore {
 
   static async main(backend: DataStorage, backup: DataBackup): Promise<RootStore> {
     const rootStore = new RootStore(backend, backup, (fileStore, uiStore) => {
+      const libraryName = getLibraryDisplayName();
+      const appTitle = libraryName === null ? 'Allusion' : `${libraryName} - Allusion`;
       if (uiStore.isSlideMode && fileStore.fileList.length > 0) {
         const activeFile = fileStore.fileList[uiStore.firstItemIndex];
-        return `${activeFile?.filename}.${activeFile?.extension} - Allusion`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        return `${activeFile?.filename}.${activeFile?.extension} - ${appTitle}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
       } else {
-        return 'Allusion';
+        return appTitle;
       }
     });
 

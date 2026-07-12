@@ -120,3 +120,27 @@ export const CHECK_FOR_UPDATES = 'CHECK_FOR_UPDATES';
 export const TOGGLE_CHECK_UPDATES_ON_STARTUP = 'TOGGLE_CHECK_UPDATES_ON_STARTUP';
 export const IS_CHECK_UPDATES_ON_STARTUP_ENABLED = 'IS_CHECK_UPDATES_ON_STARTUP_ENABLED';
 export const CONSOLE_MESSAGE = 'CONSOLE_MESSAGE';
+
+//////////////////// Libraries ////////////////////
+export const GET_ACTIVE_LIBRARY = 'GET_ACTIVE_LIBRARY';
+export const SET_ACTIVE_LIBRARY = 'SET_ACTIVE_LIBRARY';
+export const GET_LIBRARIES = 'GET_LIBRARIES';
+export const CREATE_LIBRARY = 'CREATE_LIBRARY';
+export const REMOVE_RECENT_LIBRARY = 'REMOVE_RECENT_LIBRARY';
+export const TOGGLE_LIBRARY_PICKER_ON_STARTUP = 'TOGGLE_LIBRARY_PICKER_ON_STARTUP';
+
+/** A library is a folder containing its own database, backups and watcher snapshots. */
+export type LibraryInfo = {
+  path: string;
+  name: string;
+  /** Timestamp (ms) of when the library was last opened. */
+  lastOpened: number;
+  /** The legacy userData-based library, registered on first run for backwards compatibility. */
+  isDefault?: boolean;
+};
+
+export type LibraryRegistryMessage = {
+  libraries: LibraryInfo[];
+  activePath: string | null;
+  showPickerOnStartup: boolean;
+};

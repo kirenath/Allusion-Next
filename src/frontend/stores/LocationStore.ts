@@ -22,6 +22,7 @@ import { IS_MAC, IS_WIN } from 'common/process';
 import { BackendType } from '@parcel/watcher';
 import { execSync } from 'child_process';
 import { debounce } from 'common/timeout';
+import { scopedStorageKey } from '../library-scope';
 
 const PREFERENCES_STORAGE_KEY = 'location-store-preferences';
 type Preferences = { extensions: IMG_EXTENSIONS_TYPE[] };
@@ -75,7 +76,9 @@ class LocationStore {
   @action async init(): Promise<void> {
     // Restore preferences
     try {
-      const prefs = JSON.parse(localStorage.getItem(PREFERENCES_STORAGE_KEY) || '') as Preferences;
+      const prefs = JSON.parse(
+        localStorage.getItem(scopedStorageKey(PREFERENCES_STORAGE_KEY)) || '',
+      ) as Preferences;
       (prefs.extensions || IMG_EXTENSIONS).forEach((ext) => this.enabledFileExtensions.add(ext));
     } catch (e) {
       // If no preferences found, use defaults
@@ -624,7 +627,7 @@ class LocationStore {
   @action.bound setSupportedImageExtensions(extensions: Set<IMG_EXTENSIONS_TYPE>): void {
     this.enabledFileExtensions.replace(extensions);
     localStorage.setItem(
-      PREFERENCES_STORAGE_KEY,
+      scopedStorageKey(PREFERENCES_STORAGE_KEY),
       JSON.stringify(
         { extensions: Array.from(this.enabledFileExtensions) } as Preferences,
         null,

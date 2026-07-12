@@ -24,12 +24,14 @@ import { IS_DEV, IS_MAC } from '../common/process';
 import { TagDTO, ROOT_TAG_ID } from './api/tag';
 import { MainMessenger } from './ipc/main';
 import { WindowSystemButtonPress } from './ipc/messages';
+import LibraryManager from './library-manager';
 
 // sets the userData path to the executables directory if the installation is portable
 const portablePath = process.env.PORTABLE_EXECUTABLE_DIR as string;
 portablePath && app.setPath('userData', path.join(portablePath, 'Allusion'));
 
 const basePath = app.getPath('userData');
+const libraryManager = new LibraryManager(basePath);
 const preferencesFilePath = path.join(basePath, 'preferences.json');
 const windowStateFilePath = path.join(basePath, 'windowState.json');
 
@@ -791,6 +793,35 @@ MainMessenger.onToggleCheckUpdatesOnStartup(() => {
 });
 
 MainMessenger.onIsCheckUpdatesOnStartupEnabled(() => preferences.checkForUpdatesOnStartup === true);
+
+//////////////////// Libraries ////////////////////
+let hasPickedLibraryThisSession = false;
+
+MainMessenger.onGetActiveLibrary(() =>
+  // While the picker should be shown, report no active library so the renderer
+  // asks the user to pick one before initializing the database
+  libraryManager.shouldShowPickerOnStartup() && !hasPickedLibraryThisSession
+    ? null
+    : libraryManager.getActiveLibrary(),
+);
+MainMessenger.onSetActiveLibrary((libraryPath, relaunch) => {
+  const library = libraryManager.setActiveLibrary(libraryPath);
+  hasPickedLibraryThisSession = true;
+  if (relaunch) {
+    forceRelaunch();
+  }
+  return library;
+});
+
+MainMessenger.onGetLibraries(() => libraryManager.getRegistry());
+
+MainMessenger.onCreateLibrary((libraryPath) => libraryManager.setActiveLibrary(libraryPath));
+
+MainMessenger.onRemoveRecentLibrary((libraryPath) => libraryManager.removeFromRecents(libraryPath));
+
+MainMessenger.onToggleLibraryPickerOnStartup((show) =>
+  libraryManager.setShowPickerOnStartup(show),
+);
 
 // Helper functions and variables/constants
 

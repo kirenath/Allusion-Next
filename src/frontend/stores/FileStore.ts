@@ -37,6 +37,7 @@ import { InheritedTagsVisibilityModeType } from './UiStore';
 import { clamp } from 'common/core';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { serializeDate } from 'src/backend/schemaTypes';
+import { scopedStorageKey } from '../library-scope';
 
 export const FILE_STORAGE_KEY = 'Allusion_File';
 
@@ -1279,7 +1280,7 @@ class FileStore {
   }
 
   @action recoverPersistentPreferences(): void {
-    const prefsString = localStorage.getItem(FILE_STORAGE_KEY);
+    const prefsString = localStorage.getItem(scopedStorageKey(FILE_STORAGE_KEY));
     if (prefsString) {
       try {
         const prefs = JSON.parse(prefsString);
@@ -1334,7 +1335,7 @@ class FileStore {
   }
 
   clearPersistentPreferences(): void {
-    localStorage.removeItem(FILE_STORAGE_KEY);
+    localStorage.removeItem(scopedStorageKey(FILE_STORAGE_KEY));
   }
 
   @action private async removeThumbnail(path: string) {

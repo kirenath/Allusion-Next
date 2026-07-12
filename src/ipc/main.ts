@@ -53,6 +53,14 @@ import {
   WINDOW_SYSTEM_BUTTON_PRESS,
   WINDOW_UNMAXIMIZE,
   CONSOLE_MESSAGE,
+  GET_ACTIVE_LIBRARY,
+  SET_ACTIVE_LIBRARY,
+  GET_LIBRARIES,
+  CREATE_LIBRARY,
+  REMOVE_RECENT_LIBRARY,
+  TOGGLE_LIBRARY_PICKER_ON_STARTUP,
+  LibraryInfo,
+  LibraryRegistryMessage,
 } from './messages';
 
 export class MainMessenger {
@@ -192,4 +200,23 @@ export class MainMessenger {
   static onConsoleMessage = (
     cb: (type: 'log' | 'info' | 'error' | 'warn' | 'debug', message: string) => void,
   ) => ipcMain.on(CONSOLE_MESSAGE, (_, { type, message }) => cb(type, message));
+
+  //////////////////// Libraries ////////////////////
+  static onGetActiveLibrary = (cb: () => LibraryInfo | null) =>
+    ipcMain.handle(GET_ACTIVE_LIBRARY, () => cb());
+
+  static onSetActiveLibrary = (cb: (path: string, relaunch: boolean) => LibraryInfo) =>
+    ipcMain.handle(SET_ACTIVE_LIBRARY, (_, path: string, relaunch: boolean) => cb(path, relaunch));
+
+  static onGetLibraries = (cb: () => LibraryRegistryMessage) =>
+    ipcMain.handle(GET_LIBRARIES, () => cb());
+
+  static onCreateLibrary = (cb: (path: string) => LibraryInfo) =>
+    ipcMain.handle(CREATE_LIBRARY, (_, path: string) => cb(path));
+
+  static onRemoveRecentLibrary = (cb: (path: string) => void) =>
+    ipcMain.handle(REMOVE_RECENT_LIBRARY, (_, path: string) => cb(path));
+
+  static onToggleLibraryPickerOnStartup = (cb: (show: boolean) => void) =>
+    ipcMain.handle(TOGGLE_LIBRARY_PICKER_ON_STARTUP, (_, show: boolean) => cb(show));
 }

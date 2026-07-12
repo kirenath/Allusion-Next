@@ -31,6 +31,9 @@ import fse from 'fs-extra';
 import { USE_BACKEND_AS_WORKER } from 'src/backend/config';
 import { BackendService } from 'src/frontend/workers/BackendService';
 import { BackupSchedulerService } from './frontend/workers/BackupSchedulerService';
+import LibraryPicker from './frontend/containers/LibraryPicker';
+import { setLibraryScope, scopedStorageKey } from './frontend/library-scope';
+import { LibraryInfo } from 'src/ipc/messages';
 import './frontend/i18n';
 
 async function main(): Promise<void> {
@@ -45,7 +48,7 @@ async function main(): Promise<void> {
 
   root.render(<SplashScreen />);
 
-  const basePath = await RendererMessenger.getPath('userData');
+  const basePath = await resolveLibraryPath(root);
   const databaseDirectory = path.join(basePath, 'databases');
   const databaseFilePath = path.join(databaseDirectory, `${DB_NAME}.sqlite`);
 
@@ -54,6 +57,30 @@ async function main(): Promise<void> {
   } else {
     await runPreviewApp(databaseFilePath, root);
   }
+}
+
+/**
+ * Determines which library folder to open. Shows the library picker when no
+ * library is active yet, or when the user enabled the picker on startup
+ * (main window only; the preview window follows the main window's library).
+ */
+async function resolveLibraryPath(root: Root): Promise<string> {
+  let library = await RendererMessenger.getActiveLibrary();
+
+  if (library === null && !IS_PREVIEW_WINDOW) {
+    library = await new Promise<LibraryInfo>((resolve) => {
+      root.render(<LibraryPicker onPicked={resolve} />);
+    });
+    root.render(<SplashScreen />);
+  }
+
+  if (library !== null) {
+    setLibraryScope(library.path, library.isDefault === true, library.name);
+    return library.path;
+  }
+
+  // Fallback (e.g. preview window without an active library): legacy userData location
+  return RendererMessenger.getPath('userData');
 }
 
 async function runMainApp(dbPath: string, dbDirectory: string, root: Root): Promise<void> {
@@ -104,7 +131,7 @@ async function runMainApp(dbPath: string, dbDirectory: string, root: Root): Prom
   reaction(
     () => rootStore.fileStore.getPersistentPreferences(),
     (preferences) => {
-      localStorage.setItem(FILE_STORAGE_KEY, JSON.stringify(preferences));
+      localStorage.setItem(scopedStorageKey(FILE_STORAGE_KEY), JSON.stringify(preferences));
     },
     { delay: 200 },
   );
@@ -112,7 +139,7 @@ async function runMainApp(dbPath: string, dbDirectory: string, root: Root): Prom
   reaction(
     () => rootStore.uiStore.getPersistentPreferences(),
     (preferences) => {
-      localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
+      localStorage.setItem(scopedStorageKey(PREFERENCES_STORAGE_KEY), JSON.stringify(preferences));
     },
     { delay: 200 },
   );

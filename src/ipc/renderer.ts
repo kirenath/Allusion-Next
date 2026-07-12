@@ -54,6 +54,14 @@ import {
   WINDOW_SYSTEM_BUTTON_PRESS,
   WINDOW_UNMAXIMIZE,
   CONSOLE_MESSAGE,
+  GET_ACTIVE_LIBRARY,
+  SET_ACTIVE_LIBRARY,
+  GET_LIBRARIES,
+  CREATE_LIBRARY,
+  REMOVE_RECENT_LIBRARY,
+  TOGGLE_LIBRARY_PICKER_ON_STARTUP,
+  LibraryInfo,
+  LibraryRegistryMessage,
 } from './messages';
 
 export class RendererMessenger {
@@ -184,9 +192,15 @@ export class RendererMessenger {
     return path.join(userDataPath, 'Allusion', 'thumbnails');
   };
 
+  /** Path of the currently active library folder. Falls back to userData when none is set. */
+  static getActiveLibraryPath = async (): Promise<string> => {
+    const library = await RendererMessenger.getActiveLibrary();
+    return library?.path ?? (await RendererMessenger.getPath('userData'));
+  };
+
   static getDefaultBackupDirectory = async () => {
-    const userDataPath = await RendererMessenger.getPath('userData');
-    return path.join(userDataPath, 'backups');
+    const libraryPath = await RendererMessenger.getActiveLibraryPath();
+    return path.join(libraryPath, 'backups');
   };
 
   static getThemesDirectory = async () => {
@@ -195,9 +209,27 @@ export class RendererMessenger {
   };
 
   static getWatcherSnapshotsDirectory = async () => {
-    const userDataPath = await RendererMessenger.getPath('userData');
-    return path.join(userDataPath, 'watcher_snapshots');
+    const libraryPath = await RendererMessenger.getActiveLibraryPath();
+    return path.join(libraryPath, 'watcher_snapshots');
   };
+
+  //////////////////// Libraries ////////////////////
+  static getActiveLibrary = (): Promise<LibraryInfo | null> =>
+    ipcRenderer.invoke(GET_ACTIVE_LIBRARY);
+
+  static setActiveLibrary = (path: string, relaunch: boolean): Promise<LibraryInfo> =>
+    ipcRenderer.invoke(SET_ACTIVE_LIBRARY, path, relaunch);
+
+  static getLibraries = (): Promise<LibraryRegistryMessage> => ipcRenderer.invoke(GET_LIBRARIES);
+
+  static createLibrary = (path: string): Promise<LibraryInfo> =>
+    ipcRenderer.invoke(CREATE_LIBRARY, path);
+
+  static removeRecentLibrary = (path: string): Promise<void> =>
+    ipcRenderer.invoke(REMOVE_RECENT_LIBRARY, path);
+
+  static toggleLibraryPickerOnStartup = (show: boolean): Promise<void> =>
+    ipcRenderer.invoke(TOGGLE_LIBRARY_PICKER_ON_STARTUP, show);
 
   static sendConsoleMessage = (
     type: 'log' | 'info' | 'error' | 'warn' | 'debug',

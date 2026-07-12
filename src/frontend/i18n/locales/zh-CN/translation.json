@@ -214,6 +214,7 @@
     "viewMissing": "查看系统中丢失的图片"
   },
   "settings": {
+    "library": "图片库",
     "appearance": "外观",
     "usagePreferences": "使用偏好",
     "keyboardShortcuts": "键盘快捷键",
@@ -318,6 +319,25 @@
     "thumbnailDirectory": "缩略图目录",
     "development": "开发",
     "toggleDevTools": "切换开发者工具"
+  },
+  "libraries": {
+    "pickerTitle": "打开图片库",
+    "pickerSubtitle": "图片库是一个包含独立数据库、标签和位置的文件夹。",
+    "defaultLibrary": "默认库",
+    "lastOpened": "上次打开：{{date}}",
+    "removeFromList": "从列表中移除",
+    "noLibrariesYet": "还没有图片库。打开一个文件夹来创建第一个库。",
+    "openFolderAsLibrary": "打开文件夹作为库…",
+    "openFolderHint": "选择空文件夹将创建新库，选择已有库文件夹则直接打开。",
+    "currentLibrary": "当前图片库",
+    "switchLibrary": "切换…",
+    "switchExplanation": "每个图片库拥有独立的数据库、标签和位置。切换库时 Allusion 会自动重启并加载所选库。选择空文件夹即可创建新库。注意：浏览器扩展的下载目录是全局设置，切换库后如有需要请手动调整。",
+    "showPickerOnStartup": "启动时显示库选择界面",
+    "recentLibraries": "最近使用的库",
+    "open": "打开",
+    "confirmSwitchTitle": "切换图片库？",
+    "switchAndRestart": "切换并重启",
+    "confirmSwitchInfo": "Allusion 将重启并打开所选图片库："
   },
   "search": {
     "advancedSearch": "高级搜索",

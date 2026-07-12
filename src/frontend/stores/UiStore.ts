@@ -19,6 +19,7 @@ import { AppToaster } from '../components/Toaster';
 import { ClientSearchGroup, isClientSearchGroup } from '../entities/SearchItem';
 import { SearchGroupDTO } from 'src/api/file-search';
 import i18n, { DEFAULT_LANGUAGE, LanguageCode } from '../i18n';
+import { scopedStorageKey } from '../library-scope';
 import { Cursor, SearchConjunction } from 'src/api/data-storage-search';
 import { FileDTO } from 'src/api/file';
 
@@ -1665,7 +1666,7 @@ class UiStore {
 
   // Storing preferences
   @action recoverPersistentPreferences(): void {
-    const prefsString = localStorage.getItem(PREFERENCES_STORAGE_KEY);
+    const prefsString = localStorage.getItem(scopedStorageKey(PREFERENCES_STORAGE_KEY));
     if (prefsString) {
       try {
         const prefs = JSON.parse(prefsString);
@@ -1865,7 +1866,7 @@ class UiStore {
   }
 
   clearPersistentPreferences(): void {
-    localStorage.removeItem(PREFERENCES_STORAGE_KEY);
+    localStorage.removeItem(scopedStorageKey(PREFERENCES_STORAGE_KEY));
   }
 
   /////////////////// Helper methods ///////////////////

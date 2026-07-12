@@ -214,6 +214,7 @@
     "viewMissing": "View missing images on your system"
   },
   "settings": {
+    "library": "Library",
     "appearance": "Appearance",
     "usagePreferences": "Usage Preferences",
     "keyboardShortcuts": "Keyboard Shortcuts",
@@ -318,6 +319,25 @@
     "thumbnailDirectory": "Thumbnail Directory",
     "development": "Development",
     "toggleDevTools": "Toggle DevTools"
+  },
+  "libraries": {
+    "pickerTitle": "Open a Library",
+    "pickerSubtitle": "A library is a folder holding its own database, tags and locations.",
+    "defaultLibrary": "Default Library",
+    "lastOpened": "Last opened: {{date}}",
+    "removeFromList": "Remove from list",
+    "noLibrariesYet": "No libraries yet. Open a folder to create your first library.",
+    "openFolderAsLibrary": "Open folder as library...",
+    "openFolderHint": "Pick an empty folder to create a new library, or an existing library folder to open it.",
+    "currentLibrary": "Current Library",
+    "switchLibrary": "Switch...",
+    "switchExplanation": "Each library has its own database, tags and locations. Switching restarts Allusion with the selected library. Pick an empty folder to create a new library. Note: the browser extension download directory is a global setting; adjust it after switching if needed.",
+    "showPickerOnStartup": "Show library picker on startup",
+    "recentLibraries": "Recent Libraries",
+    "open": "Open",
+    "confirmSwitchTitle": "Switch library?",
+    "switchAndRestart": "Switch and restart",
+    "confirmSwitchInfo": "Allusion will restart and open the selected library:"
   },
   "search": {
     "advancedSearch": "Advanced Search",
