@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLazy } from 'src/frontend/hooks/useLazy';
 import PopupWindow from '../../components/PopupWindow';
 import { useStore } from '../../contexts/StoreContext';
@@ -40,51 +41,38 @@ type TabItem = {
   content: () => JSX.Element;
 };
 
+type TabDef = {
+  labelKey: string;
+  content: () => JSX.Element;
+};
+
+const TAB_DEFS: TabDef[] = [
+  { labelKey: 'settings.appearance', content: Appearance },
+  { labelKey: 'settings.usagePreferences', content: UsagePreferences },
+  { labelKey: 'settings.keyboardShortcuts', content: Shortcuts },
+  { labelKey: 'settings.startupBehavior', content: StartupBehavior },
+  { labelKey: 'settings.imageFormats', content: ImageFormatPicker },
+  { labelKey: 'settings.importExport', content: ImportExport },
+  { labelKey: 'settings.backgroundProcesses', content: BackgroundProcesses },
+  { labelKey: 'settings.advanced', content: Advanced },
+];
+
 const Tabs = () => {
-  const SETTINGS_TABS = useLazy<TabItem[]>(() => [
-    {
-      label: 'Appearance',
-      content: Appearance,
-    },
-    {
-      label: 'Usage Preferences',
-      content: UsagePreferences,
-    },
-    {
-      label: 'Keyboard Shortcuts',
-      content: Shortcuts,
-    },
-    {
-      label: 'Startup Behavior',
-      content: StartupBehavior,
-    },
-    {
-      label: 'Image Formats',
-      content: ImageFormatPicker,
-    },
-    {
-      label: 'Import/Export',
-      content: ImportExport,
-    },
-    {
-      label: 'Background Processes',
-      content: BackgroundProcesses,
-    },
-    {
-      label: 'Advanced',
-      content: Advanced,
-    },
-  ]);
+  const { t } = useTranslation();
+  const SETTINGS_TABS: TabItem[] = TAB_DEFS.map((def) => ({
+    label: t(def.labelKey),
+    content: def.content,
+  }));
 
   const [selection, setSelection] = useState(0);
 
-  const handleKeydown = useLazy(() => (event: React.KeyboardEvent) => {
+  const handleKeydown = (event: React.KeyboardEvent) => {
     if (event.key === 'ArrowDown') {
       setSelection((id) => Math.min(id + 1, SETTINGS_TABS.length - 1));
     } else if (event.key === 'ArrowUp') {
       setSelection((id) => Math.max(id - 1, 0));
     }
-  });
+  };
 
   return (
     <div className="tabs">

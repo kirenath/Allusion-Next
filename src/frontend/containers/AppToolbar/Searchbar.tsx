@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useStore } from '../../contexts/StoreContext';
 const SEARCHBAR_ID = 'toolbar-searchbar';
@@ -53,6 +54,7 @@ import ReactDOM from 'react-dom';
 
 const QuickSearchList = observer(() => {
   const { uiStore, tagStore } = useStore();
+  const { t } = useTranslation();
 
   const selection = useComputed(() => {
     const selectedItems: ClientTag[] = [];
@@ -88,7 +90,7 @@ const QuickSearchList = observer(() => {
         key="search-in-extra-property"
         id="search-in-extra-property-option"
         index={0}
-        value={`Search for "${query}" in an extra property`}
+        value={t('search.searchInExtraProperty', { query })}
         query={query}
         resetTextBox={resetTextBox}
       />,
@@ -96,7 +98,7 @@ const QuickSearchList = observer(() => {
         id="search-in-path-option"
         index={1}
         key="search-in-path"
-        value={`Search in file paths for "${query}"`}
+        value={t('search.searchInFilePaths', { query })}
         onClick={() => {
           resetTextBox();
           uiStore.addSearchCriteria(
@@ -108,7 +110,7 @@ const QuickSearchList = observer(() => {
         id="advanced-search-option"
         index={2}
         key="advanced-search"
-        value="Advanced search"
+        value={t('toolbar.advancedSearch')}
         onClick={uiStore.toggleAdvancedSearch}
         icon={IconSet.SEARCH_EXTENDED}
       />,
@@ -239,6 +241,7 @@ const QuickExtraPropertySearchOption = (props: QuickEPOption) => {
 
 const SearchMatchButton = observer(({ disabled }: { disabled: boolean }) => {
   const { fileStore, uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handleClick = useRef((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -249,7 +252,7 @@ const SearchMatchButton = observer(({ disabled }: { disabled: boolean }) => {
   return (
     <IconButton
       icon={uiStore.searchMatchAny ? IconSet.SEARCH_ANY : IconSet.SEARCH_ALL}
-      text={`Search using ${uiStore.searchMatchAny ? 'any' : 'all'} queries`}
+      text={t('search.searchUsing', { mode: uiStore.searchMatchAny ? t('search.any') : t('search.all') })}
       onClick={handleClick}
       className="btn-icon-large"
       disabled={disabled}
@@ -260,6 +263,7 @@ const SearchMatchButton = observer(({ disabled }: { disabled: boolean }) => {
 const CriteriaList = observer(() => {
   const rootStore = useStore();
   const { fileStore, uiStore } = rootStore;
+  const { t } = useTranslation();
   return (
     <div className="input" onClick={uiStore.toggleAdvancedSearch}>
       <div className="multiautocomplete-input">
@@ -277,7 +281,7 @@ const CriteriaList = observer(() => {
 
         <IconButton
           icon={uiStore.searchMatchAny ? IconSet.SEARCH_ANY : IconSet.SEARCH_ALL}
-          text={`Search using ${uiStore.searchMatchAny ? 'any' : 'all'} queries`}
+          text={t('search.searchUsing', { mode: uiStore.searchMatchAny ? t('search.any') : t('search.all') })}
           onClick={(e) => {
             uiStore.toggleSearchMatchAny();
             fileStore.refetch();
@@ -290,7 +294,7 @@ const CriteriaList = observer(() => {
 
         <IconButton
           icon={IconSet.CLOSE}
-          text="Clear"
+          text={t('common.clear')}
           onClick={(e) => {
             uiStore.clearSearchCriteriaTree();
             e.stopPropagation();

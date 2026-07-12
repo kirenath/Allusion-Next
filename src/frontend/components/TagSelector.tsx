@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import React, {
   ForwardedRef,
   ReactElement,
@@ -54,6 +55,7 @@ const DEFAULT_FALLBACK_PLACEMENTS: Placement[] = ['left-end', 'top-start', 'righ
 
 const TagSelector = observer((props: TagSelectorProps) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const {
     selection,
     onSelect,
@@ -257,7 +259,7 @@ const TagSelector = observer((props: TagSelectorProps) => {
               />
             </div>
             {extraIconButtons}
-            <IconButton icon={IconSet.CLOSE} text="Clear" onClick={clearSelection} />
+            <IconButton icon={IconSet.CLOSE} text={t('common.clear')} onClick={clearSelection} />
           </div>
         )}
       >
@@ -333,6 +335,7 @@ const SuggestedTagsList = observer(
       forceCreateOption,
     } = props;
     const { tagStore, uiStore } = useStore();
+    const { t } = useTranslation();
 
     const { suggestions, widestItem } = useMemo(
       () =>
@@ -342,13 +345,13 @@ const SuggestedTagsList = observer(
             const matches: (ClientTag | ReactElement<RowProps> | string)[] = [];
             // Add recently used tags.
             if (uiStore.recentlyUsedTags.length > 0) {
-              matches.push('Recently used tags');
+              matches.push(t('components.recentlyUsedTags'));
               for (const tag of uiStore.recentlyUsedTags) {
                 matches.push(tag);
                 widest = widest ? (tag.pathCharLength > widest.pathCharLength ? tag : widest) : tag;
               }
               if (selectionMap.size > 0) {
-                matches.push('Assigned tags');
+                matches.push(t('components.assignedTags'));
               }
             }
             for (const tag of selectionMap.keys()) {
@@ -357,7 +360,7 @@ const SuggestedTagsList = observer(
             }
             if (selectionMap.size === 0 && uiStore.recentlyUsedTags.length === 0) {
               matches.push(
-                <Row key="empty-message" value="Type to search tags...&nbsp;&nbsp;"></Row>,
+                <Row key="empty-message" value={`${t('components.typeToSearchTags')}&nbsp;&nbsp;`}></Row>,
               );
             }
             return { suggestions: matches, widestItem: widest };

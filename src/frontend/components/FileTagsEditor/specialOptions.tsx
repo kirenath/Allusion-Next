@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from 'src/frontend/contexts/StoreContext';
 import { Row } from 'widgets/combobox';
 import { IconSet } from 'widgets/icons';
@@ -23,6 +24,7 @@ export const CreateOption = ({
   index,
 }: CreateOptionProps) => {
   const { tagStore, uiStore } = useStore();
+  const { t } = useTranslation();
 
   const createTag = useCallback(async () => {
     const newTag = await tagStore.create(tagStore.root, inputText);
@@ -40,14 +42,14 @@ export const CreateOption = ({
             index={index}
             style={style}
             selected={false}
-            value={`Create Tag "${inputText}"`}
+            value={t('components.createTag', { name: inputText })}
             onClick={createTag}
             icon={IconSet.TAG_ADD}
           />
         </>
       ) : (
         !hasMatches && (
-          <Row style={style} key="empty-message" value="Type to select tags&nbsp;&nbsp;" />
+          <Row style={style} key="empty-message" value={`${t('components.typeToSelectTags')}&nbsp;&nbsp;`} />
         )
       )}
     </>
@@ -72,6 +74,7 @@ export const BulkApplyOption = ({
   index,
 }: BulkApplyOptionProps) => {
   const { tagStore, uiStore } = useStore();
+  const { t } = useTranslation();
 
   const applytags = useCallback(async () => {
     const root = runInAction(() => tagStore.root);
@@ -98,14 +101,14 @@ export const BulkApplyOption = ({
             index={index}
             style={style}
             selected={false}
-            value="Apply All Checked Tags"
+            value={t('components.applyAllCheckedTags')}
             onClick={applytags}
             icon={IconSet.ADD_TAG_FILL}
           />
         </>
       ) : (
         tagNames.length <= 0 && (
-          <Row style={style} key="empty-message" value="No tag names detected &nbsp;&nbsp;" />
+          <Row style={style} key="empty-message" value={`${t('components.noTagNamesDetected')}&nbsp;&nbsp;`} />
         )
       )}
     </>

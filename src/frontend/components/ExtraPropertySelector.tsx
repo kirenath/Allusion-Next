@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, {
   ForwardedRef,
   useCallback,
@@ -257,6 +258,7 @@ interface CreateOptionProps {
 
 const CreateOptions = ({ inputText, hasMatches, resetTextBox }: CreateOptionProps) => {
   const { extraPropertyStore, uiStore } = useStore();
+  const { t } = useTranslation();
 
   const createExtraProperty = useCallback(
     async (type: ExtraPropertyType) => {
@@ -282,7 +284,7 @@ const CreateOptions = ({ inputText, hasMatches, resetTextBox }: CreateOptionProp
           key={type}
           id={`extra-property-create-option-${type}`}
           selected={false}
-          value={`Create Property "${inputText}"`}
+          value={t('components.createProperty', { name: inputText })}
           onClick={() => createExtraProperty(type)}
           icon={IconSet.PLUS}
         >

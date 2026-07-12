@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../../contexts/StoreContext';
 import UiStore from 'src/frontend/stores/UiStore';
 import { Toggle } from 'widgets/checkbox';
@@ -62,6 +63,7 @@ const pageSizeOptions = [
 
 export const UsagePreferences = observer(() => {
   const { uiStore, fileStore } = useStore();
+  const { t } = useTranslation();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
     if (isNaN(val)) {
@@ -72,20 +74,20 @@ export const UsagePreferences = observer(() => {
 
   return (
     <>
-      <h3>Tag Selectors</h3>
+      <h3>{t('settings.tagSelectors')}</h3>
       <div className="vstack">
         <Toggle
           checked={uiStore.isClearTagSelectorsOnSelectEnabled}
           onChange={uiStore.toggleClearTagSelectorsOnSelect}
         >
-          Clear Tag Search Text After Select
+          {t('settings.clearTagSearchTextAfterSelect')}
         </Toggle>
         <RecentTagsNumber />
         <Toggle
           checked={uiStore.isIncludeSubtagsOnMatchEnabled}
           onChange={uiStore.toggleIncludeSubtagsOnMatch}
         >
-          Include Sub-tags On Tag Selector Suggestion Matches
+          {t('settings.includeSubtagsOnMatch')}
         </Toggle>
         <br />
         <div style={{ display: 'flex' }}>
@@ -98,7 +100,7 @@ export const UsagePreferences = observer(() => {
             </p>
           </InfoButton>
           &nbsp;&nbsp;
-          <label className="dialog-label">Bulk Tag Names / RegEx to Auto Disable</label>
+          <label className="dialog-label">{t('settings.bulkTagNamesAutoDisable')}</label>
         </div>
         <StringArrayEditor
           items={uiStore.autoDisableBulkTagNames.slice()}
@@ -119,7 +121,7 @@ export const UsagePreferences = observer(() => {
             </p>
           </InfoButton>
           &nbsp;&nbsp;
-          <label className="dialog-label">Bulk Tag Characters to Auto Remove</label>
+          <label className="dialog-label">{t('settings.bulkTagCharsAutoRemove')}</label>
         </div>
         <StringArrayEditor
           items={uiStore.bulkAutoRemoveStrings.slice()}
@@ -132,17 +134,16 @@ export const UsagePreferences = observer(() => {
         <br />
       </div>
 
-      <h3>Gallery</h3>
+      <h3>{t('settings.gallery')}</h3>
       <div className="vstack">
         <div id="page-size-controllers-container">
           <Slider
             value={fileStore.paginationSize}
             label={
               <span>
-                <b>Pagination Size:</b> Number of files initially loaded and when reaching the
-                scroll edge.{' '}
+                <b>{t('settings.paginationSize')}:</b> {t('settings.paginationSizeDesc')}{' '}
                 <span style={{ fontWeight: 'lighter' }}>
-                  (This setting heavily impacts memory usage and performance)
+                  ({t('settings.paginationSizeImpact')})
                 </span>
               </span>
             }
@@ -170,6 +171,7 @@ export const UsagePreferences = observer(() => {
 
 const RecentTagsNumber = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
@@ -180,7 +182,7 @@ const RecentTagsNumber = observer(() => {
 
   return (
     <label>
-      Maximum Number of Recently Used Tags to Remember
+      {t('settings.maxRecentTags')}
       <select value={uiStore.recentlyUsedTagsMaxLength} onChange={handleChange}>
         {[...Array(UiStore.MAX_RECENTLY_USED_TAGS + 1)].map((_, i) => (
           <option key={i} value={i}>

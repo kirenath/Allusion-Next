@@ -2,6 +2,7 @@ import { getThumbnailPath, isDirEmpty } from 'common/fs';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import FileInput from 'src/frontend/components/FileInput';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { Button, ButtonGroup, IconSet } from 'widgets';
@@ -13,6 +14,7 @@ import ExternalLink from 'src/frontend/components/ExternalLink';
 
 export const Advanced = observer(() => {
   const { uiStore, fileStore } = useStore();
+  const { t } = useTranslation();
   const thumbnailDirectory = uiStore.thumbnailDirectory;
 
   const [defaultThumbnailDir, setDefaultThumbnailDir] = useState('');
@@ -68,20 +70,20 @@ export const Advanced = observer(() => {
           }}
           onChange={browseThumbnailDirectory}
         >
-          Change...
+          {t('settings.change')}
         </FileInput>
-        <h3 className="filepicker-label">Thumbnail Directory</h3>
+        <h3 className="filepicker-label">{t('settings.thumbnailDirectory')}</h3>
         <div className="filepicker-path">{thumbnailDirectory}</div>
       </div>
 
-      <h3>Development</h3>
+      <h3>{t('settings.development')}</h3>
       <ButtonGroup>
         <ClearDbButton />
         <Button
           onClick={RendererMessenger.toggleDevTools}
           styling="outlined"
           icon={IconSet.CHROME_DEVTOOLS}
-          text="Toggle DevTools"
+          text={t('settings.toggleDevTools')}
         />
       </ButtonGroup>
     </>

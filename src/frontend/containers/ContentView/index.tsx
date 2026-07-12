@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 import { useStore } from '../../contexts/StoreContext';
 
@@ -38,6 +39,7 @@ const ContentView = observer(() => {
 
 const Content = observer(() => {
   const { fileStore, uiStore } = useStore();
+  const { t } = useTranslation();
   const dndData = useTagDnD();
   const { fileList } = fileStore;
   const [contentRect, setContentRect] = useState({ width: 1, height: 1 });
@@ -51,10 +53,10 @@ const Content = observer(() => {
         e.clientX,
         e.clientY,
         <Menu>
-          <MenuSubItem icon={IconSet.VIEW_GRID} text="View method...">
+          <MenuSubItem icon={IconSet.VIEW_GRID} text={t('content.viewMethod')}>
             <LayoutMenuItems />
           </MenuSubItem>
-          <MenuSubItem icon={IconSet.FILTER_NAME_DOWN} text="Sort by...">
+          <MenuSubItem icon={IconSet.FILTER_NAME_DOWN} text={t('content.sortBy')}>
             <SortMenuItems />
           </MenuSubItem>
         </Menu>,

@@ -3,6 +3,7 @@ import { shell } from 'electron';
 import { observer } from 'mobx-react-lite';
 import SysPath from 'path';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AppToaster } from 'src/frontend/components/Toaster';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { Button, ButtonGroup, IconSet } from 'widgets';
@@ -15,6 +16,7 @@ import FileInput from 'src/frontend/components/FileInput';
 export const ImportExport = observer(() => {
   const rootStore = useStore();
   const { fileStore, tagStore, exifTool } = rootStore;
+  const { t } = useTranslation();
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [isConfirmingMetadataExport, setConfirmingMetadataExport] = useState(false);
   const [isConfirmingFileImport, setConfirmingFileImport] = useState<{
@@ -35,7 +37,7 @@ export const ImportExport = observer(() => {
       });
     } catch (e) {
       console.log(e);
-      AppToaster.show({ message: 'Backup file is invalid', timeout: 5000 });
+      AppToaster.show({ message: t('settings.backupFileInvalid'), timeout: 5000 });
     }
   };
 
@@ -46,15 +48,15 @@ export const ImportExport = observer(() => {
     try {
       await rootStore.backupDatabaseToFile(filepath);
       AppToaster.show({
-        message: 'Backup created successfully!',
-        clickAction: { label: 'View', onClick: () => shell.showItemInFolder(filepath) },
+        message: t('settings.backupCreatedSuccessfully'),
+        clickAction: { label: t('settings.view'), onClick: () => shell.showItemInFolder(filepath) },
         timeout: 5000,
       });
     } catch (e) {
       console.error(e);
       AppToaster.show({
-        message: 'Could not create backup, open DevTools for more details',
-        clickAction: { label: 'View', onClick: RendererMessenger.toggleDevTools },
+        message: t('settings.couldNotCreateBackup'),
+        clickAction: { label: t('settings.view'), onClick: RendererMessenger.toggleDevTools },
         timeout: 5000,
       });
     }
@@ -66,7 +68,7 @@ export const ImportExport = observer(() => {
     }
     setIsOptimizing(true);
     const loadingToastKey = AppToaster.show({
-      message: 'Optimizing database and freeing disk space... Please wait.',
+      message: t('settings.optimizingDatabase'),
       type: 'info',
       timeout: 0,
     });
@@ -75,7 +77,7 @@ export const ImportExport = observer(() => {
       await rootStore.optimizeDatabase();
       AppToaster.dismiss(loadingToastKey);
       AppToaster.show({
-        message: 'Database optimized and storage compacted successfully!',
+        message: t('settings.databaseOptimized'),
         type: 'success',
         timeout: 5000,
       });
@@ -83,9 +85,9 @@ export const ImportExport = observer(() => {
       console.error(e);
       AppToaster.dismiss(loadingToastKey);
       AppToaster.show({
-        message: 'Could not optimize database, open DevTools for more details',
+        message: t('settings.couldNotOptimizeDatabase'),
         type: 'error',
-        clickAction: { label: 'View', onClick: RendererMessenger.toggleDevTools },
+        clickAction: { label: t('settings.view'), onClick: RendererMessenger.toggleDevTools },
         timeout: 5000,
       });
     } finally {
@@ -95,7 +97,7 @@ export const ImportExport = observer(() => {
 
   return (
     <>
-      <h3>File Metadata</h3>
+      <h3>{t('settings.fileMetadata')}</h3>
 
       <p>
         This option is useful for importing/exporting tags from/to other software. If you use a
@@ -112,7 +114,7 @@ export const ImportExport = observer(() => {
       </Callout>
       <div className="vstack">
         <label>
-          Hierarchical separator
+          {t('settings.hierarchicalSeparator')}
           <select
             value={exifTool.hierarchicalSeparator}
             onChange={(e) => exifTool.setHierarchicalSeparator(e.target.value)}
@@ -127,19 +129,19 @@ export const ImportExport = observer(() => {
 
         <ButtonGroup>
           <Button
-            text="Import tags and properties from file metadata"
+            text={t('settings.importTagsFromMetadata')}
             onClick={fileStore.readTagsFromFiles}
             styling="outlined"
           />
           <Button
-            text="Export tags and properties to file metadata"
+            text={t('settings.exportTagsToMetadata')}
             onClick={() => setConfirmingMetadataExport(true)}
             styling="outlined"
           />
           <Alert
             open={isConfirmingMetadataExport}
-            title="Are you sure you want to overwrite your files' tags?"
-            primaryButtonText="Export"
+            title={t('settings.confirmOverwriteTags')}
+            primaryButtonText={t('common.export')}
             onClick={(button) => {
               if (button === DialogButton.PrimaryButton) {
                 fileStore.writeTagsToFiles();
@@ -155,7 +157,7 @@ export const ImportExport = observer(() => {
         </ButtonGroup>
       </div>
 
-      <h3>Backup Database as File</h3>
+      <h3>{t('settings.backupDatabase')}</h3>
 
       <Callout icon={IconSet.INFO}>
         Automatic back-ups are created every 10 minutes in the{' '}
@@ -179,17 +181,17 @@ export const ImportExport = observer(() => {
           }}
           onChange={handleChooseImportDir}
         >
-          {IconSet.IMPORT} Restore database from file
+          {IconSet.IMPORT} {t('settings.restoreDatabaseFromFile')}
         </FileInput>
         <Button
-          text={isOptimizing ? 'Optimizing storage...' : 'Optimize database'}
+          text={isOptimizing ? t('settings.optimizingStorage') : t('settings.optimizeDatabase')}
           onClick={handleOptimizeDatabase}
           icon={IconSet.CLEAR_DATABASE}
           styling="outlined"
           disabled={isOptimizing}
         />
         <Button
-          text="Backup database to file"
+          text={t('settings.backupDatabaseToFile')}
           onClick={handleCreateExport}
           icon={IconSet.OPEN_EXTERNAL}
           styling="outlined"
@@ -197,13 +199,13 @@ export const ImportExport = observer(() => {
 
         <Alert
           open={Boolean(isConfirmingFileImport)}
-          title="Are you sure you want to restore the database from a backup?"
-          primaryButtonText="Import"
+          title={t('settings.confirmRestoreDatabase')}
+          primaryButtonText={t('common.import')}
           onClick={async (button) => {
             if (isConfirmingFileImport && button === DialogButton.PrimaryButton) {
               AppToaster.show({
                 message:
-                  'Restoring database, please do not close any windows... Allusion will restart automatically.',
+                  t('settings.restoringDatabase'),
                 timeout: 0,
               });
               try {
@@ -215,7 +217,7 @@ export const ImportExport = observer(() => {
               } catch (e) {
                 console.error('Could not restore backup', e);
                 AppToaster.show({
-                  message: 'Restoring database failed!',
+                  message: t('settings.restoringDatabaseFailed'),
                   timeout: 5000,
                 });
               }

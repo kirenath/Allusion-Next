@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { action } from 'mobx';
+import { useTranslation } from 'react-i18next';
 
 import { useStore } from 'src/frontend/contexts/StoreContext';
 import { IconSet } from 'widgets';
@@ -10,6 +11,7 @@ import { FileRow } from './RemovalAlert';
 
 export const ManyOpenExternal = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const selection = uiStore.fileSelection;
 
   const handleConfirm = action(() => {
@@ -20,10 +22,10 @@ export const ManyOpenExternal = observer(() => {
   return (
     <Alert
       open={uiStore.isManyExternalFilesOpen}
-      title={`Are you sure you want to open ${selection.size} images in their default application?`}
+      title={t('dialogs.openManyExternalConfirm', { count: selection.size })}
       icon={IconSet.WARNING}
       type="warning"
-      primaryButtonText="Confirm"
+      primaryButtonText={t('common.confirm')}
       defaultButton={DialogButton.PrimaryButton}
       onClick={(button) => {
         if (button !== DialogButton.CloseButton) {
@@ -32,7 +34,7 @@ export const ManyOpenExternal = observer(() => {
         uiStore.closeManyExternalFiles();
       }}
     >
-      <p>This may severely slow down your computer, to the point of it becoming unresponsive.</p>
+      <p>{t('dialogs.openManyExternalWarning')}</p>
       {uiStore.isManyExternalFilesOpen ? (
         <div className="deletion-confirmation-list">
           <VirtualizedGrid itemData={Array.from(selection)} itemsInView={10} children={FileRow} />

@@ -18,6 +18,7 @@ import { ROOT_TAG_ID } from 'src/api/tag';
 import { AppToaster } from '../components/Toaster';
 import { ClientSearchGroup, isClientSearchGroup } from '../entities/SearchItem';
 import { SearchGroupDTO } from 'src/api/file-search';
+import i18n, { DEFAULT_LANGUAGE, LanguageCode } from '../i18n';
 import { Cursor, SearchConjunction } from 'src/api/data-storage-search';
 import { FileDTO } from 'src/api/file';
 
@@ -192,7 +193,8 @@ type PersistentPreferenceFields =
   // the following are only restored when isRememberSearchEnabled is enabled
   | 'isSlideMode'
   | 'firstItem'
-  | 'searchRootGroup';
+  | 'searchRootGroup'
+  | 'language';
 
 class UiStore {
   static MIN_OUTLINER_WIDTH = 192; // default of 12 rem
@@ -246,6 +248,7 @@ class UiStore {
   @observable galleryVideoPlaybackMode: GalleryVideoPlaybackMode = 'hover';
   @observable showTreeConnectorLines: boolean = false;
   @observable isRefreshing: boolean = false;
+  @observable language: LanguageCode = DEFAULT_LANGUAGE;
 
   /** Indicates the visibility of each toolbar button */
   @observable toolbarButtonsVisibility: Record<ToolbarButtonName, boolean> = Object.fromEntries(
@@ -910,6 +913,11 @@ class UiStore {
       return;
     }
     this.scrollbarsStyle = style;
+  }
+
+  @action.bound setLanguage(lang: LanguageCode): void {
+    this.language = lang;
+    i18n.changeLanguage(lang);
   }
 
   @action.bound toggleAdvancedSearch(): void {
@@ -1715,6 +1723,9 @@ class UiStore {
 
         this.isRefreshLocationsStartupEnabled = Boolean(prefs.isRefreshLocationsStartupEnabled ?? false); // eslint-disable-line prettier/prettier
         this.isRememberSearchEnabled = Boolean(prefs.isRememberSearchEnabled);
+        if (prefs.language) {
+          this.setLanguage(prefs.language);
+        }
         if (this.isRememberSearchEnabled) {
           // If remember search criteria, restore the search criteria list...
           const serializedCriterias: SearchGroupDTO | (SearchGroupDTO | SearchCriteria)[] =
@@ -1806,6 +1817,7 @@ class UiStore {
       recentlyUsedTagsMaxLength: this.recentlyUsedTagsMaxLength,
       isClearTagSelectorsOnSelectEnabled: this.isClearTagSelectorsOnSelectEnabled,
       isIncludeSubtagsOnMatchEnabled: this.isIncludeSubtagsOnMatchEnabled,
+      language: this.language,
     };
     return preferences;
   }

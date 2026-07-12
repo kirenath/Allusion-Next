@@ -2,6 +2,7 @@ import fse from 'fs-extra';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ellipsize, humanFileSize } from 'common/fmt';
 import { encodeFilePath, isFileExtensionVideo } from 'common/fs';
@@ -37,6 +38,7 @@ export const MasonryCell = observer(
     transform: [width, height, top, left],
   }: MasonryItemProps) => {
     const { uiStore, fileStore } = useStore();
+    const { t } = useTranslation();
     const [isHovered, setIsHovered] = useState(false);
     const style = { height, width, transform: `translate(${left}px,${top}px)` };
     const eventManager = useMemo(() => new CommandDispatcher(file), [file]);
@@ -97,7 +99,7 @@ export const MasonryCell = observer(
               e.preventDefault();
               await fileStore.fetchMissingFiles();
             }}
-            text="This image could not be found. Open the recovery view."
+            text={t('content.brokenImageTooltip')}
           />
         )}
 

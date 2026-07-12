@@ -3,6 +3,7 @@ import { action, runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import SysPath from 'path';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet, Tree } from 'widgets';
 import MultiSplitPane, { MultiSplitPaneProps } from 'widgets/MultiSplit/MultiSplitPane';
@@ -79,11 +80,6 @@ export class LocationTreeItemRevealer extends TreeItemRevealer {
   }
 }
 
-// Tooltip info
-const enum Tooltip {
-  Location = 'Add new Location',
-  Refresh = 'Refresh locations and detect file changes',
-}
 
 interface ITreeData {
   expansion: IExpansionState;
@@ -202,6 +198,7 @@ const DirectoryMenu = observer(
     onEdit: (loc: ClientLocation | ClientSubLocation) => void;
   }) => {
     const { uiStore } = useStore();
+    const { t } = useTranslation();
 
     const path = location instanceof ClientLocation ? location.path : location.path;
 
@@ -237,43 +234,42 @@ const DirectoryMenu = observer(
       <>
         <MenuItem
           onClick={() => onEdit(location)} //
-          text="Edit Tags"
+          text={t('outliner.editTags')}
           icon={IconSet.TAG_GROUP}
         />
         <MenuItem
           onClick={handleAddToSearch} //
-          text="Add to Search Query"
+          text={t('outliner.addToSearchQuery')}
           icon={IconSet.SEARCH}
         />
         <MenuItem
           onClick={handleAddWithExclusions}
-          text="Add to Search & Exclude Sublocations"
+          text={t('outliner.addToSearchExcludeSublocations')}
           icon={IconSet.SEARCH}
           disabled={!hasSublocations}
         />
         <MenuItem
           onClick={handleReplaceSearch}
-          text="Replace Search Query"
+          text={t('outliner.replaceSearchQuery')}
           icon={IconSet.REPLACE}
         />
         <MenuItem
           onClick={handleReplaceWithExclusions}
-          text="Replace Search & Exclude Sublocations"
+          text={t('outliner.replaceSearchExcludeSublocations')}
           icon={IconSet.REPLACE}
           disabled={!hasSublocations}
         />
         <MenuDivider />
         {location instanceof ClientSubLocation && (
           <MenuItem
-            // Only show alert when excluding, not when re-including
             onClick={location.isExcluded ? location.toggleExcluded : () => onExclude(location)}
-            text={location.isExcluded ? 'Re-include' : 'Exclude'}
+            text={location.isExcluded ? t('common.reInclude') : t('common.exclude')}
             icon={!location.isExcluded ? IconSet.HIDDEN : IconSet.PREVIEW}
           />
         )}
         <MenuItem
           onClick={handleOpenFileExplorer}
-          text="Open in File Browser"
+          text={t('outliner.openInFileBrowser')}
           icon={IconSet.FOLDER_CLOSE}
         />
       </>
@@ -291,6 +287,7 @@ interface IContextMenuProps {
 const LocationTreeContextMenu = observer(
   ({ location, onDelete, onExclude, onEdit }: IContextMenuProps) => {
     const { uiStore } = useStore();
+    const { t } = useTranslation();
 
     const openDeleteDialog = useCallback(() => onDelete(location), [location, onDelete]);
 
@@ -298,11 +295,11 @@ const LocationTreeContextMenu = observer(
       return (
         <Menu>
           <MenuItem
-            text="Open Recovery Panel"
+            text={t('content.openRecoveryPanel')}
             onClick={() => uiStore.openLocationRecovery(location.id)}
             icon={IconSet.WARNING_BROKEN_LINK}
           />
-          <MenuItem text="Delete" onClick={openDeleteDialog} icon={IconSet.DELETE} />
+          <MenuItem text={t('common.delete')} onClick={openDeleteDialog} icon={IconSet.DELETE} />
         </Menu>
       );
     }
@@ -313,10 +310,10 @@ const LocationTreeContextMenu = observer(
         <MenuDivider />
         <MenuCheckboxItem
           checked={location.isWatchingFiles && location.worker !== undefined}
-          text="Automatically Sync File Changes"
+          text={t('outliner.automaticallySyncFileChanges')}
           onClick={location.toggleWatchFiles}
         />
-        <MenuItem text="Delete" onClick={openDeleteDialog} icon={IconSet.DELETE} />
+        <MenuItem text={t('common.delete')} onClick={openDeleteDialog} icon={IconSet.DELETE} />
       </Menu>
     );
   },
@@ -602,6 +599,7 @@ const LocationsTree = ({ onDelete, onExclude, onEdit }: ILocationTreeProps) => {
 
 const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
   const { locationStore } = useStore();
+  const { t } = useTranslation();
 
   const [creatableLocation, setCreatableLocation] = useState<ClientLocation>();
   const [deletableLocation, setDeletableLocation] = useState<ClientLocation>();
@@ -630,7 +628,7 @@ const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
     const existingDir = locationStore.exists((dir) => path === dir.path);
     if (existingDir) {
       AppToaster.show({
-        message: 'This folder has already been added as a location.',
+        message: t('outliner.locationAlreadyExists'),
         timeout: 5000,
       });
       return;
@@ -643,7 +641,7 @@ const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
     const parentDir = locationStore.exists((dir) => path.includes(addSeparator(dir.path)));
     if (parentDir) {
       AppToaster.show({
-        message: 'You cannot add a location that is a sub-folder of an existing location.',
+        message: t('outliner.locationIsSubfolder'),
         timeout: 5000,
       });
       return;
@@ -657,7 +655,7 @@ const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
     const childDir = locationStore.exists((dir) => dir.path.includes(pathWithSeparator));
     if (childDir) {
       AppToaster.show({
-        message: 'You cannot add a location that is a parent-folder of an existing location.',
+        message: t('outliner.locationIsParentFolder'),
         timeout: 5000,
       });
       return;
@@ -674,23 +672,23 @@ const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
   return (
     <MultiSplitPane
       id="locations"
-      title="Locations"
+      title={t('outliner.locations')}
       className={`${isEmpty ? 'attention' : ''} ${isDropping ? 'info' : ''}`}
       headerToolbar={
         <Toolbar controls="location-list" isCompact>
           {locationStore.locationList.length > 0 && (
             <ToolbarButton
               icon={IconSet.RELOAD_COMPACT}
-              text="Refresh"
+              text={t('outliner.refresh')}
               onClick={action(() => locationStore.updateLocations())}
-              tooltip={Tooltip.Refresh}
+              tooltip={t('outliner.refreshTooltip')}
             />
           )}
           <ToolbarButton
             icon={IconSet.PLUS}
-            text="New Location"
+            text={t('outliner.newLocation')}
             onClick={handleChooseWatchedDir}
-            tooltip={Tooltip.Location}
+            tooltip={t('outliner.newLocationTooltip')}
           />
         </Toolbar>
       }
@@ -701,7 +699,7 @@ const LocationsPanel = observer((props: Partial<MultiSplitPaneProps>) => {
         onExclude={setExcludableSubLocation}
         onEdit={setLocationToEdit}
       />
-      {isEmpty && <Callout icon={IconSet.INFO}>Click + to choose a location.</Callout>}
+      {isEmpty && <Callout icon={IconSet.INFO}>{t('outliner.clickToChooseLocation')}</Callout>}
 
       <LocationRecoveryDialog />
 

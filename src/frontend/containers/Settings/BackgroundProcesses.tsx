@@ -1,6 +1,7 @@
 import { chromeExtensionUrl, firefoxExtensionUrl } from 'common/config';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ExternalLink from 'src/frontend/components/ExternalLink';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { IconSet, Toggle } from 'widgets';
@@ -12,6 +13,7 @@ import UiStore from 'src/frontend/stores/UiStore';
 
 export const BackgroundProcesses = observer(() => {
   const { uiStore, locationStore } = useStore();
+  const { t } = useTranslation();
 
   const importDirectory = uiStore.importDirectory;
   const browseImportDirectory = async ([newDir]: [string, ...string[]]) => {
@@ -39,7 +41,7 @@ export const BackgroundProcesses = observer(() => {
   return (
     <>
       <TaggingServiceConfig />
-      <h3>Browser Extension</h3>
+      <h3>{t('settings.browserExtension')}</h3>
       <Callout icon={IconSet.INFO}>
         You need to install the browser extension before either in the{' '}
         <ExternalLink url={chromeExtensionUrl}>Chrome Web Store</ExternalLink> or{' '}
@@ -61,12 +63,12 @@ export const BackgroundProcesses = observer(() => {
             : () => alert('Please choose a download directory first.')
         }
       >
-        Run browser extension
+        {t('settings.runBrowserExtension')}
       </Toggle>
       <br />
       <br />
       <Toggle checked={isRunInBackground} onChange={toggleRunInBackground}>
-        Run in background
+        {t('settings.runInBackground')}
       </Toggle>
       <div className="filepicker">
         <FileInput
@@ -77,10 +79,10 @@ export const BackgroundProcesses = observer(() => {
           }}
           onChange={browseImportDirectory}
         >
-          Change...
+          {t('settings.change')}
         </FileInput>
-        <h4 className="filepicker-label">Download Directory</h4>
-        <div className="filepicker-path">{uiStore.importDirectory || 'Not set'}</div>
+        <h4 className="filepicker-label">{t('settings.downloadDirectory')}</h4>
+        <div className="filepicker-path">{uiStore.importDirectory || t('settings.notSet')}</div>
       </div>
       <br />
       <br />
@@ -90,6 +92,7 @@ export const BackgroundProcesses = observer(() => {
 
 const TaggingServiceConfig = observer(() => {
   const { taggingServiceURL, setTaggingServiceURL } = useStore().uiStore;
+  const { t } = useTranslation();
   const prehost = 'http://localhost';
 
   const posthost = taggingServiceURL.startsWith(prehost)
@@ -113,7 +116,7 @@ const TaggingServiceConfig = observer(() => {
   // Custom and minimalistic implementation inspired/based on cmeka's implementation: https://github.com/cmeka/OneFolder/commit/b0d7e12
   return (
     <>
-      <h3>Local Tagging Service API URL</h3>
+      <h3>{t('settings.localTaggingServiceURL')}</h3>
       <Callout icon={IconSet.INFO}>
         A tagging service such as{' '}
         <ExternalLink url="https://github.com/cmeka/media-tag-service">
@@ -164,6 +167,7 @@ const TaggingServiceConfig = observer(() => {
 
 const TaggingServiceParallelRequests = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number(event.target.value);
@@ -172,7 +176,7 @@ const TaggingServiceParallelRequests = observer(() => {
 
   return (
     <label>
-      Number of Tagging Requests in Parallel
+      {t('settings.taggingRequestsParallel')}
       <select value={uiStore.taggingServiceParallelRequests} onChange={handleChange}>
         {[...Array(UiStore.MAX_TAGGING_SERVICE_PARALLEL_REQUESTS)].map((_, i) => (
           <option key={i + 1} value={i + 1}>

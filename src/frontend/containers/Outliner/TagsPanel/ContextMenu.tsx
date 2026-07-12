@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { HexColorPicker } from 'react-colorful';
 
 import { IconSet } from 'widgets';
@@ -26,6 +27,7 @@ const defaultColorOptions = [
 
 export const ColorPickerMenu = observer(({ tag }: { tag: ClientTag }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handleChange = (color: string) => {
     if (tag.isSelected) {
@@ -41,10 +43,10 @@ export const ColorPickerMenu = observer(({ tag }: { tag: ClientTag }) => {
       {/* Rainbow gradient icon? */}
       <MenuCheckboxItem
         checked={color === 'inherit'}
-        text="Inherit Parent Color"
+        text={t('outliner.inheritParentColor')}
         onClick={() => handleChange(color === 'inherit' ? '' : 'inherit')}
       />
-      <MenuSubItem text="Pick Color" icon={IconSet.COLOR}>
+      <MenuSubItem text={t('outliner.pickColor')} icon={IconSet.COLOR}>
         <div style={{ display: 'flex', flexWrap: 'wrap', width: 'min-content', gap: '3px' }}>
           <HexColorPicker color={color || undefined} onChange={handleChange} />
           <button
@@ -81,6 +83,7 @@ export const ColorPickerMenu = observer(({ tag }: { tag: ClientTag }) => {
 
 export const TagVisibilityMenu = observer(({ tag }: { tag: ClientTag }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const handleVisibleInherit = (val: boolean) => {
     if (tag.isSelected) {
       uiStore.VisibleInheritSelectedTagsAndCollections(tag.id, val);
@@ -94,7 +97,7 @@ export const TagVisibilityMenu = observer(({ tag }: { tag: ClientTag }) => {
     <>
       <MenuCheckboxItem
         checked={isVisibleInherited}
-        text="Visible When Inherited"
+        text={t('outliner.visibleWhenInherited')}
         onClick={() => handleVisibleInherit(!isVisibleInherited)}
       />
     </>
@@ -110,6 +113,7 @@ interface IContextMenuProps {
 export const TagItemContextMenu = observer((props: IContextMenuProps) => {
   const { tag, dispatch, pos } = props;
   const { tagStore, uiStore } = useStore();
+  const { t } = useTranslation();
   const ctxTags = uiStore.getTagContextItems(tag.id);
 
   return (
@@ -121,38 +125,38 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
             .then((t) => dispatch(Factory.insertNode(t, tag.id, t.id)))
             .catch((err) => console.log('Could not create tag', err))
         }
-        text="New Tag"
+        text={t('outliner.newTag')}
         icon={IconSet.TAG_ADD}
       />
       <MenuItem
         onClick={() => uiStore.openTagPropertiesEditor(tag)}
-        text="Edit Tag"
+        text={t('outliner.editTag')}
         icon={IconSet.EDIT}
       />
       <MenuItem
         onClick={() => dispatch(Factory.enableEditing(tag, tag.id))}
-        text="Rename"
+        text={t('outliner.rename')}
         icon={IconSet.EDIT}
       />
       <MenuItem
         icon={IconSet.RELOAD_COMPACT}
-        text="Update File Counts"
+        text={t('outliner.updateFileCounts')}
         onClick={() => tagStore.updateTagSubTreeFileCounts(tag)}
       />
       <MenuItem
         icon={!tag.isHidden ? IconSet.HIDDEN : IconSet.PREVIEW}
-        text="Hide Tagged Images"
+        text={!tag.isHidden ? t('outliner.hideTaggedImages') : t('outliner.showTaggedImages')}
         onClick={tag.toggleHidden}
       />
       <MenuItem
         onClick={() => uiStore.openTagMergePanel(tag)}
-        text="Merge With"
+        text={t('outliner.mergeWith')}
         icon={IconSet.TAG_GROUP}
         disabled={ctxTags.some((tag) => tag.subTags.length > 0)}
       />
       <MenuItem
         onClick={() => dispatch(Factory.confirmDeletion(tag))}
-        text="Delete"
+        text={t('outliner.delete')}
         icon={IconSet.DELETE}
       />
       <MenuDivider />
@@ -165,7 +169,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
             ? uiStore.addTagSelectionToCriteria()
             : uiStore.addSearchCriteria(new ClientTagSearchCriteria(undefined, 'tags', tag.id))
         }
-        text="Add to Search"
+        text={t('outliner.addToSearch')}
         icon={IconSet.SEARCH}
       />
       <MenuItem
@@ -174,41 +178,41 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
             ? uiStore.replaceCriteriaWithTagSelection()
             : uiStore.replaceSearchCriteria(new ClientTagSearchCriteria(undefined, 'tags', tag.id))
         }
-        text="Replace Search"
+        text={t('outliner.replaceSearch')}
         icon={IconSet.REPLACE}
       />
       <MenuDivider />
       <MenuItem
         onClick={() => tag.parent.insertSubTag(tag, pos - 2)}
-        text="Move Up"
+        text={t('outliner.moveUp')}
         icon={IconSet.ITEM_MOVE_UP}
         disabled={pos === 1}
       />
       <MenuItem
         onClick={() => tag.parent.insertSubTag(tag, pos + 1)}
-        text="Move Down"
+        text={t('outliner.moveDown')}
         icon={IconSet.ITEM_MOVE_DOWN}
         disabled={pos === tag.parent.subTags.length}
       />
       <MenuItem
         onClick={() => uiStore.openTagMovePanel(tag)}
-        text="Move To"
+        text={t('outliner.moveTo')}
         icon={IconSet.TAG_GROUP}
       />
       <MenuSubItem
-        text="Sort Selected..."
+        text={t('outliner.sortSelected')}
         icon={IconSet.FILTER_NAME_DOWN}
         disabled={ctxTags.length < 2}
       >
         <MenuItem
           onClick={() => uiStore.sortSelectedTagItems('ascending')}
-          text="Sort by Name (Ascending)"
+          text={t('outliner.sortByNameAscending')}
           icon={IconSet.FILTER_NAME_DOWN}
           disabled={ctxTags.length < 2}
         />
         <MenuItem
           onClick={() => uiStore.sortSelectedTagItems('descending')}
-          text="Sort by Name (Descending)"
+          text={t('outliner.sortByNameDescending')}
           icon={IconSet.FILTER_NAME_UP}
           disabled={ctxTags.length < 2}
         />
@@ -216,7 +220,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
           onClick={() =>
             uiStore.sortSelectedTagItems('ascending', (a, b) => a.fileCount - b.fileCount)
           }
-          text="Sort by File Count (Ascending)"
+          text={t('outliner.sortByFileCountAscending')}
           icon={IconSet.FILTER_FILTER_DOWN}
           disabled={ctxTags.length < 2}
         />
@@ -224,7 +228,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
           onClick={() =>
             uiStore.sortSelectedTagItems('descending', (a, b) => a.fileCount - b.fileCount)
           }
-          text="Sort by File Count (Descending)"
+          text={t('outliner.sortByFileCountDescending')}
           icon={IconSet.FILTER_FILTER_DOWN}
           disabled={ctxTags.length < 2}
         />
@@ -234,7 +238,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
               hexCompare(a.viewColor, b.viewColor),
             )
           }
-          text="Sort by Color (Ascending)"
+          text={t('outliner.sortByColorAscending')}
           icon={IconSet.COLOR}
           disabled={ctxTags.length < 2}
         />
@@ -244,7 +248,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
               hexCompare(a.viewColor, b.viewColor),
             )
           }
-          text="Sort by Color (Descending)"
+          text={t('outliner.sortByColorDescending')}
           icon={IconSet.COLOR}
           disabled={ctxTags.length < 2}
         />
@@ -255,7 +259,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
               (a, b) => a.dateAdded.getTime() - b.dateAdded.getTime(),
             )
           }
-          text="Sort by Date Added (Ascending)"
+          text={t('outliner.sortByDateAddedAscending')}
           icon={IconSet.FILTER_DATE}
           disabled={ctxTags.length < 2}
         />
@@ -266,7 +270,7 @@ export const TagItemContextMenu = observer((props: IContextMenuProps) => {
               (a, b) => a.dateAdded.getTime() - b.dateAdded.getTime(),
             )
           }
-          text="Sort by Date Added (Descending)"
+          text={t('outliner.sortByDateAddedDescending')}
           icon={IconSet.FILTER_DATE}
           disabled={ctxTags.length < 2}
         />

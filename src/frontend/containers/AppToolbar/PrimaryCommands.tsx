@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet } from 'widgets';
 import { ToolbarButton } from 'widgets/toolbar';
@@ -16,11 +17,12 @@ import {
 
 const OutlinerToggle = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   return (
     <ToolbarButton
       id="outliner-toggle"
-      text="Toggle Outliner"
+      text={t('toolbar.toggleOutliner')}
       icon={uiStore.isOutlinerOpen ? IconSet.DOUBLE_CARET : IconSet.MENU_HAMBURGER}
       controls="outliner"
       pressed={uiStore.isOutlinerOpen}
@@ -67,14 +69,15 @@ export default PrimaryCommands;
 
 export const SlideModeCommand = () => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <>
       <ToolbarButton
         isCollapsible={false}
         icon={IconSet.ARROW_LEFT}
         onClick={uiStore.disableSlideMode}
-        text="Back"
-        tooltip="Back to content panel"
+        text={t('toolbar.back')}
+        tooltip={t('toolbar.backToContent')}
       />
 
       <div className="spacer" />
@@ -90,6 +93,7 @@ export const SlideModeCommand = () => {
 
 const FileSelectionCommand = observer(() => {
   const { uiStore, fileStore } = useStore();
+  const { t } = useTranslation();
   const fileLoadedCount = fileStore.numLoadedFiles;
   const fileCount = fileStore.showsMissingContent ? fileLoadedCount : fileStore.numFilteredFiles;
   const allFilesSelected = uiStore.isAllFilesSelected;
@@ -107,7 +111,7 @@ const FileSelectionCommand = observer(() => {
       onClick={handleToggleSelect}
       pressed={allFilesSelected}
       text={fileCount == 0 ? '0' : selectionCount + ' / ' + fileCount}
-      tooltip={`Selects or deselects all images, (${fileLoadedCount} loaded files)`}
+      tooltip={t('toolbar.selectTooltip', { count: fileLoadedCount })}
       disabled={fileCount === 0}
     />
   );
@@ -115,14 +119,15 @@ const FileSelectionCommand = observer(() => {
 
 const RemoveFilesPopover = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <>
       <ToolbarButton
         icon={IconSet.DELETE}
         disabled={uiStore.fileSelection.size === 0}
         onClick={uiStore.openToolbarFileRemover}
-        text="Delete"
-        tooltip="Delete selected missing images from library"
+        text={t('toolbar.delete')}
+        tooltip={t('toolbar.deleteMissingTooltip')}
       />
       <FileRemoval />
     </>

@@ -1,6 +1,7 @@
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet, Tag } from 'widgets';
 import { Alert, DialogButton } from 'widgets/popovers';
@@ -20,27 +21,31 @@ interface IRemovalProps<T> {
   onClose: () => void;
 }
 
-export const LocationRemoval = (props: IRemovalProps<ClientLocation>) => (
-  <RemovalAlert
-    open
-    title={`Are you sure you want to delete the location "${props.object.name}"?`}
-    information="This will permanently remove the location and all data linked to its images in Allusion."
-    onCancel={props.onClose}
-    onConfirm={() => {
-      props.onClose();
-      props.object.delete();
-    }}
-  />
-);
+export const LocationRemoval = (props: IRemovalProps<ClientLocation>) => {
+  const { t } = useTranslation();
+  return (
+    <RemovalAlert
+      open
+      title={t('dialogs.deleteLocationConfirm', { name: props.object.name })}
+      information={t('dialogs.deleteLocationInfo')}
+      onCancel={props.onClose}
+      onConfirm={() => {
+        props.onClose();
+        props.object.delete();
+      }}
+    />
+  );
+};
 
 export const SubLocationExclusion = (props: IRemovalProps<ClientSubLocation>) => {
+  const { t } = useTranslation();
   return (
     <Alert
       open
-      title={`Are you sure you want to exclude the directory "${props.object.name}"?`}
+      title={t('dialogs.excludeDirectoryConfirm', { name: props.object.name })}
       icon={IconSet.WARNING}
       type="warning"
-      primaryButtonText="Exclude"
+      primaryButtonText={t('common.exclude')}
       defaultButton={DialogButton.PrimaryButton}
       onClick={(button) => {
         if (button !== DialogButton.CloseButton) {
@@ -49,13 +54,14 @@ export const SubLocationExclusion = (props: IRemovalProps<ClientSubLocation>) =>
         props.onClose();
       }}
     >
-      <p>Any tags saved on images in that directory will be lost.</p>
+      <p>{t('dialogs.excludeDirectoryInfo')}</p>
     </Alert>
   );
 };
 
 export const TagRemoval = observer((props: IRemovalProps<ClientTag>) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const { object } = props;
   const tagsToRemove = Array.from(
     new Map(
@@ -66,17 +72,15 @@ export const TagRemoval = observer((props: IRemovalProps<ClientTag>) => {
     ).values(),
   ).map((t) => <Tag key={t.id} text={t.name} color={t.viewColor} isHeader={t.isHeader} />);
 
-  const text = 'Are you sure you want to delete this tag(s)?';
-
   return (
     <RemovalAlert
       open
-      title={text}
-      information="Deleting tags or collections will permanently remove them from Allusion."
+      title={t('dialogs.deleteTagConfirm')}
+      information={t('dialogs.deleteTagInfo')}
       body={
         tagsToRemove.length > 0 && (
           <div id="tag-remove-overview" className="tag-overview">
-            <p>Selected Tags</p>
+            <p>{t('dialogs.selectedTags')}</p>
             {tagsToRemove}
           </div>
         )
@@ -90,18 +94,21 @@ export const TagRemoval = observer((props: IRemovalProps<ClientTag>) => {
   );
 });
 
-export const ExtraPropertyRemoval = observer((props: IRemovalProps<ClientExtraProperty>) => (
-  <RemovalAlert
-    open
-    title={`Are you sure you want to delete the "${props.object.name}" extra property?`}
-    information="This will permanently remove the extra property and all of its values from all files in Allusion."
-    onCancel={props.onClose}
-    onConfirm={() => {
-      props.onClose();
-      props.object.delete();
-    }}
-  />
-));
+export const ExtraPropertyRemoval = observer((props: IRemovalProps<ClientExtraProperty>) => {
+  const { t } = useTranslation();
+  return (
+    <RemovalAlert
+      open
+      title={t('dialogs.deleteExtraPropertyConfirm', { name: props.object.name })}
+      information={t('dialogs.deleteExtraPropertyInfo')}
+      onCancel={props.onClose}
+      onConfirm={() => {
+        props.onClose();
+        props.object.delete();
+      }}
+    />
+  );
+});
 
 export const ExtraPropertyUnAssign = observer(
   (
@@ -111,6 +118,7 @@ export const ExtraPropertyUnAssign = observer(
     }>,
   ) => {
     const { extraPropertyStore, uiStore, fileStore } = useStore();
+    const { t } = useTranslation();
     const fileCount = uiStore.isAllFilesSelected
       ? fileStore.numFilteredFiles
       : props.object.files.length;
@@ -129,9 +137,9 @@ export const ExtraPropertyUnAssign = observer(
     return (
       <RemovalAlert
         open
-        title={`Are you sure you want to remove the "${extraPropertyName}" extra property from ${fileCount} files?`}
-        information="This will permanently remove all of its values from those files in Allusion."
-        primaryButtonText="Remove"
+        title={t('dialogs.removeExtraPropertyConfirm', { name: extraPropertyName, count: fileCount })}
+        information={t('dialogs.removeExtraPropertyInfo')}
+        primaryButtonText={t('common.remove')}
         onCancel={props.onClose}
         onConfirm={() => {
           props.onClose();
@@ -151,6 +159,7 @@ export const ExtraPropertyOverwrite = observer(
     }>,
   ) => {
     const { extraPropertyStore, uiStore, fileStore } = useStore();
+    const { t } = useTranslation();
     const fileCount = uiStore.isAllFilesSelected
       ? fileStore.numFilteredFiles
       : props.object.files.length;
@@ -173,9 +182,9 @@ export const ExtraPropertyOverwrite = observer(
     return (
       <RemovalAlert
         open
-        title={`Are you sure you want to overwrite the "${extraPropertyName}" extra property from ${fileCount} files?`}
-        information="This will permanently overwrite all of its values from those files in Allusion."
-        primaryButtonText="Confirm"
+        title={t('dialogs.overwriteExtraPropertyConfirm', { name: extraPropertyName, count: fileCount })}
+        information={t('dialogs.overwriteExtraPropertyInfo')}
+        primaryButtonText={t('common.confirm')}
         onCancel={props.onClose}
         onConfirm={() => {
           props.onClose();
@@ -201,6 +210,7 @@ export const FileRow = ({ index, style, data }: VirtualizedGridRowProps<ClientFi
 
 export const FileRemoval = observer(() => {
   const { fileStore, uiStore } = useStore();
+  const { t } = useTranslation();
   const selection = uiStore.fileSelection;
 
   const handleConfirm = action(() => {
@@ -217,10 +227,8 @@ export const FileRemoval = observer(() => {
   return (
     <RemovalAlert
       open={uiStore.isToolbarFileRemoverOpen}
-      title={`Are you sure you want to delete ${selection.size} missing file${
-        selection.size > 1 ? 's' : ''
-      }?`}
-      information="Deleting files will permanently remove them from Allusion, so any tags saved on them will be lost. If you move files back into their location, they will be automatically detected by Allusion."
+      title={t('dialogs.deleteMissingFileConfirm', { count: selection.size, plur: selection.size > 1 ? 's' : '' })}
+      information={t('dialogs.deleteMissingFileInfo')}
       body={
         uiStore.isToolbarFileRemoverOpen ? (
           <div className="deletion-confirmation-list">
@@ -238,6 +246,7 @@ export const FileRemoval = observer(() => {
 
 export const MoveFilesToTrashBin = observer(() => {
   const { fileStore, uiStore } = useStore();
+  const { t } = useTranslation();
   const selection = uiStore.fileSelection;
 
   const handleConfirm = action(async () => {
@@ -257,10 +266,10 @@ export const MoveFilesToTrashBin = observer(() => {
     fileStore.deleteFiles(files);
     if (files.length !== selection.size) {
       AppToaster.show({
-        message: 'Some files could not be deleted.',
+        message: t('dialogs.someFilesCouldNotBeDeleted'),
         clickAction: {
           onClick: () => RendererMessenger.toggleDevTools(),
-          label: 'More info',
+          label: t('common.moreInfo'),
         },
         timeout: 8000,
       });
@@ -272,12 +281,8 @@ export const MoveFilesToTrashBin = observer(() => {
   return (
     <RemovalAlert
       open={uiStore.isMoveFilesToTrashOpen}
-      title={`Are you sure you want to delete ${selection.size} file${isMulti ? 's' : ''}?`}
-      information={`You will be able to recover ${
-        isMulti ? 'them' : 'it'
-      } from your system's trash bin, but all assigned tags to ${
-        isMulti ? 'them' : 'it'
-      } in Allusion will be lost.`}
+      title={t('dialogs.deleteFileConfirm', { count: selection.size, plur: isMulti ? 's' : '' })}
+      information={t('dialogs.deleteFileInfo', { them: isMulti ? 'them' : 'it' })}
       body={
         uiStore.isMoveFilesToTrashOpen ? (
           <div className="deletion-confirmation-list">
@@ -295,11 +300,12 @@ export const MoveFilesToTrashBin = observer(() => {
 
 export const SavedSearchRemoval = observer((props: IRemovalProps<ClientFileSearchItem>) => {
   const { searchStore } = useStore();
+  const { t } = useTranslation();
   return (
     <RemovalAlert
       open
-      title="Search item removal"
-      information={`Are you sure you want to delete the search item "${props.object.name}"?`}
+      title={t('dialogs.searchItemRemovalTitle')}
+      information={t('dialogs.searchItemRemovalInfo', { name: props.object.name })}
       onCancel={props.onClose}
       onConfirm={() => {
         props.onClose();
@@ -319,19 +325,22 @@ interface IRemovalAlertProps {
   body?: React.ReactNode;
 }
 
-const RemovalAlert = (props: IRemovalAlertProps) => (
-  <Alert
-    open={props.open}
-    title={props.title}
-    icon={IconSet.WARNING}
-    type="danger"
-    primaryButtonText={props.primaryButtonText ? props.primaryButtonText : 'Delete'}
-    defaultButton={DialogButton.PrimaryButton}
-    onClick={(button) =>
-      button === DialogButton.CloseButton ? props.onCancel() : props.onConfirm()
-    }
-  >
-    <p>{props.information}</p>
-    {props.body}
-  </Alert>
-);
+const RemovalAlert = (props: IRemovalAlertProps) => {
+  const { t } = useTranslation();
+  return (
+    <Alert
+      open={props.open}
+      title={props.title}
+      icon={IconSet.WARNING}
+      type="danger"
+      primaryButtonText={props.primaryButtonText ? props.primaryButtonText : t('common.delete')}
+      defaultButton={DialogButton.PrimaryButton}
+      onClick={(button) =>
+        button === DialogButton.CloseButton ? props.onCancel() : props.onConfirm()
+      }
+    >
+      <p>{props.information}</p>
+      {props.body}
+    </Alert>
+  );
+};

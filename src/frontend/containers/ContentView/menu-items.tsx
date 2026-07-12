@@ -2,6 +2,7 @@ import { shell } from 'electron';
 import { observer } from 'mobx-react-lite';
 import SysPath from 'path';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet } from 'widgets';
 import { MenuItem, MenuRadioItem, MenuSubItem } from 'widgets/menus';
@@ -23,18 +24,19 @@ import { runInAction } from 'mobx';
 
 export const MissingFileMenuItems = observer(() => {
   const { uiStore, fileStore } = useStore();
+  const { t } = useTranslation();
   return (
     <>
       <MenuItem
         onClick={fileStore.fetchMissingFiles}
-        text="Open Recovery Panel"
+        text={t('content.openRecoveryPanel')}
         icon={IconSet.WARNING_BROKEN_LINK}
         disabled={fileStore.showsMissingContent}
       />
-      <MenuItem onClick={uiStore.copyTagsToClipboard} text="Copy Tags" icon={IconSet.TAG_GROUP} />
+      <MenuItem onClick={uiStore.copyTagsToClipboard} text={t('content.copyTags')} icon={IconSet.TAG_GROUP} />
       <MenuItem
         onClick={uiStore.openToolbarFileRemover}
-        text="Delete Missing File Data"
+        text={t('content.deleteMissingFileData')}
         icon={IconSet.DELETE}
       />
     </>
@@ -43,6 +45,7 @@ export const MissingFileMenuItems = observer(() => {
 
 export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
   const { uiStore, locationStore, fileStore } = useStore();
+  const { t } = useTranslation();
 
   const handleClearSelectedFileTags = () => {
     // Currently copy tags to clipboard as backup in case of error by the user
@@ -83,54 +86,54 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
 
   return (
     <>
-      <MenuItem onClick={handleViewFullSize} text="View at Full Size" icon={IconSet.SEARCH} />
+      <MenuItem onClick={handleViewFullSize} text={t('content.viewAtFullSize')} icon={IconSet.SEARCH} />
       <MenuItem
         onClick={handleCopyImageToClipboard}
-        text="Copy Image to Clipboard"
+        text={t('content.copyImageToClipboard')}
         icon={IconSet.COPY}
         disabled={isFileExtensionVideo(file.extension)}
       />
       <MenuItem
         onClick={handlePreviewWindow}
-        text="Open In Preview Window"
+        text={t('content.openInPreviewWindow')}
         icon={IconSet.PREVIEW}
       />
-      <MenuSubItem text="Tagging..." icon={IconSet.TAG_ADD}>
+      <MenuSubItem text={t('content.tagging')} icon={IconSet.TAG_ADD}>
         <MenuItem
           onClick={uiStore.openFileTagsEditor}
-          text="Open Tag Selector"
+          text={t('content.openTagSelector')}
           icon={IconSet.TAG}
         />
         <MenuItem
           onClick={fileStore.tagSelectedFilesUsingTaggingService}
-          text="Auto Tag Selected Using Tagging Service"
+          text={t('content.autoTagSelected')}
           icon={IconSet.TAG_ADD}
           disabled={fileStore.isTaggingWithService}
         />
         <MenuItem
           onClick={fileStore.readTagsFromSelectedFiles}
-          text="Import Tags From Selected Files Metadata"
+          text={t('content.importTagsFromMetadata')}
           icon={IconSet.TAG_ADD}
         />
         <MenuItem
           onClick={fileStore.writeTagsToSelectedFiles}
-          text="Overwrite Tags in Selected Files Metadata"
+          text={t('content.overwriteTagsInMetadata')}
           icon={IconSet.WARNING}
         />
         <MenuItem
           onClick={handleClearSelectedFileTags}
-          text="Clear Selected Files Tags (and copy tags)"
+          text={t('content.clearSelectedFilesTags')}
           icon={IconSet.TAG_BLANCO}
         />
       </MenuSubItem>
-      <MenuItem onClick={uiStore.copyTagsToClipboard} text="Copy Tags" icon={IconSet.TAG_GROUP} />
+      <MenuItem onClick={uiStore.copyTagsToClipboard} text={t('content.copyTags')} icon={IconSet.TAG_GROUP} />
       <MenuItem
         onClick={uiStore.pasteTags}
-        text="Paste Tags"
+        text={t('content.pasteTags')}
         icon={IconSet.TAG_GROUP_OPEN}
         disabled={uiStore.isTagClipboardEmpty()}
       />
-      <MenuSubItem text="Search Similar Images..." icon={IconSet.MORE}>
+      <MenuSubItem text={t('content.searchSimilarImages')} icon={IconSet.MORE}>
         <MenuItem
           onClick={(e) =>
             handleSearchSimilar(
@@ -140,7 +143,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
                 .map((t) => new ClientTagSearchCriteria(undefined, 'tags', t.id, 'contains')),
             )
           }
-          text="Same Tags"
+          text={t('content.sameTags')}
           icon={IconSet.TAG}
         />
         <MenuItem
@@ -155,7 +158,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               ),
             )
           }
-          text="Same Directory"
+          text={t('content.sameDirectory')}
           icon={IconSet.FOLDER_CLOSE}
         />
         <MenuItem
@@ -170,7 +173,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               ),
             )
           }
-          text="Same Location"
+          text={t('content.sameLocation')}
         />
         <MenuItem
           onClick={(e) =>
@@ -179,7 +182,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               new ClientStringSearchCriteria(undefined, 'extension', file.extension, 'equals'),
             )
           }
-          text="Same File Type"
+          text={t('content.sameFileType')}
           icon={IconSet.FILTER_FILE_TYPE}
         />
         <MenuItem
@@ -189,7 +192,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               new ClientNumberSearchCriteria(undefined, 'height', file.height, 'equals'),
             ])
           }
-          text="Same Resolution"
+          text={t('content.sameResolution')}
           icon={IconSet.ARROW_RIGHT}
         />
         <MenuItem
@@ -199,7 +202,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               new ClientNumberSearchCriteria(undefined, 'size', file.size, 'equals'),
             )
           }
-          text="Same File Size"
+          text={t('content.sameFileSize')}
           icon={IconSet.FILTER_FILTER_DOWN}
         />
         <MenuItem
@@ -209,7 +212,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               new ClientDateSearchCriteria(undefined, 'dateCreated', file.dateCreated, 'equals'),
             )
           }
-          text="Same Creation Date"
+          text={t('content.sameCreationDate')}
           icon={IconSet.FILTER_DATE}
         />
         <MenuItem
@@ -224,7 +227,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               ),
             )
           }
-          text="Same Modification Date"
+          text={t('content.sameModificationDate')}
         />
         <MenuItem
           onClick={(e) =>
@@ -233,7 +236,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
               new ClientDateSearchCriteria(undefined, 'dateModified', file.dateModified, 'equals'),
             )
           }
-          text="Same Modification Date in App"
+          text={t('content.sameModificationDateInApp')}
         />
       </MenuSubItem>
     </>
@@ -242,6 +245,7 @@ export const FileViewerMenuItems = ({ file }: { file: ClientFile }) => {
 
 export const SlideFileViewerMenuItems = observer(({ file }: { file: ClientFile }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handlePreviewWindow = () => {
     uiStore.selectFile(file, true);
@@ -267,33 +271,33 @@ export const SlideFileViewerMenuItems = observer(({ file }: { file: ClientFile }
     <>
       <MenuItem
         onClick={handleCopyImageToClipboard}
-        text="Copy Image to Clipboard"
+        text={t('content.copyImageToClipboard')}
         icon={IconSet.COPY}
         disabled={isFileExtensionVideo(file.extension)}
       />
-      <MenuItem onClick={handleCopyTagsToClipboard} text="Copy Tags" icon={IconSet.TAG_GROUP} />
+      <MenuItem onClick={handleCopyTagsToClipboard} text={t('content.copyTags')} icon={IconSet.TAG_GROUP} />
       <MenuItem
         onClick={handlePasteTags}
-        text="Paste Tags"
+        text={t('content.pasteTags')}
         icon={IconSet.TAG_GROUP_OPEN}
         disabled={uiStore.isTagClipboardEmpty()}
       />
       <MenuItem
         onClick={handlePreviewWindow}
-        text="Open In Preview Window"
+        text={t('content.openInPreviewWindow')}
         icon={IconSet.PREVIEW}
       />
 
-      <MenuSubItem text="Upscale filtering..." icon={IconSet.VIEW_GRID}>
+      <MenuSubItem text={t('content.upscaleFiltering')} icon={IconSet.VIEW_GRID}>
         <MenuRadioItem
           onClick={uiStore.setUpscaleModeSmooth}
           checked={uiStore.upscaleMode === 'smooth'}
-          text="Smooth"
+          text={t('content.upscaleSmooth')}
         />
         <MenuRadioItem
           onClick={uiStore.setUpscaleModePixelated}
           checked={uiStore.upscaleMode === 'pixelated'}
-          text="Pixelated"
+          text={t('content.upscalePixelated')}
         />
       </MenuSubItem>
     </>
@@ -302,11 +306,12 @@ export const SlideFileViewerMenuItems = observer(({ file }: { file: ClientFile }
 
 export const ExternalAppMenuItems = observer(({ file }: { file: ClientFile }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <>
       <MenuItem
         onClick={() => uiStore.openExternal()}
-        text="Open External"
+        text={t('content.openExternal')}
         icon={IconSet.OPEN_EXTERNAL}
         disabled={file.isBroken}
       />
@@ -314,18 +319,18 @@ export const ExternalAppMenuItems = observer(({ file }: { file: ClientFile }) =>
         onClick={() =>
           LocationTreeItemRevealer.instance.revealSubLocation(file.locationId, file.absolutePath)
         }
-        text="Reveal in Locations Panel"
+        text={t('content.revealInLocationsPanel')}
         icon={IconSet.TREE_LIST}
       />
       <MenuItem
         onClick={() => shell.showItemInFolder(file.absolutePath)}
-        text="Reveal in File Browser"
+        text={t('content.revealInFileBrowser')}
         icon={IconSet.FOLDER_CLOSE}
         disabled={file.isBroken}
       />
       <MenuItem
         onClick={uiStore.openMoveFilesToTrash}
-        text={`Delete file${uiStore.fileSelection.size > 1 ? 's' : ''}`}
+        text={uiStore.fileSelection.size > 1 ? t('content.deleteFiles') : t('content.deleteFile')}
         icon={IconSet.DELETE}
         disabled={file.isBroken}
       />
@@ -335,34 +340,35 @@ export const ExternalAppMenuItems = observer(({ file }: { file: ClientFile }) =>
 
 export const FileTagMenuItems = observer(({ file, tag }: { file?: ClientFile; tag: ClientTag }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const ctxTags = uiStore.getTagContextItems(tag.id);
   return (
     <>
       <MenuItem
         onClick={() => TagsTreeItemRevealer.instance.revealTag(tag)}
-        text="Reveal in Tags Panel"
+        text={t('content.revealInTagsPanel')}
         icon={IconSet.TREE_LIST}
         disabled={file ? file.isBroken : false}
       />
       <MenuItem
         onClick={() => uiStore.openTagPropertiesEditor(tag)}
-        text="Edit Tag"
+        text={t('content.editTag')}
         icon={IconSet.EDIT}
       />
       <MenuItem
         onClick={() => uiStore.openTagMovePanel(tag)}
-        text="Move Tag To"
+        text={t('content.moveTagTo')}
         icon={IconSet.TAG_GROUP}
       />
       <MenuItem
         onClick={() => uiStore.openTagMergePanel(tag)}
-        text="Merge Tag With"
+        text={t('content.mergeTagWith')}
         icon={IconSet.TAG_GROUP}
         disabled={ctxTags.some((tag) => tag.subTags.length > 0)}
       />
       <MenuItem
         onClick={() => file && file.removeTag(tag)}
-        text="Unassign Tag From File"
+        text={t('content.unassignTagFromFile')}
         icon={IconSet.TAG_BLANCO}
       />
     </>
@@ -377,6 +383,7 @@ export const EditorTagSummaryItems = ({
   beforeSelect: () => void;
 }) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const ctxTags = uiStore.getTagContextItems(tag.id);
   return (
     <>
@@ -385,7 +392,7 @@ export const EditorTagSummaryItems = ({
           beforeSelect();
           TagsTreeItemRevealer.instance.revealTag(tag);
         }}
-        text="Reveal in Tags Panel"
+        text={t('content.revealInTagsPanel')}
         icon={IconSet.TREE_LIST}
       />
       <MenuItem
@@ -393,17 +400,17 @@ export const EditorTagSummaryItems = ({
           beforeSelect();
           uiStore.openTagPropertiesEditor(tag);
         }}
-        text="Edit Tag"
+        text={t('content.editTag')}
         icon={IconSet.EDIT}
       />
       <MenuItem
         onClick={() => uiStore.openTagMovePanel(tag)}
-        text="Move To"
+        text={t('content.moveTo')}
         icon={IconSet.TAG_GROUP}
       />
       <MenuItem
         onClick={() => uiStore.openTagMergePanel(tag)}
-        text="Merge With"
+        text={t('content.mergeWith')}
         icon={IconSet.TAG_GROUP}
         disabled={ctxTags.some((tag) => tag.subTags.length > 0)}
       />
@@ -424,19 +431,20 @@ export const FileExtraPropertyMenuItems = observer(
     onRename: (extraProperty: ClientExtraProperty) => void;
   }) => {
     const { uiStore } = useStore();
+    const { t } = useTranslation();
 
     const isMultiple = uiStore.fileSelection.size > 1;
     return (
       <>
         <MenuItem
           onClick={() => onRemove(extraProperty)}
-          text={`Remove extra property from ${isMultiple ? 'files' : 'file'}`}
+          text={isMultiple ? t('content.removeExtraPropertyFromFiles') : t('content.removeExtraPropertyFromFile')}
           icon={IconSet.CLOSE}
         />
-        <MenuItem onClick={() => onRename(extraProperty)} text="Rename" icon={IconSet.EDIT} />
+        <MenuItem onClick={() => onRename(extraProperty)} text={t('common.rename')} icon={IconSet.EDIT} />
         <MenuItem
           onClick={() => onDelete(extraProperty)}
-          text="Delete extra property and remove it from all files"
+          text={t('content.deleteExtraProperty')}
           icon={IconSet.DELETE}
         />
       </>

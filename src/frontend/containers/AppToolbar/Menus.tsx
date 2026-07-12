@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 import { OrderBy, OrderDirection } from 'src/api/data-storage-search';
 import { FileDTO } from 'src/api/file';
@@ -12,18 +13,13 @@ import { ExtraPropertySelector } from 'src/frontend/components/ExtraPropertySele
 import { ClientExtraProperty } from 'src/frontend/entities/ExtraProperty';
 import { useComputed } from 'src/frontend/hooks/mobx';
 
-// Tooltip info
-const enum Tooltip {
-  View = 'Change view content panel',
-  Filter = 'Sort view content panel',
-}
-
 export const SortCommand = () => {
+  const { t } = useTranslation();
   return (
     <MenuButton
       icon={IconSet.SORT}
-      text="Sort"
-      tooltip={Tooltip.Filter}
+      text={t('toolbar.sort')}
+      tooltip={t('toolbar.sortTooltip')}
       id="__sort-menu"
       menuID="__sort-options"
     >
@@ -33,11 +29,12 @@ export const SortCommand = () => {
 };
 
 export const ViewCommand = () => {
+  const { t } = useTranslation();
   return (
     <MenuButton
       icon={IconSet.THUMB_BG}
-      text="View"
-      tooltip={Tooltip.View}
+      text={t('toolbar.view')}
+      tooltip={t('toolbar.viewTooltip')}
       id="__layout-menu"
       menuID="__layout-options"
     >
@@ -57,30 +54,30 @@ export const ViewCommand = () => {
 const sortMenuData: Array<{
   prop: OrderBy<FileDTO>;
   icon: JSX.Element;
-  text: string;
+  textKey: string;
   hideDirection?: boolean;
 }> = [
-  // { prop: 'tags', icon: IconSet.TAG, text: 'Tag' },
-  { prop: 'name', icon: IconSet.FILTER_NAME_UP, text: 'Name' },
-  { prop: 'absolutePath', icon: IconSet.FOLDER_OPEN, text: 'Path' },
-  { prop: 'extension', icon: IconSet.FILTER_FILE_TYPE, text: 'File type' },
-  { prop: 'size', icon: IconSet.FILTER_FILTER_DOWN, text: 'File size' },
-  { prop: 'dateAdded', icon: IconSet.FILTER_DATE, text: 'Date added' },
-  { prop: 'dateModified', icon: IconSet.FILTER_DATE, text: 'Date modified in app' },
-  { prop: 'dateModifiedOS', icon: IconSet.FILTER_DATE, text: 'Date modified' },
-  { prop: 'dateCreated', icon: IconSet.FILTER_DATE, text: 'Date created' },
-  { prop: 'random', icon: IconSet.RELOAD_COMPACT, text: 'Random', hideDirection: true },
+  { prop: 'name', icon: IconSet.FILTER_NAME_UP, textKey: 'toolbar.sortName' },
+  { prop: 'absolutePath', icon: IconSet.FOLDER_OPEN, textKey: 'toolbar.sortPath' },
+  { prop: 'extension', icon: IconSet.FILTER_FILE_TYPE, textKey: 'toolbar.sortFileType' },
+  { prop: 'size', icon: IconSet.FILTER_FILTER_DOWN, textKey: 'toolbar.sortFileSize' },
+  { prop: 'dateAdded', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateAdded' },
+  { prop: 'dateModified', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateModifiedInApp' },
+  { prop: 'dateModifiedOS', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateModified' },
+  { prop: 'dateCreated', icon: IconSet.FILTER_DATE, textKey: 'toolbar.sortDateCreated' },
+  { prop: 'random', icon: IconSet.RELOAD_COMPACT, textKey: 'toolbar.sortRandom', hideDirection: true },
 ];
 
 const sortExtraPropertyData: {
   prop: OrderBy<FileDTO>;
   icon: JSX.Element;
-  text: string;
+  textKey: string;
   hideDirection?: boolean;
-} = { prop: 'extraProperty', icon: IconSet.META_INFO, text: 'Extra Property' };
+} = { prop: 'extraProperty', icon: IconSet.META_INFO, textKey: 'toolbar.sortExtraProperty' };
 
 export const SortMenuItems = observer(() => {
   const { fileStore, extraPropertyStore } = useStore();
+  const { t } = useTranslation();
   const {
     orderDirection: fileOrder,
     orderBy,
@@ -103,17 +100,17 @@ export const SortMenuItems = observer(() => {
   return (
     <>
       <MenuCheckboxItem
-        text="Use natural ordering"
+        text={t('toolbar.sortUseNaturalOrdering')}
         checked={fileStore.isNaturalOrderingEnabled}
         onClick={fileStore.toggleNaturalOrdering}
       />
       <MenuRadioGroup>
         {[
-          ...sortMenuData.map(({ prop, icon, text, hideDirection }) => (
+          ...sortMenuData.map(({ prop, icon, textKey, hideDirection }) => (
             <MenuRadioItem
               key={prop}
               icon={icon}
-              text={text}
+              text={t(textKey)}
               checked={orderBy === prop}
               accelerator={orderBy === prop && !hideDirection ? orderIcon : undefined}
               onClick={() => (orderBy === prop ? switchOrderDirection() : orderFilesBy(prop))}
@@ -122,7 +119,7 @@ export const SortMenuItems = observer(() => {
           <MenuSubItem
             key={sortExtraPropertyData.prop}
             icon={sortExtraPropertyData.icon}
-            text={sortExtraPropertyData.text}
+            text={t(sortExtraPropertyData.textKey)}
             checked={orderBy === sortExtraPropertyData.prop}
             accelerator={
               orderBy === sortExtraPropertyData.prop && !sortExtraPropertyData.hideDirection ? (
@@ -247,35 +244,35 @@ const thumbnailPaddingSizeOptions = [
 
 export const LayoutMenuItems = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <MenuRadioGroup>
       <MenuRadioItem
         icon={IconSet.VIEW_LIST}
         onClick={uiStore.setMethodList}
         checked={uiStore.isList}
-        text="List"
+        text={t('toolbar.viewList')}
         accelerator={<KeyCombo combo={uiStore.hotkeyMap.viewList} />}
       />
       <MenuRadioItem
         icon={IconSet.VIEW_GRID}
         onClick={uiStore.setMethodGrid}
         checked={uiStore.isGrid}
-        text="Grid"
+        text={t('toolbar.viewGrid')}
         accelerator={<KeyCombo combo={uiStore.hotkeyMap.viewGrid} />}
       />
       <MenuRadioItem
         icon={IconSet.VIEW_MASONRY_V}
         onClick={uiStore.setMethodMasonryVertical}
         checked={uiStore.isMasonryVertical}
-        // TODO: "masonry" might not ring a bell to some people. Suggestions for a better name? "Flow", "Stream"?
-        text="Vertical Masonry"
+        text={t('toolbar.viewMasonryVertical')}
         accelerator={<KeyCombo combo={uiStore.hotkeyMap.viewMasonryVertical} />}
       />
       <MenuRadioItem
         icon={IconSet.VIEW_MASONRY_H}
         onClick={uiStore.setMethodMasonryHorizontal}
         checked={uiStore.isMasonryHorizontal}
-        text="Horizontal Masonry"
+        text={t('toolbar.viewMasonryHorizontal')}
         accelerator={<KeyCombo combo={uiStore.hotkeyMap.viewMasonryHorizontal} />}
       />
     </MenuRadioGroup>
@@ -284,10 +281,11 @@ export const LayoutMenuItems = observer(() => {
 
 export const ThumbnailSizeSliderMenuItem = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <MenuSliderItem
       value={getThumbnailSize(uiStore.thumbnailSize)}
-      label="Thumbnail size"
+      label={t('toolbar.thumbnailSize')}
       onChange={uiStore.setThumbnailSize}
       id="thumbnail-sizes"
       options={thumbnailSizeOptions}
@@ -300,10 +298,11 @@ export const ThumbnailSizeSliderMenuItem = observer(() => {
 
 export const ThumbnailRadiusSliderMenuItem = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <MenuSliderItem
       value={uiStore.thumbnailRadius}
-      label="Thumbnail Corner Radius"
+      label={t('toolbar.thumbnailRadius')}
       onChange={uiStore.setThumbnailRadius}
       id="thumbnail-padding-sizes"
       options={thumbnailRadiusOptions}
@@ -316,10 +315,11 @@ export const ThumbnailRadiusSliderMenuItem = observer(() => {
 
 export const ThumbnailPaddingSizeSliderMenuItem = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
     <MenuSliderItem
       value={uiStore.masonryItemPadding}
-      label="Thumbnail padding size"
+      label={t('toolbar.thumbnailPaddingSize')}
       onChange={uiStore.setMasonryItemPadding}
       id="thumbnail-padding-sizes"
       options={thumbnailPaddingSizeOptions}

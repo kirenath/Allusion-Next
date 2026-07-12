@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../contexts/StoreContext';
 
 import { Menu, MenuButton, useContextMenu } from 'widgets/menus';
@@ -40,6 +41,7 @@ interface FileExtraPropertiesEditorProps {
 export const FileExtraPropertiesEditor = observer(
   ({ id, addButtonContainerID, menuPlacement }: FileExtraPropertiesEditorProps) => {
     const { uiStore, fileStore, extraPropertyStore } = useStore();
+    const { t } = useTranslation();
     const [deletableExtraProperty, setDeletableExtraProperty] = useState<ClientExtraProperty>();
     const [removableExtraProperty, setRemovableExtraProperty] = useState<{
       files: ClientFile[];
@@ -205,7 +207,7 @@ export const FileExtraPropertiesEditor = observer(
             <MenuButton
               icon={IconSet.PLUS}
               text=""
-              tooltip="Add extra property to file"
+              tooltip={t('components.addExtraPropertyToFile')}
               id={extraPropertySelectorButtonID}
               menuID={extraPropertySelectorButtonMenuID}
               placement={menuPlacement ? menuPlacement : 'left-start'}
@@ -224,7 +226,7 @@ export const FileExtraPropertiesEditor = observer(
         {uiStore.fileSelection.size === 0 && (
           <div>
             <i>
-              <b>No files selected</b>
+              <b>{t('components.noFilesSelected')}</b>
             </i>
           </div> // eslint-disable-line prettier/prettier
         )}

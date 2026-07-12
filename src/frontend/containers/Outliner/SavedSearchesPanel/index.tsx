@@ -1,6 +1,7 @@
 import { observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import MultiSplitPane, { MultiSplitPaneProps } from 'widgets/MultiSplit/MultiSplitPane';
 import { IconSet } from 'widgets/icons';
@@ -24,10 +25,6 @@ import { IExpansionState } from '../../types';
 import { createDragReorderHelper } from '../TreeItemDnD';
 import { triggerContextMenuEvent } from '../utils';
 
-// Tooltip info
-const enum Tooltip {
-  Create = 'Save the current search as a new saved search',
-}
 
 interface ITreeData {
   expansion: IExpansionState;
@@ -122,16 +119,17 @@ interface IContextMenuProps {
 
 const SearchItemContextMenu = observer(
   ({ searchItem, onDelete, onDuplicate, onReplace, onEdit }: IContextMenuProps) => {
+    const { t } = useTranslation();
     return (
       <Menu>
-        <MenuItem text="Edit" onClick={() => onEdit(searchItem)} icon={IconSet.EDIT} />
+        <MenuItem text={t('common.edit')} onClick={() => onEdit(searchItem)} icon={IconSet.EDIT} />
         <MenuItem
-          text="Replace with current search"
+          text={t('outliner.replaceWithCurrentSearch')}
           onClick={() => onReplace(searchItem)}
           icon={IconSet.REPLACE}
         />
-        <MenuItem text="Duplicate" onClick={() => onDuplicate(searchItem)} icon={IconSet.PLUS} />
-        <MenuItem text="Delete" onClick={() => onDelete(searchItem)} icon={IconSet.DELETE} />
+        <MenuItem text={t('outliner.duplicate')} onClick={() => onDuplicate(searchItem)} icon={IconSet.PLUS} />
+        <MenuItem text={t('common.delete')} onClick={() => onDelete(searchItem)} icon={IconSet.DELETE} />
       </Menu>
     );
   },
@@ -388,6 +386,7 @@ const SavedSearchesList = ({ onDelete, onEdit, onDuplicate, onReplace }: ISearch
 const SavedSearchesPanel = observer((props: Partial<MultiSplitPaneProps>) => {
   const rootStore = useStore();
   const { searchStore, uiStore } = rootStore;
+  const { t } = useTranslation();
 
   const isEmpty = searchStore.searchList.length === 0;
 
@@ -417,14 +416,14 @@ const SavedSearchesPanel = observer((props: Partial<MultiSplitPaneProps>) => {
     <SearchDnDProvider value={data.current}>
       <MultiSplitPane
         id="saved-searches"
-        title="Saved Searches"
+        title={t('outliner.savedSearches')}
         headerToolbar={
           <Toolbar controls="saved-searches-list" isCompact>
             <ToolbarButton
               icon={IconSet.PLUS}
-              text="Save current search"
+              text={t('outliner.saveCurrentSearch')}
               onClick={saveCurrentSearch}
-              tooltip={Tooltip.Create}
+              tooltip={t('outliner.saveCurrentSearchTooltip')}
             />
           </Toolbar>
         }
@@ -437,7 +436,7 @@ const SavedSearchesPanel = observer((props: Partial<MultiSplitPaneProps>) => {
           onReplace={searchStore.replaceWithActiveSearch}
         />
         {isEmpty && (
-          <Callout icon={IconSet.INFO}>Click + to save your current search criteria.</Callout>
+          <Callout icon={IconSet.INFO}>{t('outliner.clickToSaveSearch')}</Callout>
         )}
 
         {editableSearch && (

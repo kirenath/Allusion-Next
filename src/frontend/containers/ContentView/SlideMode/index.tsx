@@ -3,6 +3,7 @@ import { autorun, reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import SysPath from 'path';
 import React, { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { encodeFilePath, isFileExtensionVideo } from 'common/fs';
 import { Button, IconSet, Split } from 'widgets';
 import { useStore } from '../../../contexts/StoreContext';
@@ -410,11 +411,12 @@ interface ImageFallbackProps {
 }
 
 const ImageFallback = ({ error, absolutePath }: ImageFallbackProps) => {
+  const { t } = useTranslation();
   return (
     <div style={CONTAINER_DEFAULT_STYLE} className="image-fallback">
       <div style={{ maxHeight: 360, maxWidth: 360 }} className="image-error" />
       <br />
-      <span>Could not load {error ? '' : 'full '}image </span>
+      <span>{t('content.couldNotLoadImage', { type: error ? '' : 'full ' })}</span>
       <pre
         title={absolutePath}
         style={{ maxWidth: '40ch', overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -427,7 +429,7 @@ const ImageFallback = ({ error, absolutePath }: ImageFallbackProps) => {
             .openExternal(encodeFilePath(absolutePath))
             .catch((e) => console.error(e, absolutePath))
         }
-        text="Open in external application"
+        text={t('content.openInExternalApp')}
       />
     </div>
   );

@@ -1,11 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RendererMessenger } from 'src/ipc/renderer';
 import { Toggle } from 'widgets';
 import { useStore } from '../../contexts/StoreContext';
 
 export const StartupBehavior = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
 
   const [isAutoUpdateEnabled, setAutoUpdateEnabled] = useState(
     RendererMessenger.isCheckUpdatesOnStartupEnabled,
@@ -22,17 +24,17 @@ export const StartupBehavior = observer(() => {
         checked={uiStore.isRememberSearchEnabled}
         onChange={uiStore.toggleRememberSearchQuery}
       >
-        Restore and query last submitted search query
+        {t('settings.restoreLastSearch')}
       </Toggle>
       <Toggle
         checked={uiStore.isRefreshLocationsStartupEnabled}
         onChange={uiStore.toggleRefreshLocationStartup}
       >
-        Refresh Non Auto-Synced Locations and Detect File Changes
+        {t('settings.refreshNonAutoSyncedLocations')}
       </Toggle>
       <br />
       <Toggle checked={isAutoUpdateEnabled} onChange={toggleAutoUpdate}>
-        Check for updates
+        {t('settings.checkForUpdates')}
       </Toggle>
     </div>
   );

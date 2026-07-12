@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import { comboMatches, getKeyComboString, parseKeyCombo } from '../../hotkeyParser';
 
 import { useStore } from '../../contexts/StoreContext';
@@ -9,11 +10,11 @@ import { camelCaseToSpaced } from 'common/fmt';
 import { Button, IconSet, keyComboToString } from 'widgets';
 
 export const Shortcuts = () => {
+  const { t } = useTranslation();
   return (
     <>
       <p>
-        Click on a key combination to modify it. After typing your new combination, press Enter to
-        confirm or Escape to cancel.
+        {t('settings.shortcutsDescription')}
       </p>
       <HotkeyMapper />
     </>
@@ -76,6 +77,7 @@ interface IKeyComboEditor {
 const KeyComboEditor = observer(
   ({ actionKey, setEditableKey, isChanging, textDispatch, combo, onKeyDown }: IKeyComboEditor) => {
     const { uiStore } = useStore();
+    const { t } = useTranslation();
     const hotkeyMap = uiStore.hotkeyMap;
     const [text, setText] = textDispatch;
     const isEditable = useRef(true);
@@ -107,12 +109,12 @@ const KeyComboEditor = observer(
           />
           {text.length > 0 && isInvalidCombo(text, actionKey, hotkeyMap) && (
             <div className="key-combo-input-warning">
-              {IconSet.WARNING_FILL} Key combination already in use!
+              {IconSet.WARNING_FILL} {t('settings.keyComboInUse')}
             </div>
           )}
         </div>
         <Button
-          text={isChanging ? 'Save' : 'Edit'}
+          text={isChanging ? t('common.save') : t('common.edit')}
           onClick={() => {
             if (isEditable.current) {
               setEditableKey(actionKey);
@@ -126,7 +128,7 @@ const KeyComboEditor = observer(
         <Button
           icon={IconSet.RELOAD}
           onClick={() => uiStore.remapHotkey(actionKey, defaultCombo)}
-          text="Reset"
+          text={t('common.reset')}
           disabled={comboMatches(parseKeyCombo(combo), parseKeyCombo(defaultCombo))}
         />
       </div>

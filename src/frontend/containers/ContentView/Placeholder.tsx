@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import LOGO_FC from 'resources/logo/svg/full-color/allusion-logomark-fc.svg';
 import { IS_PREVIEW_WINDOW } from 'common/window';
 
@@ -35,6 +36,7 @@ import useMountState from 'src/frontend/hooks/useMountState';
 
 const PreviewWindowPlaceholder = observer(() => {
   const { fileStore } = useStore();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [, isMounted] = useMountState();
   useEffect(() => {
@@ -49,7 +51,7 @@ const PreviewWindowPlaceholder = observer(() => {
 
   if (isLoading) {
     return (
-      <ContentPlaceholder title="Loading..." icon={<SVG src={LOGO_FC} />}>
+      <ContentPlaceholder title={t('content.loadingDotDotDot')} icon={<SVG src={LOGO_FC} />}>
         {IconSet.LOADING}
       </ContentPlaceholder>
     );
@@ -58,14 +60,14 @@ const PreviewWindowPlaceholder = observer(() => {
   // There should always be images to preview.
   // If the placeholder is shown, something went wrong (probably the DB of the preview window is out of sync with the main window)
   return (
-    <ContentPlaceholder title="That's not supposed to happen..." icon={<SVG src={LOGO_FC} />}>
-      <p>Something went wrong while previewing the selected images</p>
+    <ContentPlaceholder title={t('content.notSupposedToHappen')} icon={<SVG src={LOGO_FC} />}>
+      <p>{t('content.somethingWentWrongPreview')}</p>
 
       <div className="divider" />
 
       <Button
         styling="outlined"
-        text="Reload Allusion"
+        text={t('content.reloadAllusion')}
         onClick={() => RendererMessenger.reload()}
       />
     </ContentPlaceholder>
@@ -74,58 +76,60 @@ const PreviewWindowPlaceholder = observer(() => {
 
 const Welcome = () => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="Welcome to Allusion" icon={<SVG src={LOGO_FC} />}>
+    <ContentPlaceholder title={t('content.welcomeToAllusion')} icon={<SVG src={LOGO_FC} />}>
       <p>
-        Allusion is a tool designed to help you organize your Visual Library, so you can easily find
-        what you need throughout your creative process.
+        {t('content.welcomeDescription')}
       </p>
       <p>
-        Allusion needs to know where to find your images.
+        {t('content.welcomeNeedsToKnow')}
         <br />
-        Add a Location to get started.
+        {t('content.welcomeAddLocation')}
       </p>
 
       <div className="divider" />
 
-      <p>New to Allusion?</p>
-      <Button styling="outlined" text="Open Help Center" onClick={uiStore.toggleHelpCenter} />
+      <p>{t('content.welcomeNewToAllusion')}</p>
+      <Button styling="outlined" text={t('content.welcomeOpenHelpCenter')} onClick={uiStore.toggleHelpCenter} />
 
       <br />
       <br />
       <br />
 
       {/* Mention principles (?) */}
-      <small>Allusion is a read-only application. We&rsquo;ll never touch your files</small>
+      <small>{t('content.welcomeReadonly')}</small>
     </ContentPlaceholder>
   );
 };
 
 const NoContentFound = () => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="No images" icon={IconSet.MEDIA}>
-      <p>Images can be added from the outliner</p>
-      <Button onClick={uiStore.toggleOutliner} text="Toggle outliner" styling="outlined" />
+    <ContentPlaceholder title={t('content.noImages')} icon={IconSet.MEDIA}>
+      <p>{t('content.noImagesDescription')}</p>
+      <Button onClick={uiStore.toggleOutliner} text={t('content.toggleOutliner')} styling="outlined" />
     </ContentPlaceholder>
   );
 };
 
 const NoQueryContent = () => {
   const { fileStore } = useStore();
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="No images found" icon={IconSet.SEARCH}>
-      <p>Try searching for something else.</p>
+    <ContentPlaceholder title={t('content.noImagesFound')} icon={IconSet.SEARCH}>
+      <p>{t('content.trySearchingElsewhere')}</p>
       {/* TODO: when search includes a Hidden tag, remind the user that's what might be causing them to see no results */}
       <ButtonGroup align="center">
         <Button
-          text="All images"
+          text={t('content.allImages')}
           icon={IconSet.MEDIA}
           onClick={fileStore.fetchAllFiles}
           styling="outlined"
         />
         <Button
-          text="Untagged"
+          text={t('content.untagged')}
           icon={IconSet.TAG_BLANCO}
           onClick={fileStore.fetchUntaggedFiles}
           styling="outlined"
@@ -137,11 +141,12 @@ const NoQueryContent = () => {
 
 const NoUntaggedContent = () => {
   const { fileStore } = useStore();
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="No untagged images" icon={IconSet.TAG}>
-      <p>All images have been tagged. Nice work!</p>
+    <ContentPlaceholder title={t('content.noUntaggedImages')} icon={IconSet.TAG}>
+      <p>{t('content.allImagesTagged')}</p>
       <Button
-        text="All Images"
+        text={t('content.allImagesLabel')}
         icon={IconSet.MEDIA}
         onClick={fileStore.fetchAllFiles}
         styling="outlined"
@@ -152,18 +157,19 @@ const NoUntaggedContent = () => {
 
 const NoMissingContent = () => {
   const { fileStore } = useStore();
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="No missing images" icon={IconSet.WARNING_BROKEN_LINK}>
-      <p>Try searching for something else.</p>
+    <ContentPlaceholder title={t('content.noMissingImages')} icon={IconSet.WARNING_BROKEN_LINK}>
+      <p>{t('content.trySearchingElsewhere')}</p>
       <ButtonGroup align="center">
         <Button
-          text="All images"
+          text={t('content.allImages')}
           icon={IconSet.MEDIA}
           onClick={fileStore.fetchAllFiles}
           styling="outlined"
         />
         <Button
-          text="Untagged"
+          text={t('content.untagged')}
           icon={IconSet.TAG_BLANCO}
           onClick={fileStore.fetchUntaggedFiles}
           styling="outlined"
@@ -174,9 +180,10 @@ const NoMissingContent = () => {
 };
 
 const BugReport = () => {
+  const { t } = useTranslation();
   return (
-    <ContentPlaceholder title="You encountered a bug!" icon={IconSet.WARNING_FILL}>
-      <p>Please report this bug to the maintainers!</p>
+    <ContentPlaceholder title={t('content.bugEncountered')} icon={IconSet.WARNING_FILL}>
+      <p>{t('content.reportBug')}</p>
     </ContentPlaceholder>
   );
 };

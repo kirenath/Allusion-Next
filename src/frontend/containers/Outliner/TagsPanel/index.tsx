@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet } from 'widgets';
 import { MultiSplitPaneProps } from 'widgets/MultiSplit/MultiSplitPane';
@@ -13,15 +14,10 @@ import { TagPropertiesEditor } from './TagPropertiesEditor';
 import { TagsMoveTo } from './TagsMoveTo';
 import { TagMerge } from './TagMerge';
 
-// Tooltip info
-const enum TooltipInfo {
-  AllImages = 'View all images in library',
-  Untagged = 'View all untagged images',
-  Missing = 'View missing images on your system',
-}
 
 export const OutlinerActionBar = observer(() => {
   const { fileStore, uiStore } = useStore();
+  const { t } = useTranslation();
 
   const handleUntaggedClick = useCallback((e: React.MouseEvent) => {
     if (!e.ctrlKey) {
@@ -48,14 +44,14 @@ export const OutlinerActionBar = observer(() => {
         icon={IconSet.MEDIA}
         onClick={fileStore.fetchAllFiles}
         pressed={fileStore.showsAllContent}
-        tooltip={TooltipInfo.AllImages}
+        tooltip={t('outliner.viewAllImages')}
       />
       <ToolbarButton
         text={fileStore.numUntaggedFiles}
         icon={IconSet.TAG_BLANCO}
         onClick={handleUntaggedClick}
         pressed={fileStore.showsUntaggedContent}
-        tooltip={TooltipInfo.Untagged}
+        tooltip={t('outliner.viewUntagged')}
       />
       {fileStore.numMissingFiles > 0 && (
         <ToolbarButton
@@ -63,7 +59,7 @@ export const OutlinerActionBar = observer(() => {
           icon={IconSet.WARNING_FILL}
           onClick={fileStore.fetchMissingFiles}
           pressed={fileStore.showsMissingContent}
-          tooltip={TooltipInfo.Missing}
+          tooltip={t('outliner.viewMissing')}
         />
       )}
     </Toolbar>

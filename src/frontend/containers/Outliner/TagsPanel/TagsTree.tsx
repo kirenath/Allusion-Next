@@ -1,6 +1,7 @@
 import { action, runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { formatTagCountText } from 'common/fmt';
 import { IconSet } from 'widgets';
@@ -564,6 +565,7 @@ const useStableMappedTagTreeNodes = (root: ClientTag) => {
 
 const TagsTree = observer((props: Partial<MultiSplitPaneProps>) => {
   const { tagStore, uiStore } = useStore();
+  const { t } = useTranslation();
   const root = tagStore.root;
   const [state, dispatchFn] = useReducer(reducer, {
     expansion: {},
@@ -798,7 +800,7 @@ const TagsTree = observer((props: Partial<MultiSplitPaneProps>) => {
   return (
     <MultiSplitPane
       id="tags"
-      title="Tags"
+      title={t('outliner.tags')}
       onKeyDown={handleKeyDown}
       headerProps={{
         onDragOver: handleDragOverAndLeave,
@@ -810,24 +812,24 @@ const TagsTree = observer((props: Partial<MultiSplitPaneProps>) => {
           {!tagStore.fileCountsInitialized && (
             <ToolbarButton
               icon={IconSet.RELOAD_COMPACT}
-              text="Update Tag File Counts"
+              text={t('outliner.updateFileCounts')}
               onClick={() => tagStore.updateTagSubTreeFileCounts(root)}
-              tooltip={'Update Tag File Counts'}
+              tooltip={t('outliner.updateFileCounts')}
             />
           )}
           {uiStore.tagSelection.size > 0 ? (
             <ToolbarButton
               icon={IconSet.CLOSE}
-              text="Clear"
+              text={t('common.clear')}
               onClick={uiStore.clearTagSelection}
-              tooltip="Clear Selection"
+              tooltip={t('outliner.clearSelection')}
             />
           ) : (
             <ToolbarButton
               icon={IconSet.PLUS}
-              text="New Tag"
+              text={t('outliner.newTag')}
               onClick={handleRootAddTag}
-              tooltip="Add a new tag"
+              tooltip={t('outliner.addNewTag')}
             />
           )}
         </Toolbar>
@@ -838,7 +840,7 @@ const TagsTree = observer((props: Partial<MultiSplitPaneProps>) => {
         <div className="tree-content-label" style={{ padding: '0.25rem' }}>
           {/* <span className="pre-icon">{IconSet.INFO}</span> */}
           {/* No tags or collections created yet */}
-          <i style={{ marginLeft: '1em' }}>None</i>
+          <i style={{ marginLeft: '1em' }}>{t('outliner.none')}</i>
         </div>
       ) : (
         <VirtualizedTree

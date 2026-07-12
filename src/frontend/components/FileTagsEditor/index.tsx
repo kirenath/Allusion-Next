@@ -1,5 +1,6 @@
 import { IComputedValue } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import React, {
   ForwardedRef,
   useCallback,
@@ -39,6 +40,7 @@ const MIN_SUMMARY_THRESHOLD = REM_VALUE * 2.1;
 
 export const FileTagsEditor = observer(() => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const clearInputOnSelect = uiStore.isClearTagSelectorsOnSelectEnabled;
   const [inputText, setInputText] = useState('');
   const [dobuncedQuery, setDebQuery] = useState('');
@@ -260,7 +262,7 @@ export const FileTagsEditor = observer(() => {
       />
       <div ref={summaryRef} style={{ height: storedSummaryHeight ?? undefined }}>
         {uiStore.fileSelection.size === 0 ? (
-          <div><i><b>No files selected</b></i></div> // eslint-disable-line prettier/prettier
+          <div><i><b>{t('components.noFilesSelected')}</b></i></div> // eslint-disable-line prettier/prettier
         ) : (
           showSummary && (
             <TagSummary
@@ -359,6 +361,7 @@ interface TagSummaryProps {
 
 const TagSummary = observer(({ counter, removeTag, onContextMenu }: TagSummaryProps) => {
   const { uiStore } = useStore();
+  const { t } = useTranslation();
   const sortedTags: ClientTag[] = Array.from(counter.get().entries())
     // Sort based on count
     .sort((a, b) => b[1][0] - a[1][0])
@@ -373,7 +376,7 @@ const TagSummary = observer(({ counter, removeTag, onContextMenu }: TagSummaryPr
         onContextMenu={onContextMenu}
         chunkSize={uiStore.fileSelection.size > 1 ? 5 : 100}
       />
-      {sortedTags.length === 0 && <i><b>No tags added yet</b></i> // eslint-disable-line prettier/prettier
+      {sortedTags.length === 0 && <i><b>{t('components.noTagsAddedYet')}</b></i> // eslint-disable-line prettier/prettier
       }
     </div>
   );

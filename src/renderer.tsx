@@ -31,6 +31,7 @@ import fse from 'fs-extra';
 import { USE_BACKEND_AS_WORKER } from 'src/backend/config';
 import { BackendService } from 'src/frontend/workers/BackendService';
 import { BackupSchedulerService } from './frontend/workers/BackupSchedulerService';
+import './frontend/i18n';
 
 async function main(): Promise<void> {
   // Render our react components in the div with id 'app' in the html file
