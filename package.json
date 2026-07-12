@@ -10,10 +10,10 @@
     "start": "electron ./build/main.bundle.js",
     "lint": "eslint src/**/*{ts,tsx} widgets/**/*{ts,tsx} --fix",
     "test": "jest",
-    "package": "yarn build && electron-builder",
+    "package": "npm run build && electron-builder",
     "logo": "ncp ./resources/logo/icns/allusion-logomark-fc.icns ./build/icon.icns && ncp ./resources/logo/ico/allusion-logomark-fc-256x256.ico ./build/icon.ico",
-    "build": "rimraf dist && yarn production && yarn logo",
-    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "build": "rimraf dist && npm run production && npm run logo",
+    "postinstall": "electron-rebuild -f",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "build:masonry": "cd wasm/wasm-build && cargo run masonry masonry/masonry-scalar && cargo run masonry masonry/masonry-simd -- -C target-feature=+simd128",
@@ -90,20 +90,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RafaUC/Allusion.git"
+    "url": "git+https://github.com/kirenath/Allusion-Next.git"
   },
   "author": "Allusion-App",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/RafaUC/Allusion/issues"
+    "url": "https://github.com/kirenath/Allusion-Next/issues"
   },
-  "homepage": "https://github.com/RafaUC/Allusion/Allusion#readme",
+  "homepage": "https://github.com/kirenath/Allusion-Next#readme",
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/chrome": "^0.0.195",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.5.1",
+    "@types/node": "^16.18.11",
     "@types/offscreencanvas": "^2019.6.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -111,10 +112,10 @@
     "@types/utif": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
+    "@electron/rebuild": "^3.7.2",
     "css-loader": "^6.7.3",
     "electron": "21.3.0",
     "electron-builder": "23.6.0",
-    "electron-rebuild": "^3.2.9",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -149,7 +150,7 @@
     "electron-updater": "^5.3.0",
     "fs-extra": "^11.1.0",
     "kysely": "^0.28.7",
-    "mobx": "^6.8.0",
+    "mobx": "6.8.0",
     "mobx-react-lite": "^3.4.0",
     "node-exiftool": "^2.3.0",
     "node-stream-zip": "^1.15.0",
@@ -161,5 +162,10 @@
     "sourcemapped-stacktrace": "^1.1.11",
     "utif": "^3.1.0",
     "wasm-feature-detect": "^1.2.11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
   }
 }
