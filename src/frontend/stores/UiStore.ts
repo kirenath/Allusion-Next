@@ -622,7 +622,7 @@ class UiStore {
     const copyToastKey = 'copy-toast';
 
     try {
-      AppToaster.show({ message: 'Copying image to clipboard...', timeout: 60000 }, copyToastKey);
+      AppToaster.show({ message: i18n.t('stores.copyingImageToClipboard'), timeout: 60000 }, copyToastKey);
       const src = await this.rootStore.imageLoader.getImageSrc(file);
       if (src !== undefined) {
         let buffer: Buffer;
@@ -656,14 +656,14 @@ class UiStore {
         }
         clipboard.writeImage(natImage);
         AppToaster.show(
-          { type: 'success', message: 'Image copied to clipboard.', timeout: 2000 },
+          { type: 'success', message: i18n.t('stores.imageCopiedToClipboard'), timeout: 2000 },
           copyToastKey,
         );
       } else {
         AppToaster.show(
           {
             type: 'error',
-            message: 'Failed to copy image to clipboard. (Extension is not supported.)',
+            message: i18n.t('stores.failedToCopyImageUnsupported'),
             timeout: 4000,
           },
           copyToastKey,
@@ -672,7 +672,7 @@ class UiStore {
       }
     } catch (e) {
       AppToaster.show(
-        { type: 'error', message: 'Failed to copy image to clipboard.', timeout: 4000 },
+        { type: 'error', message: i18n.t('stores.failedToCopyImage'), timeout: 4000 },
         copyToastKey,
       );
       console.error('Could not copy image to clipboard', e);
@@ -1013,7 +1013,7 @@ class UiStore {
       .join(', ');
     clipboard.writeText(allTagNames);
     AppToaster.show({
-      message: `Copied tags from ${this.tagClipboard.length} files.`,
+      message: i18n.t('stores.copiedTagsFromFiles', { count: this.tagClipboard.length }),
       timeout: 3000,
     });
   }

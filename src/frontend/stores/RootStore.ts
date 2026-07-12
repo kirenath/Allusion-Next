@@ -14,6 +14,7 @@ import { RendererMessenger } from 'src/ipc/renderer';
 import SearchStore from './SearchStore';
 import ExtraPropertyStore from './ExtraPropertyStore';
 import { AppToaster } from '../components/Toaster';
+import i18n from '../i18n';
 
 // This will throw exceptions whenever we try to modify the state directly without an action
 // Actions will batch state modifications -> better for performance
@@ -200,11 +201,11 @@ class RootStore {
   }
 
   async close(): Promise<void> {
-    AppToaster.show({ message: 'Closing Allusion...', type: 'info', timeout: 0 }, 'closing');
+    AppToaster.show({ message: i18n.t('stores.closingAllusion'), type: 'info', timeout: 0 }, 'closing');
     await this.locationStore.close();
     // TODO: should be able to be done more reliably by running exiftool as a child process
     await this.exifTool.close();
-    AppToaster.show({ message: 'Closing Allusion...', type: 'success', timeout: 0 }, 'closing');
+    AppToaster.show({ message: i18n.t('stores.closingAllusion'), type: 'success', timeout: 0 }, 'closing');
     await new Promise((resolve) => setTimeout(resolve, 200));
   }
 }

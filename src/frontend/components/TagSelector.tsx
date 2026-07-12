@@ -360,7 +360,7 @@ const SuggestedTagsList = observer(
             }
             if (selectionMap.size === 0 && uiStore.recentlyUsedTags.length === 0) {
               matches.push(
-                <Row key="empty-message" value={`${t('components.typeToSearchTags')}&nbsp;&nbsp;`}></Row>,
+                <Row key="empty-message" value={`${t('components.typeToSearchTags')}\u00A0\u00A0`}></Row>,
               );
             }
             return { suggestions: matches, widestItem: widest };

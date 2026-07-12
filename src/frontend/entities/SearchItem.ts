@@ -7,7 +7,7 @@ import RootStore from '../stores/RootStore';
 import {
   ClientFileSearchCriteria,
   ClientTagSearchCriteria,
-  SearchConjuctionSymbols,
+  getSearchConjunctionSymbols,
   SearchKeyDict,
 } from './SearchCriteria';
 import { ConditionGroupDTO, SearchConjunction } from 'src/api/data-storage-search';
@@ -271,14 +271,14 @@ export class ClientSearchGroup {
           return ch.name && ch.name !== ''
             ? {
                 id: ch.id,
-                label: `${SearchConjuctionSymbols[this.conjunction]} ${ch.name}`,
+                label: `${getSearchConjunctionSymbols()[this.conjunction]} ${ch.name}`,
                 isSystemTag: false,
               }
             : ch.getLabels(dict, rootStore, visited);
         } else {
           return {
             id: ch.id,
-            label: `${SearchConjuctionSymbols[this.conjunction]} ${ch.getLabel(dict, rootStore)}`,
+            label: `${getSearchConjunctionSymbols()[this.conjunction]} ${ch.getLabel(dict, rootStore)}`,
             isSystemTag: ch instanceof ClientTagSearchCriteria && ch.isSystemTag(),
           };
         }

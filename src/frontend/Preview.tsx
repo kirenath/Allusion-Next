@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconSet, Toggle } from 'widgets';
 import { ContextMenuLayer } from 'widgets/menus';
@@ -11,6 +12,7 @@ import { useWorkerListener } from './image/ThumbnailGeneration';
 
 const PreviewApp = observer(() => {
   const { uiStore, fileStore } = useStore();
+  const { t } = useTranslation();
 
   // Listen to responses of Web Workers
   useWorkerListener();
@@ -45,18 +47,18 @@ const PreviewApp = observer(() => {
         <Toolbar id="toolbar" label="Preview Command Bar" controls="content-view" isCompact>
           <ToolbarButton
             icon={IconSet.ARROW_LEFT}
-            text="Previous Image"
+            text={t('preview.previousImage')}
             onClick={handleLeftButton}
             disabled={uiStore.firstItemIndex === 0}
           />
           <ToolbarButton
             icon={IconSet.ARROW_RIGHT}
-            text="Next Image"
+            text={t('preview.nextImage')}
             onClick={handleRightButton}
             disabled={uiStore.firstItemIndex === fileStore.fileList.length - 1}
           />
           <Toggle onChange={uiStore.toggleSlideMode} checked={!uiStore.isSlideMode}>
-            Full size
+            {t('preview.fullSize')}
           </Toggle>
 
           <div className="spacer" />
@@ -65,8 +67,8 @@ const PreviewApp = observer(() => {
             icon={IconSet.INFO}
             onClick={uiStore.toggleSlideInspector}
             checked={uiStore.isSlideInspectorOpen}
-            text="Toggle the inspector panel"
-            tooltip="Toggle the inspector panel"
+            text={t('preview.toggleInspector')}
+            tooltip={t('preview.toggleInspector')}
           />
         </Toolbar>
 

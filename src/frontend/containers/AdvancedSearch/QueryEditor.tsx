@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ID } from 'src/api/id';
 import { IconSet } from 'widgets/icons';
@@ -37,42 +38,21 @@ export interface QueryEditorProps {
 export const QueryEditor = memo(function QueryEditor({
   query,
   setQuery,
-  submissionButtonText = 'Search',
+  submissionButtonText,
 }: QueryEditorProps) {
+  const { t } = useTranslation();
+  const btnText = submissionButtonText || t('advancedSearch.search');
   return (
     <fieldset aria-labelledby="query-editor-container-label">
       <legend id="query-editor-container-label">
-        Query Editor
+        {t('advancedSearch.queryEditor')}
         <InfoButton>
-          A query is a list of criterias.
-          <br />
-          <br />
-          In the editor you can edit already added criterias by changing the inputs or delete one by
-          pressing the{' '}
-          <span aria-label="remove criteria" style={{ verticalAlign: 'middle' }}>
-            {IconSet.DELETE}
-          </span>{' '}
-          icon button next to the inputs.
-          <br />
-          <br />
-          To change the order of criteria and groups, or move them to different groups, modify their
-          nesting position using the index/nesting input at the start of each criterion row.
-          <br />
-          <br />
-          To change how criteria are evaluated together, change the conjunction (AND/OR) between
-          groups/criteria.
-          <br />
-          <br />
-          You can set a name for groups for better identification. If defined, it will replace the
-          labels in the search bar and saved searches hierarchy.
-          <br />
-          <br />
+          {t('advancedSearch.queryEditorInfo')}
         </InfoButton>
       </legend>
       {query.children.size === 0 ? (
-        <Callout icon={IconSet.INFO} header="Empty Query">
-          Your query is currently empty. Create a criteria above to enable the{' '}
-          <b>{submissionButtonText}</b> button.
+        <Callout icon={IconSet.INFO} header={t('advancedSearch.emptyQuery')}>
+          {t('advancedSearch.emptyQueryMessage', { button: btnText })}
         </Callout>
       ) : undefined}
       <div id="query-editor-container">
@@ -102,6 +82,7 @@ export const CriteriaSeparator = ({ text, className }: { text: string; className
 
 export const EditableGroupControls = (props: EditableCriteriaGroupProps) => {
   const { groupId, group, path, setQuery } = props;
+  const { t } = useTranslation();
   const handleChangeGroupIndex = useCallback(
     (toIndexPat: CritIndexPath) => {
       const groupIndexPat = parseIndexPath(path);
@@ -141,7 +122,7 @@ export const EditableGroupControls = (props: EditableCriteriaGroupProps) => {
         aria-labelledby={`${groupId} group-name`}
         className="input criteria-input group-name-input"
         type="text"
-        placeholder="Criteria Group Name"
+        placeholder={t('advancedSearch.criteriaGroupName')}
         defaultValue={group.name}
         onBlur={(e) => handelChangeName(e.target.value)}
       />
@@ -154,7 +135,7 @@ export const EditableGroupControls = (props: EditableCriteriaGroupProps) => {
         onClick={handelDelete}
       >
         {IconSet.DELETE}
-        <span className="visually-hidden">Remove Criteria</span>
+        <span className="visually-hidden">{t('advancedSearch.removeCriteria')}</span>
       </button>
     </div>
   );
@@ -235,6 +216,7 @@ export interface EditableCriteriaProps {
 // The main Criteria component, finds whatever input fields for the key should be rendered
 export const EditableCriteria = React.memo(function EditableCriteria(props: EditableCriteriaProps) {
   const { critId, criteria, path, dispatch } = props;
+  const { t } = useTranslation();
   const setCriteria = (fn: (criteria: Criteria) => Criteria) => {
     dispatch((query) => {
       const critPath = getPathByIndexPath(query, parseIndexPath(path));
@@ -302,7 +284,7 @@ export const EditableCriteria = React.memo(function EditableCriteria(props: Edit
         }
       >
         {IconSet.DELETE}
-        <span className="visually-hidden">Remove Criteria</span>
+        <span className="visually-hidden">{t('advancedSearch.removeCriteria')}</span>
       </button>
     </div>
   );
@@ -314,6 +296,7 @@ type QueryMatchProps = {
 };
 
 export const QueryMatch: React.FC<QueryMatchProps> = ({ searchMatchAny, toggle }) => {
+  const { t } = useTranslation();
   return (
     <RadioGroup
       name="Match"
@@ -321,8 +304,8 @@ export const QueryMatch: React.FC<QueryMatchProps> = ({ searchMatchAny, toggle }
       value={String(searchMatchAny)}
       onChange={toggle}
     >
-      <Radio value="true">Any</Radio>
-      <Radio value="false">All</Radio>
+      <Radio value="true">{t('advancedSearch.any')}</Radio>
+      <Radio value="false">{t('advancedSearch.all')}</Radio>
     </RadioGroup>
   );
 };

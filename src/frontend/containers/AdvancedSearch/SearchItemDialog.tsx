@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from 'widgets/button';
 import { IconSet } from 'widgets/icons';
@@ -20,6 +21,7 @@ interface ISearchItemDialogProps {
 const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose }) => {
   const rootStore = useStore();
   const { tagStore, searchStore } = rootStore;
+  const { t } = useTranslation();
 
   // Copy state of search item: only update the ClientSearchItem on submit.
   const [name, setName] = useState(searchItem.name);
@@ -65,7 +67,7 @@ const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose
           handleSubmit();
         }}
       >
-        <label id="name">Name</label>
+        <label id="name">{t('advancedSearch.name')}</label>
         <input
           className="input"
           defaultValue={searchItem.name}
@@ -82,10 +84,10 @@ const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose
         <QueryEditor query={query} setQuery={setQuery} submissionButtonText="Save" />
 
         <fieldset className="dialog-actions">
-          <Button styling="outlined" text="Close" icon={IconSet.CLOSE} onClick={onClose} />
+          <Button styling="outlined" text={t('common.close')} icon={IconSet.CLOSE} onClick={onClose} />
           <Button
             styling="filled"
-            text="Save"
+            text={t('common.save')}
             icon={IconSet.SELECT_CHECKED}
             onClick={handleSubmit}
             disabled={query.children.size === 0}

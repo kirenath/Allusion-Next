@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from 'src/frontend/contexts/StoreContext';
 import { useAutorun } from 'src/frontend/hooks/mobx';
 import { Button, IconSet } from 'widgets';
@@ -10,6 +11,7 @@ import { QueryEditor } from './QueryEditor';
 
 export const AdvancedSearchDialog = observer(() => {
   const { uiStore, tagStore } = useStore();
+  const { t } = useTranslation();
   const [query, setQuery] = useState<Query>(getemptyQuery());
   const keySelector = useRef<HTMLSelectElement>(null);
   // Initialize form with current queries. When the form is closed, all inputs
@@ -34,7 +36,7 @@ export const AdvancedSearchDialog = observer(() => {
   return (
     <Dialog
       open={uiStore.isAdvancedSearchOpen}
-      title="Advanced Search"
+      title={t('advancedSearch.title')}
       icon={IconSet.SEARCH_EXTENDED}
       onCancel={uiStore.closeAdvancedSearch}
     >
@@ -46,10 +48,10 @@ export const AdvancedSearchDialog = observer(() => {
         <br />
 
         <fieldset className="dialog-actions">
-          <Button styling="outlined" text="Reset" icon={IconSet.CLOSE} onClick={reset} />
+          <Button styling="outlined" text={t('advancedSearch.reset')} icon={IconSet.CLOSE} onClick={reset} />
           <Button
             styling="filled"
-            text="Search"
+            text={t('advancedSearch.search')}
             icon={IconSet.SEARCH}
             onClick={search}
             disabled={query.children.size === 0}

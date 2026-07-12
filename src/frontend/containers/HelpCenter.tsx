@@ -1,8 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import { observer } from 'mobx-react-lite';
 import React, { memo, useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { chromeExtensionUrl, firefoxExtensionUrl } from 'common/config';
+import i18n from '../i18n';
 import { clamp } from 'common/core';
 import Logo_About from 'resources/images/helpcenter/logo-about-helpcenter-dark.jpg';
 import { Button, ButtonGroup, IconSet, Split } from 'widgets';
@@ -133,17 +135,18 @@ interface IPage {
 
 const Page = (props: IPage) => {
   const { toolbar, pages, pageIndex, openPage } = props;
+  const { t } = useTranslation();
 
   const buttons = [];
   if (pageIndex > 0) {
     const previousPage = () => openPage(pageIndex - 1);
     buttons.push(
-      <Button key="previous" styling="outlined" onClick={previousPage} text="Previous" />,
+      <Button key="previous" styling="outlined" onClick={previousPage} text={t('helpcenter.previous')} />,
     );
   }
   if (pageIndex < pages.length - 1) {
     const nextPage = () => openPage(pageIndex + 1);
-    buttons.push(<Button key="next" styling="outlined" onClick={nextPage} text="Next" />);
+    buttons.push(<Button key="next" styling="outlined" onClick={nextPage} text={t('helpcenter.next')} />);
   }
 
   return (
@@ -169,10 +172,11 @@ interface IPageToolbar {
 }
 
 const PageToolbar = ({ isIndexOpen, toggleIndex, controls }: IPageToolbar) => {
+  const { t } = useTranslation();
   return (
     <div role="toolbar" className="doc-page-toolbar" data-compact>
       <ToolbarButton
-        text="Toggle Index"
+        text={t('helpcenter.toggleIndex')}
         icon={isIndexOpen ? IconSet.DOUBLE_CARET : IconSet.MENU_HAMBURGER}
         pressed={isIndexOpen}
         controls={controls}
@@ -191,11 +195,11 @@ interface IPageData {
 
 const PAGE_DATA: () => IPageData[] = () => [
   {
-    title: 'About Allusion',
+    title: i18n.t('helpcenter.aboutAllusion'),
     icon: IconSet.LOGO,
     sections: [
       {
-        title: 'What is Allusion',
+        title: i18n.t('helpcenter.whatIsAllusion'),
         content: (
           <>
             <img className="centered" src={Logo_About} alt="Logo" />
@@ -221,11 +225,11 @@ const PAGE_DATA: () => IPageData[] = () => [
     ],
   },
   {
-    title: 'Library Setup',
+    title: i18n.t('helpcenter.librarySetup'),
     icon: IconSet.META_INFO,
     sections: [
       {
-        title: 'Getting Started',
+        title: i18n.t('helpcenter.gettingStarted'),
         content: (
           <>
             <p>
@@ -239,7 +243,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Locations',
+        title: i18n.t('helpcenter.locations'),
         content: (
           <>
             <p>
@@ -286,7 +290,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Drag & Drop',
+        title: i18n.t('helpcenter.dragAndDrop'),
         content: (
           <>
             <p>
@@ -299,7 +303,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Browser Extension',
+        title: i18n.t('helpcenter.browserExtension'),
         content: (
           <>
             <p>
@@ -314,7 +318,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Tag Import/Export',
+        title: i18n.t('helpcenter.tagImportExport'),
         content: (
           <>
             <p>
@@ -336,11 +340,11 @@ const PAGE_DATA: () => IPageData[] = () => [
     ],
   },
   {
-    title: 'Tagging',
+    title: i18n.t('helpcenter.tagging'),
     icon: IconSet.TAG,
     sections: [
       {
-        title: 'Tag Setup',
+        title: i18n.t('helpcenter.tagSetup'),
         content: (
           <>
             <p>
@@ -379,7 +383,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Implied Tags and Inherited Tags',
+        title: i18n.t('helpcenter.impliedAndInheritedTags'),
         content: (
           <>
             <p>
@@ -413,7 +417,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'How to Tag an Image',
+        title: i18n.t('helpcenter.howToTagAnImage'),
         content: (
           <>
             <p>There are several ways to tag your images and manage your collection efficiently:</p>
@@ -460,7 +464,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Recently used Tags',
+        title: i18n.t('helpcenter.recentlyUsedTags'),
         content: (
           <>
             <p>
@@ -474,7 +478,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Navigation',
+        title: i18n.t('helpcenter.navigation'),
         content: (
           <>
             <p>
@@ -487,7 +491,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Automatic Tagging',
+        title: i18n.t('helpcenter.automaticTagging'),
         content: (
           <>
             <p>
@@ -578,11 +582,11 @@ const PAGE_DATA: () => IPageData[] = () => [
     ],
   },
   {
-    title: 'Extra Properties',
+    title: i18n.t('helpcenter.extraProperties'),
     icon: IconSet.OUTLINER4,
     sections: [
       {
-        title: 'Extra Properties',
+        title: i18n.t('helpcenter.extraProperties'),
         content: (
           <>
             <p>
@@ -631,11 +635,11 @@ const PAGE_DATA: () => IPageData[] = () => [
     ],
   },
   {
-    title: 'Search',
+    title: i18n.t('helpcenter.search'),
     icon: IconSet.SEARCH,
     sections: [
       {
-        title: 'Quick Search',
+        title: i18n.t('helpcenter.quickSearch'),
         content: (
           <>
             <p>
@@ -666,7 +670,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Advanced Search',
+        title: i18n.t('helpcenter.advancedSearchSection'),
         content: (
           <>
             <p>
@@ -698,11 +702,11 @@ const PAGE_DATA: () => IPageData[] = () => [
     ],
   },
   {
-    title: 'Inspection',
+    title: i18n.t('helpcenter.inspection'),
     icon: IconSet.INFO,
     sections: [
       {
-        title: 'Content Area',
+        title: i18n.t('helpcenter.contentArea'),
         content: (
           <>
             <p>
@@ -718,7 +722,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Image Details',
+        title: i18n.t('helpcenter.imageDetails'),
         content: (
           <>
             <p>
@@ -734,7 +738,7 @@ const PAGE_DATA: () => IPageData[] = () => [
         ),
       },
       {
-        title: 'Image Preview Window',
+        title: i18n.t('helpcenter.imagePreviewWindow'),
         content: (
           <>
             <p>

@@ -36,7 +36,7 @@ import {
   ClientExtraPropertySearchCriteria,
   ClientStringSearchCriteria,
   ClientTagSearchCriteria,
-  CustomKeyDict,
+  getCustomKeyDict,
 } from 'src/frontend/entities/SearchCriteria';
 import { ClientTag } from 'src/frontend/entities/Tag';
 
@@ -268,7 +268,7 @@ const CriteriaList = observer(() => {
     <div className="input" onClick={uiStore.toggleAdvancedSearch}>
       <div className="multiautocomplete-input">
         <div className="input-wrapper">
-          {uiStore.searchRootGroup.getLabels(CustomKeyDict, rootStore).map((label) => (
+          {uiStore.searchRootGroup.getLabels(getCustomKeyDict(), rootStore).map((label) => (
             <Tag
               key={`${label.id}`}
               text={label.label}

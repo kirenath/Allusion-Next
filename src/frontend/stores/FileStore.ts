@@ -16,6 +16,7 @@ import {
 import { FileDTO, IMG_EXTENSIONS_TYPE } from '../../api/file';
 import { ID } from '../../api/id';
 import { AppToaster, IToastProps } from '../components/Toaster';
+import i18n from '../i18n';
 import { ClientFile, mergeMovedFile } from '../entities/File';
 import { ClientLocation } from '../entities/Location';
 import {
@@ -156,16 +157,16 @@ class FileStore {
     let count = 0;
     let isCancelled = false;
     const cancelled = () => isCancelled;
-    const failedClickAction = { label: 'Open DevTools', onClick: RendererMessenger.toggleDevTools };
+    const failedClickAction = { label: i18n.t('stores.openDevTools'), onClick: RendererMessenger.toggleDevTools };
 
     const showProgressToaster = () => {
       const percentage = ((count / numFiles) * 100).toFixed(2);
       AppToaster.show(
         {
-          message: `Reading tags from ${numFiles} files ${percentage}%...`,
+          message: i18n.t('stores.readingTagsFromFiles', { numFiles, percentage }),
           timeout: 0,
           clickAction: {
-            label: 'Cancel',
+            label: i18n.t('common.cancel'),
             onClick: () => {
               isCancelled = true;
             },
@@ -177,8 +178,8 @@ class FileStore {
     const showFinishToast = (_t: any, _c: any, status: Status) => {
       const isError = status === Status.error;
       const message = isError
-        ? 'Reading tags from files failed. Check the dev console for more details'
-        : 'Reading tags from files... Done!';
+        ? i18n.t('stores.readingTagsFailed')
+        : i18n.t('stores.readingTagsDone');
       AppToaster.show(
         {
           message: message,
@@ -293,17 +294,17 @@ class FileStore {
     let count = 0;
     let isCancelled = false;
     const cancelled = () => isCancelled;
-    const failedClickAction = { label: 'Open DevTools', onClick: RendererMessenger.toggleDevTools };
+    const failedClickAction = { label: i18n.t('stores.openDevTools'), onClick: RendererMessenger.toggleDevTools };
 
     const showProgressToaster = () => {
       if (!isCancelled) {
         const percentage = ((count / numFiles) * 100).toFixed(2);
         AppToaster.show(
           {
-            message: `Writing tags to ${numFiles} files ${percentage}%...`,
+            message: i18n.t('stores.writingTagsToFiles', { numFiles, percentage }),
             timeout: 0,
             clickAction: {
-              label: 'Cancel',
+              label: i18n.t('common.cancel'),
               onClick: () => {
                 isCancelled = true;
               },
@@ -316,8 +317,8 @@ class FileStore {
     const showFinishToast = (_t: any, _c: any, status: Status) => {
       const isError = status === Status.error;
       const message = isError
-        ? 'Writing tags to files failed. Check the dev console for more details'
-        : 'Writing tags to files... Done!';
+        ? i18n.t('stores.writingTagsFailed')
+        : i18n.t('stores.writingTagsDone');
       AppToaster.show(
         {
           message: message,
@@ -509,7 +510,7 @@ class FileStore {
     let isServiceActive = false;
     let isCancelled = false;
     const cancelled = () => isCancelled;
-    const failedClickAction = { label: 'Open DevTools', onClick: RendererMessenger.toggleDevTools };
+    const failedClickAction = { label: i18n.t('stores.openDevTools'), onClick: RendererMessenger.toggleDevTools };
 
     // use local counters instead of using the progress argument of the callbacks
     const showProgressToaster = () => {
@@ -517,12 +518,10 @@ class FileStore {
         const percentage = ((count / numFiles) * 100).toFixed(2);
         AppToaster.show(
           {
-            message: `Tagging ${numFiles} file${isMulti ? 's ' : ''}${isMulti ? percentage : ''}${
-              isMulti ? '%' : ''
-            } (${count})...  ${successCount !== count ? `(${count - successCount} failures)` : ''}`,
+            message: i18n.t('stores.taggingFiles', { numFiles, isMulti, percentage, count, failures: successCount !== count ? count - successCount : 0 }),
             timeout: 0,
             clickAction: {
-              label: 'Cancel',
+              label: i18n.t('common.cancel'),
               onClick: () => {
                 isCancelled = true;
               },
@@ -537,8 +536,8 @@ class FileStore {
       if (successCount === 0) {
         isCancelled = true;
         const message = taggingServiceURL
-          ? 'Could not get tags from the tagging service: is it not running, or is the API/URL misconfigured?'
-          : 'No Local Tagging Service API configured, go to: Settings > Background Processes > Local Tagging Service API URL';
+          ? i18n.t('stores.taggingServiceError')
+          : i18n.t('stores.taggingServiceNotConfigured');
         AppToaster.show(
           {
             type: 'error',
@@ -553,9 +552,7 @@ class FileStore {
         AppToaster.show(
           {
             type: isSuccess ? 'success' : 'warning',
-            message: `Successfully tagged ${successCount} of ${numFiles} files.  ${
-              !isSuccess ? `(${numFiles - successCount} failures)` : ''
-            }`,
+            message: i18n.t('stores.successfullyTaggedFiles', { successCount, numFiles, failures: !isSuccess ? numFiles - successCount : 0 }),
             timeout: 0,
             clickAction: !isSuccess ? failedClickAction : undefined,
           },
@@ -603,7 +600,7 @@ class FileStore {
             AppToaster.show(
               {
                 type: 'error',
-                message: `Failed to get the tags for "${file.name}" from the tagging service`,
+                message: i18n.t('stores.failedToGetTagsForFile', { name: file.name }),
                 timeout: 8000,
                 clickAction: failedClickAction,
               },
@@ -908,7 +905,7 @@ class FileStore {
         if (fetchedFiles.length === 0) {
           AppToaster.show(
             {
-              message: `${direction === 'after' ? 'End' : 'Top'} of results reached`,
+              message: i18n.t(direction === 'after' ? 'stores.endOfResultsReached' : 'stores.topOfResultsReached'),
               timeout: direction === 'after' ? 5000 : 2000,
             },
             'results-edge-reached',
@@ -1094,8 +1091,7 @@ class FileStore {
 
       AppToaster.show(
         {
-          message:
-            'Some files can no longer be found. Either move them back to their location, or delete them from Allusion',
+          message: i18n.t('stores.someFilesCannotBeFound'),
           timeout: 12000,
         },
         'recovery-view',
@@ -1278,7 +1274,7 @@ class FileStore {
       console.error(e);
       AppToaster.show(
         {
-          message: 'An error occurred while saving some files. Please try again.',
+          message: i18n.t('stores.errorSavingFiles'),
           timeout: 4000,
           type: 'error',
         },
@@ -1399,10 +1395,10 @@ class FileStore {
       const percentage = Math.min(((batchNum * batchSize) / total) * 100, 100).toFixed(1);
       AppToaster.show(
         {
-          message: `Scanning for missing files ${percentage}%...`,
+          message: i18n.t('stores.scanningForMissingFiles', { percentage }),
           timeout: 1200,
           clickAction: {
-            label: 'Cancel',
+            label: i18n.t('common.cancel'),
             onClick: () => {
               cancelled = true;
             },
@@ -1906,7 +1902,7 @@ class FileStore {
     if (this.isDispatchingToBackend) {
       AppToaster.show(
         {
-          message: 'Saving to all selected files already in progress...',
+          message: i18n.t('stores.savingAlreadyInProgress'),
           timeout: 6000,
           type: 'error',
         },
@@ -1933,10 +1929,10 @@ class FileStore {
         : (progress: number) =>
             AppToaster.show(
               {
-                message: `Saving ${total} Files ${(progress * 100).toFixed(1)}%...`,
+                message: i18n.t('stores.savingFiles', { total, progress: (progress * 100).toFixed(1) }),
                 timeout: 0,
                 clickAction: {
-                  label: 'Cancel',
+                  label: i18n.t('common.cancel'),
                   onClick: handleCancelled,
                 },
               },
@@ -1983,16 +1979,21 @@ class FileStore {
     if (showFinishProgressToaster) {
       showFinishProgressToaster(total, count, status);
     } else {
-      const strings = {
-        [Status.success]: ['Succesfuly saved', '', 'success'],
-        [Status.error]: ['Saved', ' with errors', 'error'],
-        [Status.aborted]: ['Saved', ' and cancelled', 'warning'],
-      }[status];
+      const typeMap: Record<Status, IToastProps['type']> = {
+        [Status.success]: 'success',
+        [Status.error]: 'error',
+        [Status.aborted]: 'warning',
+      };
+      const messageMap: Record<Status, string> = {
+        [Status.success]: i18n.t('stores.successfullySavedFiles', { count }),
+        [Status.error]: i18n.t('stores.savedFilesWithErrors', { count }),
+        [Status.aborted]: i18n.t('stores.savedFilesAndCancelled', { count }),
+      };
       AppToaster.show(
         {
-          message: `${strings[0]} ${count} files${strings[1]}.`,
+          message: messageMap[status],
           timeout: 0,
-          type: strings[2] as IToastProps['type'],
+          type: typeMap[status],
         },
         'is-dispatching-to-backend',
       );

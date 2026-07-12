@@ -13,7 +13,7 @@ import { generateId } from '../../../../api/id';
 import { SavedSearchRemoval } from '../../../components/RemovalAlert';
 import { useStore } from '../../../contexts/StoreContext';
 import { DnDSearchType, SearchDnDProvider, useSearchDnD } from '../../../contexts/TagDnDContext';
-import { ClientFileSearchCriteria, CustomKeyDict } from '../../../entities/SearchCriteria';
+import { ClientFileSearchCriteria, getCustomKeyDict } from '../../../entities/SearchCriteria';
 import {
   ClientFileSearchItem,
   ClientSearchGroup,
@@ -283,10 +283,10 @@ const SearchItemNode = observer(({ nodeData }: SearchItemCriteriaProps) => {
     ? nodeData.name
       ? nodeData.name
       : nodeData
-          .getLabels(CustomKeyDict, rootStore)
+          .getLabels(getCustomKeyDict(), rootStore)
           .map((l) => l.label)
           .join(', ')
-    : nodeData.getLabel(CustomKeyDict, rootStore);
+    : nodeData.getLabel(getCustomKeyDict(), rootStore);
 
   return (
     <div
@@ -399,9 +399,9 @@ const SavedSearchesPanel = observer((props: Partial<MultiSplitPaneProps>) => {
         return new ClientFileSearchItem(
           generateId(),
           uiStore.searchRootGroup
-            .getLabels(CustomKeyDict, rootStore)
+            .getLabels(getCustomKeyDict(), rootStore)
             .map((label) => label.label)
-            .join(', ') || 'New search',
+            .join(', ') || t('advancedSearch.newSearch'),
           uiStore.searchRootGroup.serialize(rootStore, true),
           searchStore.searchList.length,
         );

@@ -49,7 +49,7 @@ export const CreateOption = ({
         </>
       ) : (
         !hasMatches && (
-          <Row style={style} key="empty-message" value={`${t('components.typeToSelectTags')}&nbsp;&nbsp;`} />
+          <Row style={style} key="empty-message" value={`${t('components.typeToSelectTags')}\u00A0\u00A0`} />
         )
       )}
     </>
@@ -108,7 +108,7 @@ export const BulkApplyOption = ({
         </>
       ) : (
         tagNames.length <= 0 && (
-          <Row style={style} key="empty-message" value={`${t('components.noTagNamesDetected')}&nbsp;&nbsp;`} />
+          <Row style={style} key="empty-message" value={`${t('components.noTagNamesDetected')}\u00A0\u00A0`} />
         )
       )}
     </>

@@ -1,6 +1,7 @@
 import { action, computed, Lambda, makeObservable, observable } from 'mobx';
 
 import { camelCaseToSpaced } from '../../../common/fmt';
+import i18n from '../i18n';
 import {
   ArrayConditionDTO,
   ConditionDTO,
@@ -35,15 +36,15 @@ import { ClientSearchGroup } from './SearchItem';
 // A dictionary of labels for (some of) the keys of the type we search for
 export type SearchKeyDict = Partial<Record<keyof FileDTO, string>>;
 
-export const CustomKeyDict: SearchKeyDict = {
-  absolutePath: 'Path',
-  locationId: 'Location',
-};
+export const getCustomKeyDict = (): SearchKeyDict => ({
+  absolutePath: i18n.t('entities.path'),
+  locationId: i18n.t('entities.location'),
+});
 
-export const SearchConjuctionSymbols: Record<SearchConjunction, string> = {
-  and: 'AND',
-  or: 'OR',
-};
+export const getSearchConjunctionSymbols = (): Record<SearchConjunction, string> => ({
+  and: i18n.t('entities.and'),
+  or: i18n.t('entities.or'),
+});
 
 export const NumberOperatorSymbols: Record<NumberOperatorType, string> = {
   equals: '=',
@@ -54,21 +55,21 @@ export const NumberOperatorSymbols: Record<NumberOperatorType, string> = {
   greaterThanOrEquals: '≥',
 };
 
-export const StringOperatorLabels: Record<StringOperatorType, string> = {
-  equals: 'Equals',
-  equalsIgnoreCase: 'Equals (case insensitive)',
-  notEqual: 'Not Equal',
-  startsWith: 'Starts With',
-  startsWithIgnoreCase: 'Starts With (case insensitive)',
-  notStartsWith: 'Not Starts With',
-  contains: 'Contains',
-  notContains: 'Not Contains',
-};
+export const getStringOperatorLabels = (): Record<StringOperatorType, string> => ({
+  equals: i18n.t('entities.equals'),
+  equalsIgnoreCase: i18n.t('entities.equalsIgnoreCase'),
+  notEqual: i18n.t('entities.notEqual'),
+  startsWith: i18n.t('entities.startsWith'),
+  startsWithIgnoreCase: i18n.t('entities.startsWithIgnoreCase'),
+  notStartsWith: i18n.t('entities.notStartsWith'),
+  contains: i18n.t('entities.contains'),
+  notContains: i18n.t('entities.notContains'),
+});
 
-export const ExtraPropertyOperatorLabels: Record<ExtraPropertyOperatorType, string> = {
-  existsInFile: 'Exists in File',
-  notExistsInFile: 'Does Not Exist in File',
-};
+export const getExtraPropertyOperatorLabels = (): Record<ExtraPropertyOperatorType, string> => ({
+  existsInFile: i18n.t('entities.existsInFile'),
+  notExistsInFile: i18n.t('entities.notExistsInFile'),
+});
 
 export abstract class ClientFileSearchCriteria implements IBaseSearchCriteria {
   readonly id: ID;
@@ -173,11 +174,11 @@ export class ClientTagSearchCriteria extends ClientFileSearchCriteria {
   // The component who call this metod must be observer.
   getLabel: (dict: SearchKeyDict, rootStore: RootStore) => string = (dict, rootStore) => {
     if (!this.value && !this.operator.toLowerCase().includes('not')) {
-      return 'Untagged images';
+      return i18n.t('entities.untaggedImages');
     }
     return `${dict[this.key] || camelCaseToSpaced(this.key as string)} ${camelCaseToSpaced(
       this.operator,
-    )} ${!this.value ? 'no tags' : rootStore.tagStore.get(this.value)?.name}`;
+    )} ${!this.value ? i18n.t('entities.noTags') : rootStore.tagStore.get(this.value)?.name}`;
   };
 
   serialize = (rootStore: RootStore, duplicate = false): ITagSearchCriteria => {
@@ -243,14 +244,14 @@ export class ClientExtraPropertySearchCriteria extends ClientFileSearchCriteria 
     let operatorString = undefined;
     if (ep !== undefined) {
       if (isExtraPropertyOperatorType(this.operator)) {
-        operatorString = ExtraPropertyOperatorLabels[this.operator as ExtraPropertyOperatorType];
+        operatorString = getExtraPropertyOperatorLabels()[this.operator as ExtraPropertyOperatorType];
       } else if (ep.type === epType.text) {
-        operatorString = StringOperatorLabels[this.operator as StringOperatorType];
+        operatorString = getStringOperatorLabels()[this.operator as StringOperatorType];
       } else if (ep.type === epType.number) {
         operatorString = NumberOperatorSymbols[this.operator as NumberOperatorType];
       }
     }
-    return `EP: "${ep?.name || 'Invalid Property'}" ${
+    return `EP: "${ep?.name || i18n.t('entities.invalidProperty')}" ${
       operatorString || camelCaseToSpaced(this.operator)
     } ${isExtraPropertyOperatorType(this.operator) ? '' : `"${this.value[1]}"`}`;
   };
@@ -298,7 +299,7 @@ export class ClientStringSearchCriteria extends ClientFileSearchCriteria {
 
   @action.bound getLabel: (dict: SearchKeyDict) => string = (dict) =>
     `${dict[this.key] || camelCaseToSpaced(this.key as string)} ${
-      StringOperatorLabels[this.operator as StringOperatorType] || camelCaseToSpaced(this.operator)
+      getStringOperatorLabels()[this.operator as StringOperatorType] || camelCaseToSpaced(this.operator)
     } "${this.value}"`;
 
   serialize = (_: unknown, duplicate = false): IStringSearchCriteria => {

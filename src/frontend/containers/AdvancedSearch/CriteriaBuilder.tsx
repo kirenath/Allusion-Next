@@ -1,4 +1,5 @@
 import React, { RefObject, memo, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { IconButton } from 'widgets/button';
 import { IconSet } from 'widgets/icons';
@@ -16,6 +17,7 @@ const CriteriaBuilder = memo(function QueryBuilder({ keySelector, dispatch }: Qu
   const [path, setPath] = useState<CritIndexPath>([]);
   const [criteria, setCriteria] = useState(defaultQuery('tags'));
   const { extraPropertyStore } = useStore();
+  const { t } = useTranslation();
   const epID = 'extraProperty' in criteria ? criteria.extraProperty : undefined;
   const extraProperty = useMemo(
     () => (epID !== undefined ? extraPropertyStore.get(epID) : undefined),
@@ -31,40 +33,16 @@ const CriteriaBuilder = memo(function QueryBuilder({ keySelector, dispatch }: Qu
   return (
     <fieldset aria-labelledby="criteria-builder-label">
       <legend id="criteria-builder-label">
-        Criteria Builder
+        {t('advancedSearch.criteriaBuilder')}
         <InfoButton>
-          A criteria is made of three components:
-          <ul>
-            <li>
-              <b>nesting</b> (decides in which group the criteria will be added. If empty, it will
-              be added to the root group),
-            </li>
-            <li>
-              <b>key</b> (a property of the image file),
-            </li>
-            <li>
-              <b>operator</b> (decides how the property value is compared) and
-            </li>
-            <li>
-              the matching <b>value</b>.
-            </li>
-          </ul>
-          Every image that matches the criteria is shown.
-          <br />
-          <br />
-          You can edit the inputs for each component and add the criteria to the query by pressing
-          the{' '}
-          <span aria-label="add criteria" style={{ verticalAlign: 'middle' }}>
-            {IconSet.ADD}
-          </span>{' '}
-          icon button next to the inputs.
+          {t('advancedSearch.criteriaBuilderInfo')}
         </InfoButton>
       </legend>
       <div id="criteria-builder">
-        <label id="builder-space">Nesting</label>
-        <label id="builder-key">Key</label>
-        <label id="builder-operator">Operator</label>
-        <label id="builder-value">Value</label>
+        <label id="builder-space">{t('advancedSearch.nesting')}</label>
+        <label id="builder-key">{t('advancedSearch.key')}</label>
+        <label id="builder-operator">{t('advancedSearch.operator')}</label>
+        <label id="builder-value">{t('advancedSearch.value')}</label>
         <span></span>
 
         <IndexInput
@@ -94,7 +72,7 @@ const CriteriaBuilder = memo(function QueryBuilder({ keySelector, dispatch }: Qu
           extraProperty={extraProperty}
           operator={criteria.operator}
         />
-        <IconButton text="Add Criteria" icon={IconSet.ADD} onClick={add} />
+        <IconButton text={t('advancedSearch.addCriteria')} icon={IconSet.ADD} onClick={add} />
       </div>
     </fieldset>
   );

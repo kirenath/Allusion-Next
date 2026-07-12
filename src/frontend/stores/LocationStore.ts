@@ -11,6 +11,7 @@ import { ID, generateId } from '../../api/id';
 import { LocationDTO } from '../../api/location';
 import { RendererMessenger } from '../../ipc/renderer';
 import { AppToaster } from '../components/Toaster';
+import i18n from '../i18n';
 import { ClientFile, getMetaData, mergeMovedFile } from '../entities/File';
 import { ClientLocation, ClientSubLocation } from '../entities/Location';
 import { ClientStringSearchCriteria } from '../entities/SearchCriteria';
@@ -144,7 +145,7 @@ class LocationStore {
     const progressToastKey = 'progress';
     switch (action) {
       case 'show':
-        const toastsMsg = watch ? 'Syncing locations' : 'Looking for new images';
+        const toastsMsg = watch ? i18n.t('stores.syncingLocations') : i18n.t('stores.lookingForNewImages');
 
         AppToaster.show(
           {
@@ -167,7 +168,7 @@ class LocationStore {
           );
           AppToaster.show(
             {
-              message: 'This appears to be taking longer than usual.',
+              message: i18n.t('stores.takingLongerThanUsual'),
               timeout: 10000,
               clickAction: {
                 onClick: RendererMessenger.reload,
@@ -185,7 +186,7 @@ class LocationStore {
       case 'show-missing':
         AppToaster.show(
           {
-            message: `Cannot ${watch ? 'watch' : 'find'} Location "${location.name}"`,
+            message: i18n.t('stores.cannotFindLocation', { action: watch ? i18n.t('stores.watch') : i18n.t('stores.find'), name: location.name }),
             timeout: 6000,
           },
           // a key such that the toast can be dismissed automatically on recovery
@@ -393,7 +394,7 @@ class LocationStore {
     }
 
     if (foundNewFiles) {
-      AppToaster.show({ message: 'New images detected.', timeout: 5000 }, 'new-images');
+      AppToaster.show({ message: i18n.t('stores.newImagesDetected'), timeout: 5000 }, 'new-images');
     } else {
       this.showLocationProcessToast('hide', 'update');
     }
@@ -554,10 +555,10 @@ class LocationStore {
 
     AppToaster.show(
       {
-        message: 'Finding all images...',
+        message: i18n.t('stores.findingAllImages'),
         timeout: 0,
         clickAction: {
-          label: 'Cancel',
+          label: i18n.t('common.cancel'),
           onClick: handleCancelled,
         },
       },
@@ -577,7 +578,7 @@ class LocationStore {
       AppToaster.show(
         {
           // message: 'Gathering image metadata...',
-          message: `Loading ${(progress * 100).toFixed(1)}%...`,
+          message: i18n.t('stores.loadingProgress', { progress: (progress * 100).toFixed(1) }),
           timeout: 0,
         },
         toastKey,
@@ -595,10 +596,10 @@ class LocationStore {
       () => isCancelled,
     );
 
-    AppToaster.show({ message: 'Updating database...', timeout: 0 }, toastKey);
+    AppToaster.show({ message: i18n.t('stores.updatingDatabase'), timeout: 0 }, toastKey);
     await this.backend.createFilesFromPath(location.path, files);
 
-    AppToaster.show({ message: `Location "${location.name}" is ready!`, timeout: 5000 }, toastKey);
+    AppToaster.show({ message: i18n.t('stores.locationReady', { name: location.name }), timeout: 5000 }, toastKey);
     this.rootStore.fileStore.refetch();
     this.rootStore.fileStore.refetchFileCounts();
   }
@@ -669,7 +670,7 @@ class LocationStore {
       await this.backend.createFilesFromPath(fileStats.absolutePath, [file]);
       fileStore.setDirtyTotalFiles(true);
       fileStore.setDirtyUntaggedFiles(true);
-      AppToaster.show({ message: 'New images have been detected.', timeout: 5000 }, 'new-images');
+      AppToaster.show({ message: i18n.t('stores.newImagesDetected'), timeout: 5000 }, 'new-images');
       // might be called a lot when moving many images into a folder, so debounce it
     }
     fileStore.debouncedRefetch();

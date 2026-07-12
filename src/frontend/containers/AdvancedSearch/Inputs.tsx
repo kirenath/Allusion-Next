@@ -24,10 +24,10 @@ import { BinaryOperators, OperatorType, TagOperators } from '../../../api/search
 import { TagSelector } from '../../components/TagSelector';
 import { useStore } from '../../contexts/StoreContext';
 import {
-  ExtraPropertyOperatorLabels,
+  getExtraPropertyOperatorLabels,
   NumberOperatorSymbols,
-  SearchConjuctionSymbols,
-  StringOperatorLabels,
+  getSearchConjunctionSymbols,
+  getStringOperatorLabels,
 } from '../../entities/SearchCriteria';
 import { ClientTag } from '../../entities/Tag';
 import {
@@ -155,7 +155,7 @@ export const ConjuctionSelector = ({
       onChange={handleChange}
       value={value}
     >
-      {SearchConjunctions.map((sc) => toOperatorOption(sc, SearchConjuctionSymbols))}
+      {SearchConjunctions.map((sc) => toOperatorOption(sc, getSearchConjunctionSymbols()))}
     </select>
   );
 };
@@ -550,12 +550,12 @@ function getOperatorOptions(key: Key, extraPropertyType?: ExtraPropertyType) {
   } else if (key === 'extension') {
     return BinaryOperators.map((op) => toOperatorOption(op));
   } else if (key === 'name' || key === 'absolutePath') {
-    return StringOperators.map((op) => toOperatorOption(op, StringOperatorLabels));
+    return StringOperators.map((op) => toOperatorOption(op, getStringOperatorLabels()));
   } else if (key === 'tags') {
     return TagOperators.map((op) => toOperatorOption(op));
   } else if (key == 'extraProperties' && extraPropertyType !== undefined) {
     const epOperators = ExtraPropertyOperators.map((op) =>
-      toOperatorOption(op, ExtraPropertyOperatorLabels),
+      toOperatorOption(op, getExtraPropertyOperatorLabels()),
     );
     if (extraPropertyType === ExtraPropertyType.number) {
       return [
@@ -564,7 +564,7 @@ function getOperatorOptions(key: Key, extraPropertyType?: ExtraPropertyType) {
       ];
     } else if (extraPropertyType === ExtraPropertyType.text) {
       return [
-        ...StringOperators.map((op) => toOperatorOption(op, StringOperatorLabels)),
+        ...StringOperators.map((op) => toOperatorOption(op, getStringOperatorLabels())),
         ...epOperators,
       ];
     }

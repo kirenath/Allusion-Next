@@ -7,6 +7,7 @@ import { ClientTagSearchCriteria } from '../entities/SearchCriteria';
 import { ClientTag } from '../entities/Tag';
 import RootStore from './RootStore';
 import { AppToaster, IToastProps } from '../components/Toaster';
+import i18n from '../i18n';
 import { FileDTO } from 'src/api/file';
 import { normalizeBase } from 'common/core';
 import { ConditionGroupDTO } from 'src/api/data-storage-search';
@@ -82,10 +83,8 @@ class TagStore {
     const showProgressToast = (step: number, totalTags: number, processed: number) => {
       AppToaster.show(
         {
-          message: `Updating file counts for ${totalTags} tags: step ${step}/${totalStep}${
-            processed > 0 ? ` - ${((processed / totalTags) * 100).toFixed(1)}%...` : '...'
-          }`,
-          clickAction: { label: 'Cancel', onClick: () => (cancelled = true) },
+          message: i18n.t('stores.updatingFileCountsForTags', { totalTags, step, totalStep, progress: processed > 0 ? ` - ${((processed / totalTags) * 100).toFixed(1)}%...` : '...' }),
+          clickAction: { label: i18n.t('common.cancel'), onClick: () => (cancelled = true) },
           type: 'info',
           timeout: 5000,
         },
