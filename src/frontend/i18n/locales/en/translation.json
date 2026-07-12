@@ -26,6 +26,8 @@
     "delete": "Delete",
     "deleteMissingTooltip": "Delete selected missing images from library",
     "selectTooltip": "Selects or deselects all images, ({{count}} loaded files)",
+    "multiSelect": "Multi-select",
+    "multiSelectTooltip": "Toggle multi-select mode",
     "more": "More",
     "seeMore": "See more",
     "advancedSearch": "Advanced Search",

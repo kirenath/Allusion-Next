@@ -26,6 +26,8 @@
     "delete": "删除",
     "deleteMissingTooltip": "从库中删除选中的丢失图片",
     "selectTooltip": "选择或取消选择所有图片（已加载 {{count}} 个文件）",
+    "multiSelect": "多选",
+    "multiSelectTooltip": "切换多选模式",
     "more": "更多",
     "seeMore": "查看更多",
     "advancedSearch": "高级搜索",

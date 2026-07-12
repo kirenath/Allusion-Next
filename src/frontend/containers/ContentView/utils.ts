@@ -26,3 +26,20 @@ export function getThumbnailSize(sizeType: ThumbnailSize) {
   }
   return CELL_SIZE_LARGE;
 }
+
+// Height of the caption area (filename/resolution) below each thumbnail, in pixels.
+// Note: keep in sync with the .thumbnail-caption styles in content.scss
+const CAPTION_VERTICAL_PADDING = 6;
+const CAPTION_FILENAME_HEIGHT = 20;
+const CAPTION_RESOLUTION_HEIGHT = 14;
+
+export function getThumbnailCaptionHeight(showFilename: boolean, showResolution: boolean): number {
+  if (!showFilename && !showResolution) {
+    return 0;
+  }
+  return (
+    CAPTION_VERTICAL_PADDING +
+    (showFilename ? CAPTION_FILENAME_HEIGHT : 0) +
+    (showResolution ? CAPTION_RESOLUTION_HEIGHT : 0)
+  );
+}

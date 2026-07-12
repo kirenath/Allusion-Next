@@ -902,15 +902,6 @@ class FileStore {
       // continue if the current taskId is the same else abort the fetch
       const currentFetchId = runInAction(() => this.fetchTaskIdPair[0]);
       if (start === currentFetchId) {
-        if (fetchedFiles.length === 0) {
-          AppToaster.show(
-            {
-              message: i18n.t(direction === 'after' ? 'stores.endOfResultsReached' : 'stores.topOfResultsReached'),
-              timeout: direction === 'after' ? 5000 : 2000,
-            },
-            'results-edge-reached',
-          );
-        }
         return this.updateFromBackend(fetchedFiles, direction);
       } else {
         console.debug(`FETCH "${direction}" ABORTED`);

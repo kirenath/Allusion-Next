@@ -262,6 +262,7 @@ class UiStore {
   @observable upscaleMode: UpscaleMode = 'smooth';
   @observable galleryVideoPlaybackMode: GalleryVideoPlaybackMode = 'hover';
   @observable showTreeConnectorLines: boolean = false;
+  @observable isMultiSelectMode: boolean = false;
   @observable isRefreshing: boolean = false;
   @observable language: LanguageCode = DEFAULT_LANGUAGE;
 
@@ -597,6 +598,10 @@ class UiStore {
 
   @action.bound toggleOutliner(): void {
     this.setIsOutlinerOpen(!this.isOutlinerOpen);
+  }
+
+  @action.bound toggleMultiSelectMode(): void {
+    this.isMultiSelectMode = !this.isMultiSelectMode;
   }
 
   @action.bound openPreviewWindow(): void {

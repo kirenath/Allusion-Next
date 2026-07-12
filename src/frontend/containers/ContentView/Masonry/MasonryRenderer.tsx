@@ -6,7 +6,7 @@ import FocusManager from 'src/frontend/FocusManager';
 import { ViewMethod } from 'src/frontend/stores/UiStore';
 import { debounce, throttle } from 'common/timeout';
 import { MasonryType } from 'wasm/packages/masonry';
-import { GalleryProps, getThumbnailSize } from '../utils';
+import { GalleryProps, getThumbnailCaptionHeight, getThumbnailSize } from '../utils';
 import { MasonryWorkerAdapter } from './MasonryWorkerAdapter';
 import VirtualizedRenderer from './VirtualizedRenderer';
 
@@ -36,6 +36,10 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
   const [forceRerenderObj, setForceRerenderObj] = useState<Date>(new Date());
   const thumbnailSize = getThumbnailSize(uiStore.thumbnailSize);
   const masonryItemPadding = uiStore.masonryItemPadding;
+  const captionHeight = getThumbnailCaptionHeight(
+    uiStore.isThumbnailFilenameOverlayEnabled,
+    uiStore.isThumbnailResolutionOverlayEnabled,
+  );
   const containerWidth = contentRect.width - SCROLL_BAR_WIDTH - MASONRY_PADDING;
 
   const viewMethod = uiStore.method as SupportedViewMethod;
@@ -128,6 +132,7 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
             thumbSize: thumbnailSize,
             type: ViewMethodLayoutDict[viewMethod],
             padding: masonryItemPadding,
+            captionHeight,
           },
         );
         setContainerHeight(containerHeight);
@@ -155,6 +160,7 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
               thumbSize: thumbnailSize,
               type: ViewMethodLayoutDict[viewMethod],
               padding: masonryItemPadding,
+              captionHeight,
             },
           );
           setContainerHeight(containerHeight);
@@ -175,6 +181,7 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
         thumbnailSize: number,
         masonryItemPadding: number,
         viewMethod: SupportedViewMethod,
+        captionHeight: number,
       ) {
         console.debug('Masonry: Environment changed. Recomputing layout!');
         try {
@@ -182,6 +189,7 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
             thumbSize: thumbnailSize,
             type: ViewMethodLayoutDict[viewMethod],
             padding: masonryItemPadding,
+            captionHeight,
           });
           setContainerHeight(containerHeight);
           setLayoutTimestamp(new Date());
@@ -197,13 +205,19 @@ const MasonryRenderer = observer(({ contentRect, select, lastSelectionIndex }: G
     })(),
   );
 
-  // Re-compute when the environment changes (container width, thumbnail size, view method)
+  // Re-compute when the environment changes (container width, thumbnail size, view method, caption)
   useEffect(() => {
     if (containerHeight !== undefined && containerWidth > 100) {
-      handleResize.current(containerWidth, thumbnailSize, masonryItemPadding, viewMethod);
+      handleResize.current(
+        containerWidth,
+        thumbnailSize,
+        masonryItemPadding,
+        viewMethod,
+        captionHeight,
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerWidth, handleResize, thumbnailSize, masonryItemPadding, viewMethod]);
+  }, [containerWidth, handleResize, thumbnailSize, masonryItemPadding, viewMethod, captionHeight]);
 
   return !containerHeight ? (
     <></>

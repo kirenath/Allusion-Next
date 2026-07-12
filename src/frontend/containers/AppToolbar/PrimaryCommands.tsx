@@ -37,12 +37,29 @@ const OutlinerToggle = observer(() => {
   );
 });
 
+const MultiSelectToggle = observer(() => {
+  const { uiStore } = useStore();
+  const { t } = useTranslation();
+
+  return (
+    <ToolbarButton
+      id="multi-select-toggle"
+      text={t('toolbar.multiSelect')}
+      icon={IconSet.MULTI_SELECT}
+      pressed={uiStore.isMultiSelectMode}
+      onClick={uiStore.toggleMultiSelectMode}
+      tooltip={t('toolbar.multiSelectTooltip')}
+    />
+  );
+});
+
 const PrimaryCommands = observer(() => {
   const { fileStore } = useStore();
 
   return (
     <>
       <OutlinerToggle />
+      <MultiSelectToggle />
       <FileSelectionCommand />
 
       <ViewSegmentedControl />

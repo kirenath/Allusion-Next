@@ -9,12 +9,15 @@ export interface MasonryOptions {
   type: MasonryType;
   thumbSize: number;
   padding: number;
+  /** Extra vertical space (in pixels) reserved below each image for the filename/resolution caption */
+  captionHeight: number;
 }
 
 const defaultOpts: MasonryOptions = {
   type: MasonryType.Vertical,
   thumbSize: 300,
   padding: 8,
+  captionHeight: 0,
 };
 
 export class MasonryWorkerAdapter implements Layouter {
@@ -22,6 +25,12 @@ export class MasonryWorkerAdapter implements Layouter {
   private memory?: WebAssembly.Memory;
 
   private prevNumImgs: number = 0;
+
+  // The WASM worker computes the layout based on image dimensions only.
+  // When a caption is shown below each image, that layout is post-processed here:
+  // every cell grows by captionHeight, and cells are shifted down accordingly.
+  private adjustedTransforms?: Uint32Array;
+  private captionHeight: number = 0;
 
   async initialize(numItems: number) {
     if (this.memory !== undefined && this.worker !== undefined) {
@@ -74,7 +83,7 @@ export class MasonryWorkerAdapter implements Layouter {
       opts.thumbSize ?? defaultOpts.thumbSize,
       opts.padding ?? defaultOpts.padding,
     );
-    return worker.get_height();
+    return this.postProcess(numImgs, opts);
   }
 
   async recompute(
@@ -90,13 +99,97 @@ export class MasonryWorkerAdapter implements Layouter {
       opts.thumbSize ?? defaultOpts.thumbSize,
       opts.padding ?? defaultOpts.padding,
     );
-    return this.worker.get_height();
+    return this.postProcess(this.prevNumImgs, opts);
+  }
+
+  /**
+   * Applies the caption height to the layout computed by the WASM worker
+   * and returns the adjusted container height.
+   */
+  private postProcess(numImgs: number, opts: Partial<MasonryOptions>): number {
+    const worker = this.worker;
+    const memory = this.memory;
+    if (worker === undefined || memory === undefined) {
+      throw new Error('Worker is uninitialized.');
+    }
+    const captionHeight = opts.captionHeight ?? defaultOpts.captionHeight;
+    this.captionHeight = captionHeight;
+    if (captionHeight === 0 || numImgs === 0) {
+      return worker.get_height();
+    }
+
+    const type = opts.type ?? defaultOpts.type;
+    const padding = opts.padding ?? defaultOpts.padding;
+
+    if (this.adjustedTransforms === undefined || this.adjustedTransforms.length < numImgs * 4) {
+      this.adjustedTransforms = new Uint32Array(numImgs * 4);
+    }
+    const adjusted = this.adjustedTransforms;
+    const mem = new Uint32Array(memory.buffer);
+
+    let containerHeight = 0;
+    if (type === MasonryType.Vertical) {
+      // Cells keep their column assignment; each cell shifts down by one
+      // caption height for every cell above it in the same column.
+      const columnItemCounts: number[] = [];
+      for (let i = 0; i < numImgs; i++) {
+        const o = worker.get_transform(i) >>> 2;
+        const width = mem[o];
+        const height = mem[o + 1];
+        const top = mem[o + 2];
+        const left = mem[o + 3];
+        // The worker positions each cell at left = columnIndex * (itemWidth + padding)
+        const columnWidth = width + padding;
+        const col = columnWidth > 0 ? Math.round(left / columnWidth) : 0;
+        const itemsAbove = columnItemCounts[col] ?? 0;
+        columnItemCounts[col] = itemsAbove + 1;
+
+        const adjTop = top + itemsAbove * captionHeight;
+        const adjHeight = height + captionHeight;
+        adjusted[i * 4] = width;
+        adjusted[i * 4 + 1] = adjHeight;
+        adjusted[i * 4 + 2] = adjTop;
+        adjusted[i * 4 + 3] = left;
+        containerHeight = Math.max(containerHeight, adjTop + adjHeight + padding);
+      }
+    } else {
+      // Horizontal masonry and grid layouts place items in rows sharing the same
+      // top offset, so each row shifts down by one caption height per row above it.
+      let rowIndex = -1;
+      let prevTop = -1;
+      for (let i = 0; i < numImgs; i++) {
+        const o = worker.get_transform(i) >>> 2;
+        const width = mem[o];
+        const height = mem[o + 1];
+        const top = mem[o + 2];
+        const left = mem[o + 3];
+        if (top !== prevTop) {
+          rowIndex++;
+          prevTop = top;
+        }
+
+        const adjTop = top + rowIndex * captionHeight;
+        const adjHeight = height + captionHeight;
+        adjusted[i * 4] = width;
+        adjusted[i * 4 + 1] = adjHeight;
+        adjusted[i * 4 + 2] = adjTop;
+        adjusted[i * 4 + 3] = left;
+        containerHeight = Math.max(containerHeight, adjTop + adjHeight + padding);
+      }
+    }
+    return containerHeight;
   }
 
   // This method will be available in the custom VirtualizedRenderer component as layout.getItemLayout
   getTransform(index: number): ITransform {
     if (this.worker === undefined || this.memory === undefined) {
       throw new Error('Worker is uninitialized.');
+    }
+    if (this.captionHeight > 0 && this.adjustedTransforms !== undefined) {
+      return this.adjustedTransforms.subarray(
+        index * 4,
+        index * 4 + 4,
+      ) as unknown as ITransform;
     }
     const ptr = this.worker.get_transform(index);
     return new Uint32Array(this.memory.buffer, ptr, 4) as unknown as ITransform;

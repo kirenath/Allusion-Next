@@ -557,53 +557,41 @@
       }
     }
 
-    .thumbnail-overlay {
-      display: flex;
-      justify-content: space-between;
-      column-gap: 0.25em;
-
-      background-color: rgba(0, 0, 0, 0);
-      color: hsl(0deg 0% 85%); // can't use --text-color: black text on black background in light theme
-      text-shadow: // fake black outline around font
-       -1px -1px 1px black, 0px -1px 1px black, 1px -1px 1px black,
-       -1px  0px 1px black, 0px  0px 1px black, 1px  0px 1px black,
-       -1px  1px 1px black, 0px  1px 1px black, 1px  1px 1px black;
+    // Eagle-style caption below the thumbnail (filename + resolution)
+    // Note: heights must stay in sync with getThumbnailCaptionHeight in ContentView/utils.ts
+    .thumbnail-caption {
+      flex: 0 0 auto;
       width: 100%;
-      height: 1.6em;
-      position: absolute;
-      bottom: 0;
-      padding: 0.25rem;
+      height: var(--thumbnail-caption-height, 40px);
+      padding: 4px 2px 2px 2px; // 6px vertical in total
+      overflow: hidden;
+      cursor: pointer;
+      text-align: center;
 
-      transition: background-color 0.25s $pt-transition-cubic2;
-
-      // Resolution is always visible if enabled by truncating the filename
-      > :first-child {
+      .thumbnail-filename {
+        height: 20px;
+        line-height: 16px;
+        font-size: 12px;
+        color: var(--text-color);
         white-space: nowrap;
-        overflow: hidden visible;
+        overflow: hidden;
         text-overflow: ellipsis;
-        
-        // Only here to avoid vertical scrollbar due to overflow-x: hidden
-        // It won't take up more than 1 line due to no-wrap
-        height: 2em;
+      }
+
+      .thumbnail-resolution {
+        height: 14px;
+        line-height: 14px;
+        font-size: 10px;
+        color: var(--text-color-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 
-    &:hover {
-      .thumbnail-overlay {
-        background-color: rgba(0, 0, 0, .75);
-        // Allow text selection around the name for better ux
-        user-select: text;
-
-        &:hover {
-          // Expand filename on hover if it was truncated
-          > :first-child {
-            overflow: inherit;
-            text-overflow: inherit;
-            // Allow text selection
-            user-select: text;
-          }
-        }
-      }
+    &:hover .thumbnail-caption {
+      // Allow text selection around the name for better ux
+      user-select: text;
     }
   }
 
@@ -614,16 +602,30 @@
   }
 }
 
-// Exception when both showing filename and tags in thumbnail overlay:
-// move the tags up by the height of the filename element (23.59px)
+// When the caption (filename/resolution) is shown below the thumbnail:
+// the cell becomes a column layout: thumbnail on top, caption below.
+// The extra cell height for the caption is added in MasonryWorkerAdapter.
 #gallery-content[data-show-overlay='true'] .masonry {
   [data-masonrycell] {
-    .thumbnail-tags:hover  {
-      max-height: calc(100% - 1.5em - 0.25rem);
+    display: flex;
+    flex-direction: column;
+    // No card background behind the caption text;
+    // the image area keeps its own background via .thumbnail
+    background-color: transparent;
+
+    .thumbnail {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+    }
+
+    // Keep the tag overlay on the image itself, above the caption
+    .thumbnail-tags:hover {
+      max-height: calc(100% - var(--thumbnail-caption-height, 40px));
     }
   }
   .thumbnail-tags {
-    margin-bottom: calc(1.5em + 0.25rem);
+    margin-bottom: var(--thumbnail-caption-height, 40px);
   }
 }
 

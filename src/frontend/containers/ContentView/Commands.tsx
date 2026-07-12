@@ -180,7 +180,7 @@ export function useCommandHandler(
       event.stopPropagation();
       const { file, selectAdditive, selectRange } = (event as CommandHandlerEvent<SelectPayload>)
         .detail;
-      select(file, selectAdditive, selectRange);
+      select(file, selectAdditive || uiStore.isMultiSelectMode, selectRange);
     });
 
     const handlePreview = action((event: Event) => {

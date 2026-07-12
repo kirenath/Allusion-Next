@@ -9,7 +9,7 @@ import { MenuSubItem, Menu, useContextMenu } from 'widgets/menus';
 
 import Placeholder from './Placeholder';
 import Layout from './LayoutSwitcher';
-import { getThumbnailSize } from './utils';
+import { getThumbnailCaptionHeight, getThumbnailSize } from './utils';
 
 import { LayoutMenuItems, SortMenuItems } from '../AppToolbar/Menus';
 import { useTagDnD } from 'src/frontend/contexts/TagDnDContext';
@@ -122,6 +122,14 @@ const Content = observer(() => {
       tabIndex={-1}
       data-show-overlay={
         uiStore.isThumbnailFilenameOverlayEnabled || uiStore.isThumbnailResolutionOverlayEnabled
+      }
+      style={
+        {
+          '--thumbnail-caption-height': `${getThumbnailCaptionHeight(
+            uiStore.isThumbnailFilenameOverlayEnabled,
+            uiStore.isThumbnailResolutionOverlayEnabled,
+          )}px`,
+        } as React.CSSProperties
       }
       data-selected-file-dropping={isDroppingTagOnSelection}
       onContextMenu={handleContextMenu}

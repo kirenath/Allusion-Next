@@ -105,8 +105,9 @@ export const MasonryCell = observer(
 
         {(uiStore.isThumbnailFilenameOverlayEnabled ||
           uiStore.isThumbnailResolutionOverlayEnabled) && (
-          <ThumbnailOverlay
+          <ThumbnailCaption
             file={file}
+            eventManager={eventManager}
             showFilename={uiStore.isThumbnailFilenameOverlayEnabled}
             showResolution={uiStore.isThumbnailResolutionOverlayEnabled}
           />
@@ -341,12 +342,15 @@ const TagWithHint = observer(
 );
 */
 
-const ThumbnailOverlay = ({
+/** Eagle-style caption below the thumbnail, showing the filename and resolution */
+const ThumbnailCaption = ({
   file,
+  eventManager,
   showFilename,
   showResolution,
 }: {
   file: ClientFile;
+  eventManager: CommandDispatcher;
   showFilename: boolean;
   showResolution: boolean;
 }) => {
@@ -355,7 +359,15 @@ const ThumbnailOverlay = ({
   }, ${humanFileSize(file.size)}`;
 
   return (
-    <div className="thumbnail-overlay" data-tooltip={title} tabIndex={-1} onBlur={deselect}>
+    <div
+      className="thumbnail-caption"
+      data-tooltip={title}
+      tabIndex={-1}
+      onBlur={deselect}
+      onClick={eventManager.select}
+      onDoubleClick={eventManager.preview}
+      onContextMenu={eventManager.showContextMenu}
+    >
       {showFilename && (
         <div className="thumbnail-filename" data-tooltip={title}>
           {file.name}
@@ -364,7 +376,7 @@ const ThumbnailOverlay = ({
 
       {showResolution && (
         <div className="thumbnail-resolution" data-tooltip={title}>
-          {file.width}⨯{file.height}
+          {file.width} ⨯ {file.height}
         </div>
       )}
     </div>
