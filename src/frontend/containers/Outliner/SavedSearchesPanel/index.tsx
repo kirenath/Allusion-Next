@@ -141,6 +141,7 @@ const SearchItem = observer(
   ({ nodeData, treeData }: { nodeData: ClientFileSearchItem; treeData: ITreeData }) => {
     const rootStore = useStore();
     const { uiStore, searchStore } = rootStore;
+    const { t } = useTranslation();
     const { edit: onEdit, duplicate: onDuplicate, delete: onDelete, replace: onReplace } = treeData;
     const show = useContextMenu();
     const handleContextMenu = useCallback(
@@ -239,7 +240,9 @@ const SearchItem = observer(
       >
         {/* {IconSet.SEARCH} */}
         {nodeData.rootGroup.conjunction === 'or' ? IconSet.SEARCH_ANY : IconSet.SEARCH_ALL}
-        <div className="label-text">{nodeData.name}</div>
+        <div className="label-text">
+          {nodeData.name === 'New search' ? t('advancedSearch.newSearch') : nodeData.name}
+        </div>
 
         <button className="btn btn-icon" onClick={handleEdit}>
           {IconSet.EDIT}
