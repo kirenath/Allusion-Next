@@ -528,7 +528,7 @@ autoUpdater.on('update-available', async (info: UpdateInfo) => {
   if (dialogResult.response === 0) {
     autoUpdater.downloadUpdate();
   } else if (dialogResult.response === 2) {
-    shell.openExternal('https://github.com/RafaUC/Allusion/releases/latest');
+    shell.openExternal(`${githubUrl}/releases/latest`);
   }
 });
 

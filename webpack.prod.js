@@ -5,7 +5,17 @@
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+const { execSync } = require('child_process');
 const path = require('path');
+
+function gitVersion() {
+  try {
+    return execSync('git describe --tags --always', { encoding: 'utf-8' }).trim();
+  } catch {
+    return 'unknown';
+  }
+}
 
 let mainConfig = {
   mode: 'production',
@@ -134,6 +144,10 @@ let rendererConfig = {
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
       chunkFilename: '[id].[contenthash].css',
+    }),
+    new DefinePlugin({
+      __GIT_VERSION__: JSON.stringify(gitVersion()),
+      __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
     }),
   ],
   externals: {

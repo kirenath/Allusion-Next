@@ -381,14 +381,11 @@
     "invalidProperty": "Invalid Property"
   },
   "about": {
-    "version": "Version",
-    "description": "This application was made by a small team of individuals who gathered due to common interest in art, design and software.",
-    "freeAndOpenSource": "It's completely free and open source! Find out more at",
-    "generalInformation": "General information",
-    "downloadLatestVersion": "Download the latest version",
-    "viewSourceCode": "View the source code",
-    "provideFeedback": "Provide feedback and report bugs",
-    "learnAboutContributing": "Learn about contributing"
+    "tagline": "A local image manager with the file system as the source of truth",
+    "copyright": "Allusion-Next contributors",
+    "forkPrefix": "Based on ",
+    "forkMiddle": " (",
+    "forkSuffix": " fork)"
   },
   "stores": {
     "copyingImageToClipboard": "Copying image to clipboard...",

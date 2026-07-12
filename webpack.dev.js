@@ -5,7 +5,17 @@
 // Based on https://taraksharma.com/setting-up-electron-typescript-react-webpack/
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+const { execSync } = require('child_process');
 const path = require('path');
+
+function gitVersion() {
+  try {
+    return execSync('git describe --tags --always', { encoding: 'utf-8' }).trim();
+  } catch {
+    return 'dev';
+  }
+}
 
 let mainConfig = {
   mode: 'development',
@@ -122,6 +132,10 @@ let rendererConfig = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
+    }),
+    new DefinePlugin({
+      __GIT_VERSION__: JSON.stringify(gitVersion()),
+      __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
     }),
   ],
   externals: {

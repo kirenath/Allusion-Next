@@ -5,8 +5,10 @@ import PopupWindow from '../components/PopupWindow';
 import { useStore } from '../contexts/StoreContext';
 
 import Logo_About from 'resources/images/helpcenter/logo-about-helpcenter-dark.jpg';
-import { RendererMessenger } from 'src/ipc/renderer';
 import ExternalLink from '../components/ExternalLink';
+
+const gitVersion = typeof __GIT_VERSION__ !== 'undefined' ? __GIT_VERSION__ : 'dev';
+const buildDate = typeof __BUILD_DATE__ !== 'undefined' ? __BUILD_DATE__ : '';
 
 const About = observer(() => {
   const { uiStore } = useStore();
@@ -15,34 +17,29 @@ const About = observer(() => {
   if (!uiStore.isAboutOpen) {
     return null;
   }
+
   return (
     <PopupWindow onClose={uiStore.closeAbout} windowName="about" closeOnEscape>
-      <div id="about" className="light">
-        <img src={Logo_About} alt="Logo" />
-        <small>
-          {t('about.version')} <strong>{RendererMessenger.getVersion()}</strong>
-        </small>
-        <p>
-          {t('about.description')}
-          <br />
-          {t('about.freeAndOpenSource')}
+      <div id="about">
+        <img src={Logo_About} alt="Allusion-Next" />
+        <h1>Allusion-Next</h1>
+        <p className="about-tagline">{t('about.tagline')}</p>
+        <p className="about-version">
+          {gitVersion} ({buildDate})
         </p>
-        <span>
-          <ExternalLink url="https://allusion-app.github.io/">allusion-app.github.io</ExternalLink>.
-        </span>
-        <ul>
-          <li>{t('about.generalInformation')}</li>
-        </ul>
-        <ExternalLink url="https://github.com/RafaUC/Allusion">
-          github.com/RafaUC/Allusion
-        </ExternalLink>
-        <ul>
-          <li>{t('about.downloadLatestVersion')}</li>
-          <li>🤓 {t('about.viewSourceCode')}</li>
-          <li>🐛 {t('about.provideFeedback')}</li>
-          <li>👥 {t('about.learnAboutContributing')}</li>
-        </ul>
-        {/* TODO: Licensing info here? */}
+        <p className="about-github">
+          <ExternalLink url="https://github.com/kirenath/Allusion-Next">GitHub</ExternalLink>
+        </p>
+        <footer className="about-footer">
+          <p>{t('about.copyright')}</p>
+          <p>
+            {t('about.forkPrefix')}
+            <ExternalLink url="https://github.com/allusion-app/Allusion">Allusion</ExternalLink>
+            {t('about.forkMiddle')}
+            <ExternalLink url="https://github.com/RafaUC/Allusion">RafaUC</ExternalLink>
+            {t('about.forkSuffix')}
+          </p>
+        </footer>
       </div>
     </PopupWindow>
   );

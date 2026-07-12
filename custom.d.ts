@@ -1,3 +1,6 @@
+declare const __GIT_VERSION__: string | undefined;
+declare const __BUILD_DATE__: string | undefined;
+
 declare module '*.scss';
 declare module '*.svg' {
   import React = require('react');

@@ -23,8 +23,13 @@ const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose
   const { tagStore, searchStore } = rootStore;
   const { t } = useTranslation();
 
+  const searchName =
+    searchItem.name === 'New search' || searchItem.name === '新搜索'
+      ? t('advancedSearch.newSearch')
+      : searchItem.name;
+
   // Copy state of search item: only update the ClientSearchItem on submit.
-  const [name, setName] = useState(searchItem.name);
+  const [name, setName] = useState(searchName);
 
   const [query, setQuery] = useState<Query>(getemptyQuery());
   const keySelector = useRef<HTMLSelectElement>(null);
@@ -54,7 +59,7 @@ const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose
   return (
     <Dialog
       open
-      title={`Search: "${searchItem.name}"`}
+      title={`Search: "${searchName}"`}
       icon={IconSet.SEARCH_EXTENDED}
       onCancel={onClose}
     >
@@ -70,7 +75,7 @@ const SearchItemDialog = observer<ISearchItemDialogProps>(({ searchItem, onClose
         <label id="name">{t('advancedSearch.name')}</label>
         <input
           className="input"
-          defaultValue={searchItem.name}
+          defaultValue={searchName}
           onBlur={(e) => setName(e.target.value)}
           aria-labelledby="name"
           autoFocus

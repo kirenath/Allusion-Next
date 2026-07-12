@@ -241,7 +241,9 @@ const SearchItem = observer(
         {/* {IconSet.SEARCH} */}
         {nodeData.rootGroup.conjunction === 'or' ? IconSet.SEARCH_ANY : IconSet.SEARCH_ALL}
         <div className="label-text">
-          {nodeData.name === 'New search' ? t('advancedSearch.newSearch') : nodeData.name}
+          {nodeData.name === 'New search' || nodeData.name === '新搜索'
+            ? t('advancedSearch.newSearch')
+            : nodeData.name}
         </div>
 
         <button className="btn btn-icon" onClick={handleEdit}>
