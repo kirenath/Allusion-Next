@@ -21,7 +21,8 @@
     "strict": true, 
     "isolatedModules": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "jest", "react", "react-dom", "offscreencanvas", "chrome"]
   },
   "include": ["widgets/**/*", "src/**/*", "custom.d.ts", "wasm/**/*", "common/**/*", "tests/**/*"],
   "exclude": ["**/node_modules", "**/.*/*", "dist", "resources", "build"]

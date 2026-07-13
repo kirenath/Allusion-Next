@@ -10,7 +10,7 @@
     "start": "electron ./build/main.bundle.js",
     "lint": "eslint src/**/*{ts,tsx} widgets/**/*{ts,tsx} --fix",
     "test": "jest",
-    "package": "npm run build && electron-builder",
+    "package": "rimraf dist && npm run production && electron-builder",
     "logo": "ncp ./resources/logo/icns/allusion-logomark-fc.icns ./build/icon.icns && ncp ./resources/logo/ico/allusion-logomark-fc-256x256.ico ./build/icon.ico",
     "build": "rimraf dist && npm run production && npm run logo",
     "postinstall": "electron-rebuild -f",
@@ -84,7 +84,12 @@
       "build/**/*",
       "package.json"
     ],
-    "asar": true
+    "asar": true,
+    "npmRebuild": false,
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**/*",
+      "node_modules/@parcel/watcher/**/*"
+    ]
   },
   "repository": {
     "type": "git",
